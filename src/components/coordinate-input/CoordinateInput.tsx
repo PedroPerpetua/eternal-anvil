@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { Point } from '../../types';
 import SingleCoordinateInput from './SingleCoordinateInput';
+import './CoordinateInput.scss';
 
 
 type CoordinateInputProps = {
