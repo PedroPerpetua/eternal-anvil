@@ -15,13 +15,11 @@ function CoordinateInput({ label, value, setValue }: CoordinateInputProps) {
     <>
       <Typography>{ label }</Typography>
       <SingleCoordinateInput
-        label="Position X"
         adornment="X"
         value={value[0]}
         setValue={(v) => setValue([v, value[1]])}
       />
       <SingleCoordinateInput
-        label="Position Y"
         adornment="Y"
         value={value[1]}
         setValue={(v) => setValue([value[0], v])}

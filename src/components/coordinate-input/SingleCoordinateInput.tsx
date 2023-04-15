@@ -3,20 +3,19 @@ import { validateCoordinateText } from '../../utilities';
 
 
 type SingleCoordinateInputProps = {
-  label: string;
   adornment: string;
   value: number;
   setValue: (newValue: number) => void;
 };
 
 function SingleCoordinateInput({
-  label, adornment, value, setValue,
+  adornment, value, setValue,
 }: SingleCoordinateInputProps) {
   return (
     <TextField
       className="single-coordinate-input"
-      label={label}
       value={Number.isFinite(value) ? value : ''}
+      type="number"
       onChange={(e) => {
         const newValue = e.target.value;
         if (newValue === '') {
