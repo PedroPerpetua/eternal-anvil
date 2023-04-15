@@ -13,7 +13,6 @@ function SingleCoordinateInput({
 }: SingleCoordinateInputProps) {
   return (
     <TextField
-      className="single-coordinate-input"
       value={Number.isFinite(value) ? value : ''}
       type="number"
       onChange={(e) => {
@@ -32,6 +31,7 @@ function SingleCoordinateInput({
             { adornment }
           </InputAdornment>
         ),
+        className: 'single-coordinate-input',
       }}
     />
   );

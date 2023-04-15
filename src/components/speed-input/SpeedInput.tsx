@@ -13,7 +13,6 @@ function SpeedInput({ label, value, setValue }: SpeedInputProps) {
     <>
       <Typography>{ label }</Typography>
       <TextField
-        className="speed-input"
         label="Warlord Speed"
         type="number"
         value={Number.isFinite(value) ? value : ''}
@@ -27,6 +26,9 @@ function SpeedInput({ label, value, setValue }: SpeedInputProps) {
           if (Number.isInteger(newValue)) {
             setValue(newValue);
           }
+        }}
+        InputProps={{
+          className: 'speed-input',
         }}
       />
     </>
