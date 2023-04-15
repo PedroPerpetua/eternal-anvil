@@ -1,6 +1,4 @@
-import {
-  Select, MenuItem, Typography,
-} from '@mui/material';
+import { TextField, MenuItem, Typography } from '@mui/material';
 import { DISTANCE_PENALTIES } from '../../constants';
 import './MissionPenaltyInput.scss';
 
@@ -12,11 +10,12 @@ type MissionPenaltyInputProps = {
 
 function MissionPenaltyInput({ value, setValue }: MissionPenaltyInputProps) {
   return (
-    <Select
+    <TextField
+      select
       label="Mission Type"
-      value={value}
-      onChange={(e) => setValue(e.target.value as number)}
       className="mission-penalty-input"
+      value={value}
+      onChange={(e) => setValue(Number(e.target.value))}
     >
       {
         Object.entries(DISTANCE_PENALTIES).map(
@@ -38,7 +37,7 @@ function MissionPenaltyInput({ value, setValue }: MissionPenaltyInputProps) {
           ),
         )
       }
-    </Select>
+    </TextField>
   );
 }
 

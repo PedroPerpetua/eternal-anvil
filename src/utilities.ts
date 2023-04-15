@@ -1,3 +1,4 @@
+import { INFINITE_CHAR } from './constants';
 import { Point } from './types';
 
 /**
@@ -63,11 +64,11 @@ export function calculateTravelTime(distance: number, speed: number) {
 
 /**
  * Format a time in seconds into a more human readable string.
- * @param seconds The time in seconds to format
- * @returns A string formatted as HH:MM:SS
+ * @param seconds The time in seconds to format.
+ * @returns A string formatted as `HH:MM:SS` (or `INFINITE_CHAR`).
  */
 export function formatSeconds(seconds: number) {
-  if (!Number.isFinite(seconds)) return '∞';
+  if (!Number.isFinite(seconds)) return INFINITE_CHAR;
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const finalSeconds = Math.floor((seconds % 3600) % 60);

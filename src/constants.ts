@@ -1,7 +1,7 @@
-// More will be added
-/* eslint import/prefer-default-export: 0 */
 import { DistancePenaltyMap } from './types';
 
+
+export const INFINITE_CHAR = '∞';
 
 export const DISTANCE_PENALTIES: DistancePenaltyMap = {
   JOIN_FORT_RELIC: {
