@@ -49,7 +49,7 @@ export function calculateDistance(
 
 /**
  * Calculates the time required to travel a certain distance over a certain
- * speed.
+ * speed (in seconds)
  *
  * If either `distance` or `speed` are infinite, returns `Infinity`
  * @param distance The distance to be traveled.
@@ -59,4 +59,24 @@ export function calculateDistance(
 export function calculateTravelTime(distance: number, speed: number) {
   if (!Number.isFinite(speed) || !Number.isFinite(distance)) return Infinity;
   return (distance * 3600) / speed;
+}
+
+/**
+ * Format a time in seconds into a more human readable string.
+ * @param seconds The time in seconds to format
+ * @returns A string formatted as HH:MM:SS
+ */
+export function formatSeconds(seconds: number) {
+  if (!Number.isFinite(seconds)) return '∞';
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const finalSeconds = Math.floor((seconds % 3600) % 60);
+
+  function pad(num: number, size: number) {
+    let numStr = num.toString();
+    while (numStr.length < size) numStr = `0${numStr}`;
+    return numStr;
+  }
+
+  return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(finalSeconds, 2)}`;
 }
