@@ -69,7 +69,7 @@ function TravelWidget() {
           <Typography>
             Distance:
             { ' ' }
-            { Number.isInteger(distance) ? distance : INFINITE_CHAR }
+            { Number.isFinite(distance) ? distance : INFINITE_CHAR }
           </Typography>
           <Typography color={speed === 0 ? 'gray' : 'black'}>
             Travel Time:
