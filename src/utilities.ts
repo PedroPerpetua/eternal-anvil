@@ -81,3 +81,39 @@ export function formatSeconds(seconds: number) {
 
   return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(finalSeconds, 2)}`;
 }
+
+/**
+ * Asynchronous wrapper around a FileReader's readAsDataURL method.
+ * @param file File to read.
+ * @returns The loaded DataURL.
+ */
+export function readFileAsURL(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      if (typeof fr.result !== 'string') {
+        reject(new Error(
+          `Reader returned '${fr.result}' (type '${typeof fr.result}'.`,
+        ));
+        return;
+      }
+      resolve(fr.result);
+    };
+    fr.onerror = reject;
+    fr.readAsDataURL(file);
+  });
+}
+
+/**
+ * Asynchronous wrapper around loading an image with the Image class.
+ * @param url The URL to read from.
+ * @returns The resulting Image object.
+ */
+export function readImageFromURL(url: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = url;
+  });
+}
