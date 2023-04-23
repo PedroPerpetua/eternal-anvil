@@ -2804,6 +2804,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+transformation-matrix@2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/transformation-matrix/-/transformation-matrix-2.15.0.tgz#4276ac7e384d9764b044c2d48ced77f8cc1f88c0"
+  integrity sha512-HN3kCvvH4ug3Xm/ycOfCFQOOktg5htxlC4Ih1Z7Wb6BMtQho+q+irOdGo10ARRKpqkRBXgBzQFw/AVmR0oIf0g==
+
 tsconfig-paths@^3.14.1:
   version "3.14.2"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.14.2.tgz#6e32f1f79412decd261f92d633a9dc1cfa99f088"

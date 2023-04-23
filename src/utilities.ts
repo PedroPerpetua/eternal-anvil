@@ -40,11 +40,11 @@ export function calculateDistance(
   coord1: Point, coord2: Point, extraDistance = 0,
 ) {
 /* eslint-enable function-paren-newline */
-  if (!validatePoint(coord1) || !validatePoint(coord2)) return Infinity;
   // Euclidean distance
   const distance = Math.sqrt(
     (coord1[0] - coord2[0]) ** 2 + (coord1[1] - coord2[1]) ** 2,
   );
+  if (Number.isNaN(distance)) return Infinity;
   return distance + extraDistance;
 }
 

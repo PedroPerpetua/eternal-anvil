@@ -4,6 +4,7 @@ import { Marker as LeafletMarker } from 'leaflet';
 import { Box, Button } from '@mui/material';
 import CoordinateInput from '../coordinate-input/CoordinateInput';
 import useMapImageInputStore from '../../hooks/useCustomMapStore';
+import { Point } from '../../types';
 
 
 type MarkerProps = {
@@ -26,7 +27,7 @@ function Marker({ markerId }: MarkerProps) {
     const currentMarker = markerRef.current;
     if (!currentMarker) return;
     const endPosition = currentMarker.getLatLng();
-    setMarkerDisplayPosition(markerId, [endPosition.lng, endPosition.lat]);
+    setMarkerDisplayPosition(markerId, [endPosition.lat, endPosition.lng]);
   };
 
   if (!marker) {

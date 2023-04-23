@@ -1,4 +1,5 @@
 import { atom, useRecoilState, useResetRecoilState } from 'recoil';
+import { fromTriangles, applyToPoint } from 'transformation-matrix';
 import { readFileAsURL, readImageFromURL } from '../utilities';
 import { Point } from '../types';
 
@@ -60,11 +61,19 @@ function useCustomMapStore() {
 
 
   /**
-   * Compute the resulting map transposed into Leaflet's coordinate system,
-   * ready to be used.
+   * Compute the resulting transformation matrix to be applied to points.
    */
-  const computeLeafletMap = () => { /* TODO: implement */ };
+  const affineTransformationMatrix = markers.size < 3
+    ? null
+    : fromTriangles(
+      [...markers.values()].map((p) => p.intendedCoordinates),
+      [...markers.values()].map((p) => p.displayCoordinates),
+    );
 
+  const translateArkheimPoint = (point: Point) => {
+    if (affineTransformationMatrix === null) return [NaN, NaN] as Point;
+    return applyToPoint(affineTransformationMatrix, point) as Point;
+  };
 
   /* Handle imageInfo ------------------------------------------------------*/
 
@@ -119,10 +128,7 @@ function useCustomMapStore() {
     const originalMarker = markers.get(id);
     if (!originalMarker) return;
     const newMarkers = new Map(markers);
-    newMarkers.set(id, {
-      ...originalMarker,
-      displayCoordinates: [position[1], position[0]],
-    });
+    newMarkers.set(id, { ...originalMarker, displayCoordinates: position });
     setMarkers(newMarkers);
   };
 
@@ -152,7 +158,7 @@ function useCustomMapStore() {
   return {
     reset,
     center,
-    computeLeafletMap,
+    translateArkheimPoint,
     // imageInfo
     imageInfo,
     setImage,
