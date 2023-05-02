@@ -1,14 +1,31 @@
-import { ImageOverlay, MapContainer } from 'react-leaflet';
-import { CRS, latLngBounds } from 'leaflet';
+import {
+  ImageOverlay, MapContainer, Marker as LeafletMarker,
+} from 'react-leaflet';
+import { CRS, latLngBounds, Icon } from 'leaflet';
 import useCustomMapStore from '../../hooks/useCustomMapStore';
 import MapController from './MapController';
 import { Point } from '../../types';
 import Marker from './Marker';
 
+import PinIcon from '../../assets/pin.svg';
 
-function CustomMapDisplay() {
-  const { center, markers, imageInfo } = useCustomMapStore();
 
+const LeafletPinIcon = new Icon({
+  iconUrl: PinIcon,
+});
+
+
+type CustomMapDisplayProps = {
+  testPoint: Point
+};
+
+
+function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
+  const {
+    center, markers, imageInfo, translateArkheimPoint,
+  } = useCustomMapStore();
+
+  const testPointCoordinates = translateArkheimPoint(testPoint);
   if (!imageInfo) {
     return (
       <div>No map loaded</div>
@@ -19,7 +36,7 @@ function CustomMapDisplay() {
 
   return (
     <MapContainer
-      id="custom-map-dialog-display"
+      id="custom-map-display"
       crs={CRS.Simple}
       zoom={1}
       zoomSnap={0.1}
@@ -31,6 +48,16 @@ function CustomMapDisplay() {
         [...markers.keys()].map((id) => (
           <Marker key={id} markerId={id} />
         ))
+      }
+      {
+          Number.isFinite(testPointCoordinates[0])
+          && Number.isFinite(testPointCoordinates[1])
+          && (
+          <LeafletMarker
+            position={testPointCoordinates}
+            icon={LeafletPinIcon}
+          />
+          )
       }
     </MapContainer>
   );

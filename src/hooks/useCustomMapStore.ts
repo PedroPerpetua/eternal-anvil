@@ -83,7 +83,7 @@ function useCustomMapStore() {
    * @param file The file to set the image to.
    */
   const setImage = async (file?: File) => {
-    reset();
+    markersReset();
     if (!file) return;
     const url = await readFileAsURL(file);
     const { width, height } = await readImageFromURL(url);

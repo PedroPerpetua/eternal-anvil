@@ -4,7 +4,6 @@ import { Marker as LeafletMarker } from 'leaflet';
 import { Box, Button } from '@mui/material';
 import CoordinateInput from '../coordinate-input/CoordinateInput';
 import useMapImageInputStore from '../../hooks/useCustomMapStore';
-import { Point } from '../../types';
 
 
 type MarkerProps = {
