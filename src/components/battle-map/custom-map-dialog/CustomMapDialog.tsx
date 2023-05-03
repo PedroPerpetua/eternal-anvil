@@ -1,14 +1,16 @@
+import { useState } from 'react';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import {
   Button, Box, Modal, Grid,
 } from '@mui/material';
-import { useState } from 'react';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
-import useCustomMapStore from '../../hooks/useCustomMapStore';
-import CustomMapDisplay from './CustomMapDisplay';
-import './CustomMapDialog.scss';
-import { Point } from '../../types';
-import CoordinateInput from '../coordinate-input/CoordinateInput';
 
+import CustomMapDisplay from './CustomMapDisplay';
+import useCustomMapStore from '../../../hooks/useCustomMapStore';
+import { EMPTY_POINT } from '../../../utils/constants';
+import { Point } from '../../../utils/types';
+import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
+
+import './CustomMapDialog.scss';
 
 function CustomMapDialog() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,15 +18,13 @@ function CustomMapDialog() {
     setImage, addMarker, imageInfo, reset,
   } = useCustomMapStore();
 
-  const [testCoordinate, setTestCoordinate] = useState<Point>(
-    [Infinity, Infinity],
-  );
+  const [testCoordinate, setTestCoordinate] = useState<Point>(EMPTY_POINT);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setImage(e.target.files?.[0]);
   };
 
-  const handleSave = () => {};
+  const handleSave = () => { /* TODO: IMPLEMENT ME */ };
 
   let content = null;
   if (imageInfo === null) {

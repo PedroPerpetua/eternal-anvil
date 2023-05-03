@@ -29,22 +29,47 @@
         "tsx": "never"
       }
     ],
-    "import/newline-after-import": [
+    "import/order": [
       "error",
       {
-        "count": 2
-      }
-    ],
-    "max-len": [
-      "error",
-      80
-    ],
-    "no-multiple-empty-lines": [
-      "error",
-      {
-        "max": 2,
-        "maxBOF": 0,
-        "maxEOF": 1
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "distinctGroup": false,
+        "groups": [
+          [
+            "builtin",
+            "external"
+          ],
+          [
+            "parent",
+            "sibling"
+          ],
+          "index"
+        ],
+        "newlines-between": "always",
+        "pathGroups": [
+          {
+            "group": "builtin",
+            "pattern": "react",
+            "position": "before"
+          },
+          {
+            "group": "index",
+            "pattern": "@**/**/*.css",
+            "position": "before"
+          },
+          {
+            "group": "index",
+            "pattern": "./**/*.scss",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "react"
+        ],
+        "warnOnUnassignedImports": true
       }
     ],
     "quotes": [

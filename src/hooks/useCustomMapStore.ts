@@ -1,8 +1,9 @@
 import { atom, useRecoilState, useResetRecoilState } from 'recoil';
-import { fromTriangles, applyToPoint } from 'transformation-matrix';
-import { readFileAsURL, readImageFromURL } from '../utilities';
-import { Point } from '../types';
 
+import { EMPTY_POINT } from '../utils/constants';
+import { computeAffineMatrix, transformPoint } from '../utils/math';
+import { Point, Triangle } from '../utils/types';
+import { readFileAsURL, readImageFromURL } from '../utils/utilities';
 
 export type ImageMapInfo = {
   url: string,
@@ -16,7 +17,6 @@ const customMapStore_imageInfo = atom<ImageMapInfo | null>({
   default: null,
 });
 
-
 export type InputMarker = {
   displayCoordinates: Point,
   intendedCoordinates: Point
@@ -28,19 +28,22 @@ const customMapStore_markers = atom<Map<string, InputMarker>>({
   default: new Map<string, InputMarker>(),
 });
 
-
 /**
- * Store to handle everything related to using a custom map for the planner.
- * @returns Functions that allow to modify the global state.
+ * Store to handle everything related to using a custom map for the battle-planner.
+ *
+ * This store handles the transformation of coordinates from the game to the used image.
+ *
+ * `intended` coordinates, points, etc refer to the "real" coordinates of objects inside Arkheim.
+ *
+ * `display` coordinates, points, etc refer to the coordinates in the Leaflet grid when displaying
+ * the map.
+ * @returns Functions and constants that allow interacting with the global
+ * state.
  */
 function useCustomMapStore() {
-  const [imageInfo, setImageInfo] = useRecoilState(
-    customMapStore_imageInfo,
-  );
+  const [imageInfo, setImageInfo] = useRecoilState(customMapStore_imageInfo);
   const imageInfoReset = useResetRecoilState(customMapStore_imageInfo);
-  const [markers, setMarkers] = useRecoilState(
-    customMapStore_markers,
-  );
+  const [markers, setMarkers] = useRecoilState(customMapStore_markers);
   const markersReset = useResetRecoilState(customMapStore_markers);
 
   /**
@@ -51,31 +54,36 @@ function useCustomMapStore() {
     markersReset();
   };
 
+  /* Handle coordinates ------------------------------------------------------------------------- */
+
   /**
-   * Center of the current selected map; [Infinity, Infinity] if there's no
+   * Center of the current selected map; `EMPTY_POINT` if there's no custom map.
    * custom map.
    */
-  const center: Point = imageInfo
-    ? [imageInfo.height / 2, imageInfo.width / 2]
-    : [Infinity, Infinity];
-
+  const center: Point = imageInfo ? [imageInfo.height / 2, imageInfo.width / 2] : EMPTY_POINT;
 
   /**
    * Compute the resulting transformation matrix to be applied to points.
    */
-  const affineTransformationMatrix = markers.size < 3
+  const markersArray = [...markers.values()];
+  const transformationMatrix = markersArray.length < 3
     ? null
-    : fromTriangles(
-      [...markers.values()].map((p) => p.intendedCoordinates),
-      [...markers.values()].map((p) => p.displayCoordinates),
+    : computeAffineMatrix(
+      markersArray.map((p) => p.intendedCoordinates) as Triangle,
+      markersArray.map((p) => p.displayCoordinates) as Triangle,
     );
 
-  const translateArkheimPoint = (point: Point) => {
-    if (affineTransformationMatrix === null) return [NaN, NaN] as Point;
-    return applyToPoint(affineTransformationMatrix, point) as Point;
+  /**
+   * Translate a point from the intended coordinate system to the display coordinate system.
+   * @param point The point's coordinates in the intended coordinate system.
+   * @returns The point's coordinates in the display coordinate system.
+   */
+  const intendedToDisplay = (point: Point) => {
+    if (transformationMatrix === null) return EMPTY_POINT;
+    return transformPoint(transformationMatrix, point);
   };
 
-  /* Handle imageInfo ------------------------------------------------------*/
+  /* Handle imageInfo --------------------------------------------------------------------------- */
 
   /**
    * Set the current map to the custom image. This will clear the current map
@@ -90,8 +98,7 @@ function useCustomMapStore() {
     setImageInfo({ url, width, height });
   };
 
-
-  /* Handle markers --------------------------------------------------------*/
+  /* Handle markers ----------------------------------------------------------------------------- */
 
   /**
    * Add a marker to the current custom map. The marker will initially be set
@@ -157,8 +164,10 @@ function useCustomMapStore() {
 
   return {
     reset,
+    // coordinates
     center,
-    translateArkheimPoint,
+    transformationMatrix,
+    intendedToDisplay,
     // imageInfo
     imageInfo,
     setImage,

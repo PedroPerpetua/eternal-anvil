@@ -1,6 +1,6 @@
 import { TextField, Typography } from '@mui/material';
-import './SpeedInput.scss';
 
+import './SpeedInput.scss';
 
 type SpeedInputProps = {
   label: string;

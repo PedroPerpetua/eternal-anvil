@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import { useMap } from 'react-leaflet';
 import { latLngBounds } from 'leaflet';
-import { Point } from '../../types';
+import { useMap } from 'react-leaflet';
 
+import { Point } from '../../../utils/types';
 
 type MapControllerProps = {
   center: Point;
   maxBounds: [Point, Point];
 };
-
 
 function MapController({ center, maxBounds }: MapControllerProps) {
   const map = useMap();
@@ -16,7 +15,6 @@ function MapController({ center, maxBounds }: MapControllerProps) {
   useEffect(() => {
     map.setView(center, 0);
   }, [center, map]);
-
 
   useEffect(() => {
     const bounds = latLngBounds(maxBounds);

@@ -1,15 +1,14 @@
 import { useRef } from 'react';
-import { Marker as MarkerComponent, Popup } from 'react-leaflet';
-import { Marker as LeafletMarker } from 'leaflet';
 import { Box, Button } from '@mui/material';
-import CoordinateInput from '../coordinate-input/CoordinateInput';
-import useMapImageInputStore from '../../hooks/useCustomMapStore';
+import { Marker as LeafletMarker } from 'leaflet';
+import { Marker as MarkerComponent, Popup } from 'react-leaflet';
 
+import useMapImageInputStore from '../../../hooks/useCustomMapStore';
+import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
 
 type MarkerProps = {
   markerId: string
 };
-
 
 function Marker({ markerId }: MarkerProps) {
   const {

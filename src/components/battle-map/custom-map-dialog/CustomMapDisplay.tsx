@@ -1,31 +1,24 @@
-import {
-  ImageOverlay, MapContainer, Marker as LeafletMarker,
-} from 'react-leaflet';
-import { CRS, latLngBounds, Icon } from 'leaflet';
-import useCustomMapStore from '../../hooks/useCustomMapStore';
+import { CRS, latLngBounds } from 'leaflet';
+import { ImageOverlay, MapContainer, Marker as LeafletMarker } from 'react-leaflet';
+
 import MapController from './MapController';
-import { Point } from '../../types';
 import Marker from './Marker';
+import useCustomMapStore from '../../../hooks/useCustomMapStore';
+import { Point, LeafletColors } from '../../../utils/types';
+import { coloredMarker } from '../../../utils/utilities';
 
-import PinIcon from '../../assets/pin.svg';
-
-
-const LeafletPinIcon = new Icon({
-  iconUrl: PinIcon,
-});
-
+const LeafletPinIcon = coloredMarker(LeafletColors.GOLD);
 
 type CustomMapDisplayProps = {
   testPoint: Point
 };
 
-
 function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
   const {
-    center, markers, imageInfo, translateArkheimPoint,
+    center, markers, imageInfo, intendedToDisplay,
   } = useCustomMapStore();
 
-  const testPointCoordinates = translateArkheimPoint(testPoint);
+  const testPointCoordinates = intendedToDisplay(testPoint);
   if (!imageInfo) {
     return (
       <div>No map loaded</div>

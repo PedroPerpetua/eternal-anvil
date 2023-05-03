@@ -1,7 +1,8 @@
-import { DistancePenaltyMap } from './types';
-
+import { DistancePenaltyMap, Point } from './types';
 
 export const INFINITE_CHAR = '∞';
+
+export const EMPTY_POINT: Point = [Infinity, Infinity];
 
 export const DISTANCE_PENALTIES: DistancePenaltyMap = {
   JOIN_FORT_RELIC: {

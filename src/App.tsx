@@ -1,8 +1,8 @@
 import { RecoilRoot } from 'recoil';
-import TravelWidget
-  from './components/travel-simulator-widget/TravelSimulatorWidget';
-import CustomMapDialog from './components/custom-map-dialog/CustomMapDialog';
 
+import CustomMapDialog from './components/battle-map/custom-map-dialog/CustomMapDialog';
+import TravelWidget
+  from './components/travel-simulator/travel-simulator-widget/TravelSimulatorWidget';
 
 function App() {
   return (
