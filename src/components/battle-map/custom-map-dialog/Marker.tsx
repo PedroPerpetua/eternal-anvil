@@ -13,8 +13,8 @@ type MarkerProps = {
 function Marker({ markerId }: MarkerProps) {
   const {
     getMarker,
-    setMarkerDisplayPosition,
-    setMarkerIntendedPosition,
+    setMarkerDisplayCoordinates,
+    setMarkerIntendedCoordinates,
     removeMarker,
   } = useMapImageInputStore();
 
@@ -25,7 +25,7 @@ function Marker({ markerId }: MarkerProps) {
     const currentMarker = markerRef.current;
     if (!currentMarker) return;
     const endPosition = currentMarker.getLatLng();
-    setMarkerDisplayPosition(markerId, [endPosition.lat, endPosition.lng]);
+    setMarkerDisplayCoordinates(markerId, [endPosition.lat, endPosition.lng]);
   };
 
   if (!marker) {
@@ -44,7 +44,7 @@ function Marker({ markerId }: MarkerProps) {
           <CoordinateInput
             label="In Game position"
             value={marker.intendedCoordinates}
-            setValue={(point) => setMarkerIntendedPosition(markerId, point)}
+            setValue={(point) => setMarkerIntendedCoordinates(markerId, point)}
           />
           <Button onClick={() => removeMarker(markerId)}>
             Remove Marker

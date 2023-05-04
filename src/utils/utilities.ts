@@ -1,7 +1,7 @@
 import { Icon as LeafletIcon } from 'leaflet';
 
 import { INFINITE_CHAR } from './constants';
-import { LeafletColors } from './types';
+import { Colors } from './types';
 
 /**
  * Format a time in seconds into a more human readable string.
@@ -57,7 +57,7 @@ export function readImageFromURL(url: string) {
   });
 }
 
-export function coloredMarker(color: LeafletColors, large = false) {
+export function coloredMarker(color: Colors, large = false) {
   const query = `marker-icon${large ? '-2x' : ''}-${color.valueOf()}.png`;
   return new LeafletIcon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/${query}`,

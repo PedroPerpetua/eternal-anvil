@@ -4,10 +4,10 @@ import { ImageOverlay, MapContainer, Marker as LeafletMarker } from 'react-leafl
 import MapController from './MapController';
 import Marker from './Marker';
 import useCustomMapStore from '../../../hooks/useCustomMapStore';
-import { Point, LeafletColors } from '../../../utils/types';
+import { Point, Colors } from '../../../utils/types';
 import { coloredMarker } from '../../../utils/utilities';
 
-const LeafletPinIcon = coloredMarker(LeafletColors.GOLD);
+const LeafletPinIcon = coloredMarker(Colors.GOLD);
 
 type CustomMapDisplayProps = {
   testPoint: Point

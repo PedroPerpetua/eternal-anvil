@@ -27,7 +27,7 @@ export type DistancePenaltyMap = {
   [key: string]: DistancePenalty;
 };
 
-export enum LeafletColors {
+export enum Colors {
   BLUE = 'blue',
   GOLD = 'gold',
   RED = 'red',

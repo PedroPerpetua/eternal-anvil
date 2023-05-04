@@ -37,21 +37,20 @@ const customMapStore_markers = atom<Map<string, InputMarker>>({
  *
  * `display` coordinates, points, etc refer to the coordinates in the Leaflet grid when displaying
  * the map.
- * @returns Functions and constants that allow interacting with the global
- * state.
+ * @returns Functions and constants that allow interacting with the global state.
  */
 function useCustomMapStore() {
   const [imageInfo, setImageInfo] = useRecoilState(customMapStore_imageInfo);
-  const imageInfoReset = useResetRecoilState(customMapStore_imageInfo);
+  const resetImageInfo = useResetRecoilState(customMapStore_imageInfo);
   const [markers, setMarkers] = useRecoilState(customMapStore_markers);
-  const markersReset = useResetRecoilState(customMapStore_markers);
+  const resetMarkers = useResetRecoilState(customMapStore_markers);
 
   /**
    * Reset the entire store state to it's defaults.
    */
   const reset = () => {
-    imageInfoReset();
-    markersReset();
+    resetImageInfo();
+    resetMarkers();
   };
 
   /* Handle coordinates ------------------------------------------------------------------------- */
@@ -91,7 +90,7 @@ function useCustomMapStore() {
    * @param file The file to set the image to.
    */
   const setImage = async (file?: File) => {
-    markersReset();
+    resetMarkers();
     if (!file) return;
     const url = await readFileAsURL(file);
     const { width, height } = await readImageFromURL(url);
@@ -106,59 +105,59 @@ function useCustomMapStore() {
    */
   const addMarker = () => {
     if (!imageInfo) return;
-    // Add it to the center of the map
-    const newId = crypto.randomUUID();
+    if (markers.size >= 3) return;
     const newMarkers = new Map(markers);
-    newMarkers.set(
-      newId,
-      {
-        displayCoordinates: center,
-        intendedCoordinates: [Infinity, Infinity],
-      },
-    );
+    const newId = crypto.randomUUID();
+    // Add it to the center of the map
+    newMarkers.set(newId, { displayCoordinates: center, intendedCoordinates: EMPTY_POINT });
     setMarkers(newMarkers);
   };
 
   /**
    * Getter method to get the exact marker from the store, by id.
-   * @param id The id of the marker we want.
+   * @param markerId The id of the marker we want.
    * @returns The marker with the given id.
    */
-  const getMarker = (id: string) => markers.get(id);
+  const getMarker = (markerId: string) => markers.get(markerId);
+
+  /**
+   * Auxiliary function to modify a marker with new partial data.
+   * @param markerId The id of the marker we want.
+   * @param newData A partial marker with the new information to be modified
+  */
+  const modifyMarker = (markerId: string, newData: Partial<InputMarker>) => {
+    const originalMarker = markers.get(markerId);
+    if (!originalMarker) return;
+    const newMarkers = new Map(markers);
+    newMarkers.set(markerId, { ...originalMarker, ...newData });
+    setMarkers(newMarkers);
+  };
 
   /**
    * Set a marker's display position (position in the Leaflet map).
-   * @param id The marker's id.
-   * @param position The new position.
+   * @param markerId The marker's id.
+   * @param newCoordinates The new position.
    */
-  const setMarkerDisplayPosition = (id: string, position: Point) => {
-    const originalMarker = markers.get(id);
-    if (!originalMarker) return;
-    const newMarkers = new Map(markers);
-    newMarkers.set(id, { ...originalMarker, displayCoordinates: position });
-    setMarkers(newMarkers);
+  const setMarkerDisplayCoordinates = (markerId: string, newCoordinates: Point) => {
+    modifyMarker(markerId, { displayCoordinates: newCoordinates });
   };
 
   /**
    * Set a marker's intended position (position in game).
-   * @param id The marker's id.
-   * @param position The new position.
+   * @param markerId The marker's id.
+   * @param newCoordinates The new position.
    */
-  const setMarkerIntendedPosition = (id: string, position: Point) => {
-    const originalMarker = markers.get(id);
-    if (!originalMarker) return;
-    const newMarkers = new Map(markers);
-    newMarkers.set(id, { ...originalMarker, intendedCoordinates: position });
-    setMarkers(newMarkers);
+  const setMarkerIntendedCoordinates = (markerId: string, newCoordinates: Point) => {
+    modifyMarker(markerId, { intendedCoordinates: newCoordinates });
   };
 
   /**
    * Remove an existing marker.
-   * @param id The marker's id.
+   * @param markerId The marker's id.
    */
-  const removeMarker = (id: string) => {
+  const removeMarker = (markerId: string) => {
     const newMarkers = new Map(markers);
-    newMarkers.delete(id);
+    newMarkers.delete(markerId);
     setMarkers(newMarkers);
   };
 
@@ -175,8 +174,8 @@ function useCustomMapStore() {
     markers,
     addMarker,
     getMarker,
-    setMarkerDisplayPosition,
-    setMarkerIntendedPosition,
+    setMarkerDisplayCoordinates,
+    setMarkerIntendedCoordinates,
     removeMarker,
   };
 }
