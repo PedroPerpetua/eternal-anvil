@@ -27,14 +27,7 @@ export type DistancePenaltyMap = {
   [key: string]: DistancePenalty;
 };
 
-export enum Colors {
-  BLUE = 'blue',
-  GOLD = 'gold',
-  RED = 'red',
-  GREEN = 'green',
-  ORANGE = 'orange',
-  YELLOW = 'yellow',
-  VIOLET = 'violet',
-  GRAY = 'grey',
-  BLACK = 'black,',
-}
+/**
+ * Hex color code for CSS purposes.
+ */
+export type HexColor = `#${string}`;

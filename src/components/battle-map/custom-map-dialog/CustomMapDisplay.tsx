@@ -1,16 +1,14 @@
 import { useEffect } from 'react';
 import { CRS, LatLngBounds, latLngBounds } from 'leaflet';
-import { MapContainer, Marker as LeafletMarker, useMap } from 'react-leaflet';
+import { MapContainer, Marker, useMap } from 'react-leaflet';
 
-import Marker from './Marker';
+import ReferenceMarker from './ReferenceMarker';
+import TargetIcon from './TargetIcon';
 import useCustomMapStore from '../../../hooks/useCustomMapStore';
 import { EMPTY_POINT } from '../../../utils/constants';
 import { transformPoint } from '../../../utils/math';
-import { Point, Colors } from '../../../utils/types';
-import { coloredMarker } from '../../../utils/utilities';
+import { Point } from '../../../utils/types';
 import ImageMapLayer from '../../common/image-map-layer/ImageMapLayer';
-
-const LeafletPinIcon = coloredMarker(Colors.GOLD);
 
 type CustomMapDisplayProps = {
   testPoint: Point
@@ -52,16 +50,16 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
       <ImageMapLayer image={customImageMapInfo} />
       {
         [...referenceMarkers.values()].map(
-          (marker) => (<Marker key={marker.id} marker={marker} />),
+          (marker) => (<ReferenceMarker key={marker.id} referenceMarker={marker} />),
         )
       }
       {
           Number.isFinite(testPointCoordinates[0])
           && Number.isFinite(testPointCoordinates[1])
           && (
-          <LeafletMarker
+          <Marker
             position={testPointCoordinates}
-            icon={LeafletPinIcon}
+            icon={TargetIcon}
           />
           )
       }

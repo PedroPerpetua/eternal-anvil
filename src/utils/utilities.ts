@@ -1,7 +1,4 @@
-import { Icon as LeafletIcon } from 'leaflet';
-
 import { INFINITE_CHAR } from './constants';
-import { Colors } from './types';
 
 export function generateId() {
   return crypto.randomUUID();
@@ -58,17 +55,5 @@ export function readImageFromURL(url: string) {
     image.onload = () => resolve(image);
     image.onerror = reject;
     image.src = url;
-  });
-}
-
-export function coloredMarker(color: Colors, large = false) {
-  const query = `marker-icon${large ? '-2x' : ''}-${color.valueOf()}.png`;
-  return new LeafletIcon({
-    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/${query}`,
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
   });
 }
