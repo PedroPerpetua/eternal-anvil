@@ -15,19 +15,28 @@ import './CustomMapDialog.scss';
 function CustomMapDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const {
-    setImage, addMarker, imageInfo, reset,
+    customImageMapInfo,
+    setCustomImageMapInfo,
+    createReferenceMarker,
+    reset,
+    computeTransformationMatrix,
   } = useCustomMapStore();
 
   const [testCoordinate, setTestCoordinate] = useState<Point>(EMPTY_POINT);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImage(e.target.files?.[0]);
+    setCustomImageMapInfo(e.target.files?.[0]);
   };
 
-  const handleSave = () => { /* TODO: IMPLEMENT ME */ };
+  const handleSave = () => {
+    if (customImageMapInfo === null) return;
+    if (computeTransformationMatrix() === null) return;
+    // setMapInfo({ customImageMapInfo, transformationMatrix });
+    setIsOpen(false);
+  };
 
   let content = null;
-  if (imageInfo === null) {
+  if (customImageMapInfo === null) {
     content = (
       <Button
         startIcon={<FileUploadIcon />}
@@ -69,7 +78,7 @@ function CustomMapDialog() {
             <Grid item xs={6}>
               <Button
                 variant="contained"
-                onClick={addMarker}
+                onClick={createReferenceMarker}
               >
                 Add marker
               </Button>

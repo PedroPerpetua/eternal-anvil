@@ -1,11 +1,14 @@
-import { CRS, latLngBounds } from 'leaflet';
-import { ImageOverlay, MapContainer, Marker as LeafletMarker } from 'react-leaflet';
+import { useEffect } from 'react';
+import { CRS, LatLngBounds, latLngBounds } from 'leaflet';
+import { MapContainer, Marker as LeafletMarker, useMap } from 'react-leaflet';
 
-import MapController from './MapController';
 import Marker from './Marker';
 import useCustomMapStore from '../../../hooks/useCustomMapStore';
+import { EMPTY_POINT } from '../../../utils/constants';
+import { transformPoint } from '../../../utils/math';
 import { Point, Colors } from '../../../utils/types';
 import { coloredMarker } from '../../../utils/utilities';
+import ImageMapLayer from '../../common/image-map-layer/ImageMapLayer';
 
 const LeafletPinIcon = coloredMarker(Colors.GOLD);
 
@@ -14,18 +17,28 @@ type CustomMapDisplayProps = {
 };
 
 function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
-  const {
-    center, markers, imageInfo, intendedToDisplay,
-  } = useCustomMapStore();
+  const { referenceMarkers, customImageMapInfo, computeTransformationMatrix } = useCustomMapStore();
 
-  const testPointCoordinates = intendedToDisplay(testPoint);
-  if (!imageInfo) {
+  if (customImageMapInfo === null) {
     return (
       <div>No map loaded</div>
     );
   }
 
-  const bounds: [Point, Point] = [[0, 0], [imageInfo.height, imageInfo.width]];
+  const transformationMatrix = computeTransformationMatrix();
+  const testPointCoordinates = transformationMatrix === null
+    ? EMPTY_POINT
+    : transformPoint(transformationMatrix, testPoint);
+  const bounds = latLngBounds([[0, 0], [customImageMapInfo.height, customImageMapInfo.width]]);
+
+  // Auxiliary component to handle the maxBounds on image change
+  function MaxBoundsController({ maxBounds }: { maxBounds: LatLngBounds }) {
+    const map = useMap();
+    useEffect(() => {
+      map.setMaxBounds(maxBounds);
+    }, [map, maxBounds]);
+    return null;
+  }
 
   return (
     <MapContainer
@@ -35,12 +48,12 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
       zoomSnap={0.1}
       maxBoundsViscosity={1}
     >
-      <MapController center={center} maxBounds={bounds} />
-      <ImageOverlay url={imageInfo.url} bounds={latLngBounds(bounds)} />
+      <MaxBoundsController maxBounds={bounds} />
+      <ImageMapLayer image={customImageMapInfo} />
       {
-        [...markers.keys()].map((id) => (
-          <Marker key={id} markerId={id} />
-        ))
+        [...referenceMarkers.values()].map(
+          (marker) => (<Marker key={marker.id} marker={marker} />),
+        )
       }
       {
           Number.isFinite(testPointCoordinates[0])

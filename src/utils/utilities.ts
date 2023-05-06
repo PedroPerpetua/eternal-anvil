@@ -3,6 +3,10 @@ import { Icon as LeafletIcon } from 'leaflet';
 import { INFINITE_CHAR } from './constants';
 import { Colors } from './types';
 
+export function generateId() {
+  return crypto.randomUUID();
+}
+
 /**
  * Format a time in seconds into a more human readable string.
  * @param seconds The time in seconds to format.
