@@ -1,6 +1,11 @@
 import { INFINITE_CHAR } from './constants';
+import { Id } from './types';
 
-export function generateId() {
+/**
+ * Shortcut function to generate a random unique universal identifier.
+ * @returns A random uuid4
+ */
+export function generateId(): Id {
   return crypto.randomUUID();
 }
 

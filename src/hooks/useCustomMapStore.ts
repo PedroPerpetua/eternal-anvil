@@ -2,10 +2,11 @@ import { useCallback } from 'react';
 import { atom, useRecoilState, useResetRecoilState } from 'recoil';
 import { useDeepCompareMemoize } from 'use-deep-compare-effect';
 
+import useRecoilDB from './useRecoilDB';
 import { EMPTY_POINT } from '../utils/constants';
 import { computeAffineMatrix } from '../utils/math';
-import { Point, Triangle } from '../utils/types';
-import { generateId, readFileAsURL, readImageFromURL } from '../utils/utilities';
+import { Id, Point, Triangle } from '../utils/types';
+import { readFileAsURL, readImageFromURL } from '../utils/utilities';
 
 export type CustomImageMapInfo = {
   url: string,
@@ -26,34 +27,26 @@ const customMapStore_imageInfo = atom<CustomImageMapInfo | null>({
  * coordinates that the point should map to.
  */
 export type ReferenceMarker = {
-  readonly id: string,
+  readonly id: Id,
   displayCoordinates: Point,
   intendedCoordinates: Point
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const customMapStore_referenceMarkers = atom<Map<string, ReferenceMarker>>({
+const customMapStore_referenceMarkers = atom({
   key: 'customMapStore_referenceMarkers',
-  default: new Map<string, ReferenceMarker>(),
+  default: new Map<Id, ReferenceMarker>(),
 });
 
 /**
  * Store to handle everything related to using a custom map for the battle-planner.
- *
- * This store handles the transformation of coordinates from the game to the used image.
- *
- * `intended` coordinates, points, etc refer to the "real" coordinates of objects inside Arkheim.
- *
- * `display` coordinates, points, etc refer to the coordinates in the Leaflet grid when displaying
- * the map.
- * @returns Functions and constants that allow interacting with the global state.
+ * @returns Functions and constants that allow interacting with the store.
  */
 function useCustomMapStore() {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const [customImageMapInfo, _setCustomImageMapInfo] = useRecoilState(customMapStore_imageInfo);
   const resetImageInfo = useResetRecoilState(customMapStore_imageInfo);
-  const [referenceMarkers, setReferenceMarkers] = useRecoilState(customMapStore_referenceMarkers);
-  const resetMarkers = useResetRecoilState(customMapStore_referenceMarkers);
+  const referenceMarkersDB = useRecoilDB(customMapStore_referenceMarkers);
 
   /* Handle customImageMapInfo ----------------------------------------------------------------- */
 
@@ -63,7 +56,7 @@ function useCustomMapStore() {
    * @returns An object with all the information needed from the image.
    */
   const setCustomImageMapInfo = async (file?: File) => {
-    resetMarkers();
+    referenceMarkersDB.resetDB();
     if (!file) return;
     const url = await readFileAsURL(file);
     const { width, height } = await readImageFromURL(url);
@@ -77,51 +70,40 @@ function useCustomMapStore() {
   /**
    * Auxiliary constant to check if we have the required number of markers placed or not.
    */
-  const allMarkersPlaced = referenceMarkers.size >= 3;
+  const allMarkersPlaced = referenceMarkersDB.count() >= 3;
+
+  /**
+   * Retrieve a single referenceMarker, by id.
+   * @param id The referenceMarker's id.
+   * @returns The referenceMarker's object from the store.
+   */
+  const getReferenceMarker = (id: Id) => referenceMarkersDB.getItem(id);
 
   /**
    * Create a new referenceMarker in the center of the display.
-   * @returns The id of the created marker, or null if none were created.
    */
   const createReferenceMarker = () => {
-    if (customImageMapInfo === null) return null;
-    if (allMarkersPlaced) return null;
-    const id = generateId();
-    const marker: ReferenceMarker = {
-      id,
-      displayCoordinates: customImageMapInfo.center,
-      intendedCoordinates: EMPTY_POINT,
-    };
-    // Modify state
-    const newReferenceMarkers = new Map(referenceMarkers);
-    newReferenceMarkers.set(id, marker);
-    setReferenceMarkers(newReferenceMarkers);
-    return id;
+    if (customImageMapInfo === null) return;
+    referenceMarkersDB.createItem(
+      { displayCoordinates: customImageMapInfo.center, intendedCoordinates: EMPTY_POINT },
+    );
   };
 
   /**
-   * Modify an existing marker, by id.
+   * Modify an existing referenceMarker, by id.
    * @param id The marker's id.
    * @param newData Partial ReferenceMarker data to override in the original marker.
    */
-  const modifyReferenceMarker = (id: string, newData: Partial<ReferenceMarker>) => {
-    const marker = referenceMarkers.get(id);
-    if (marker === undefined) return;
-    // Modify state
-    const newReferenceMarkers = new Map(referenceMarkers);
-    newReferenceMarkers.set(id, { ...marker, ...newData });
-    setReferenceMarkers(newReferenceMarkers);
+  const modifyReferenceMarker = (id: Id, newData: Partial<ReferenceMarker>) => {
+    referenceMarkersDB.modifyItem(id, newData);
   };
 
   /**
-   * Delete a marker, by id.
+   * Delete a referenceMarker, by id.
    * @param id The marker's id.
    */
-  const deleteReferenceMarker = (id: string) => {
-    // Modify state
-    const newReferenceMarkers = new Map(referenceMarkers);
-    newReferenceMarkers.delete(id);
-    setReferenceMarkers(newReferenceMarkers);
+  const deleteReferenceMarker = (id: Id) => {
+    referenceMarkersDB.deleteItem(id);
   };
 
   /* Auxiliary --------------------------------------------------------------------------------- */
@@ -131,13 +113,17 @@ function useCustomMapStore() {
    */
   const reset = () => {
     resetImageInfo();
-    resetMarkers();
+    referenceMarkersDB.resetDB();
   };
 
+  /**
+   * Inner function to be memoized.
+   * @returns The calculated affine matrix.
+   */
   // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
   const _computeTransformationMatrix = () => {
     if (!allMarkersPlaced) return null;
-    const [intendedTriangle, displayTriangle] = [...referenceMarkers.values()].reduce(
+    const [intendedTriangle, displayTriangle] = referenceMarkersDB.asArray().reduce(
       ([intendedTriangleArray, displayTriangleArray], currentMarker) => {
         intendedTriangleArray.push(currentMarker.intendedCoordinates);
         displayTriangleArray.push(currentMarker.displayCoordinates);
@@ -160,7 +146,7 @@ function useCustomMapStore() {
   const computeTransformationMatrix = useCallback(
     _computeTransformationMatrix,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useDeepCompareMemoize([referenceMarkers]),
+    useDeepCompareMemoize([referenceMarkersDB.items]),
   );
 
   return {
@@ -168,8 +154,9 @@ function useCustomMapStore() {
     customImageMapInfo,
     setCustomImageMapInfo,
     // referenceMarkers
-    referenceMarkers,
+    referenceMarkers: referenceMarkersDB.asArray(),
     allMarkersPlaced,
+    getReferenceMarker,
     createReferenceMarker,
     modifyReferenceMarker,
     deleteReferenceMarker,

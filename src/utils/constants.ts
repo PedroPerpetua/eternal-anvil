@@ -31,3 +31,11 @@ export const DISTANCE_PENALTIES: DistancePenaltyMap = {
     penalty: 20,
   },
 };
+
+export enum Structure {
+  ARK = 'Ark',
+  TOWER = 'Tower',
+  PORTAL = 'Portal',
+  RELIC = 'Relic',
+  GOBLIN_FORT = 'Goblin Fort',
+}
