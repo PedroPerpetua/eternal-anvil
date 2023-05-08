@@ -9,7 +9,9 @@ import { Id, Point } from '../../../utils/types';
 import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
 
 function AddStructure() {
-  const { createStructure, teams } = useBattleMapStore();
+  const {
+    createStructure, teams, edgesController, toggleSelectionMode,
+  } = useBattleMapStore();
   const initialTeamId = teams?.[0].id ?? null;
   const [teamId, setTeamId] = useState<Id | null>(initialTeamId);
   const initialStructure = Structure.TOWER;
@@ -20,6 +22,11 @@ function AddStructure() {
     if (teamId == null) return;
     createStructure(teamId, structureType, coordinate);
   };
+
+  const handleSelection = () => {
+    toggleSelectionMode();
+  };
+
   return (
     <Card style={{ backgroundColor: '#8B572A', display: 'inline-block' }}>
       <CardContent>
@@ -39,6 +46,11 @@ function AddStructure() {
       </CardContent>
       <CardActions>
         <Button onClick={handleSubmit}>Add Structure</Button>
+        <Button onClick={handleSelection}>
+          Create Edge
+          { ' ' }
+          { edgesController.selectionMode ? 'ACTIVE' : 'INACTIVE' }
+        </Button>
       </CardActions>
     </Card>
   );

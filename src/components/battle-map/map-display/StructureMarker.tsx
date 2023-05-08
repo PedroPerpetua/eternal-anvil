@@ -2,9 +2,9 @@ import { Icon } from 'leaflet';
 import { Marker } from 'react-leaflet';
 
 import TowerIcon from '../../../assets/tower-icon.png';
+import useBattleMapStore, { StructureInfo } from '../../../hooks/useBattleMapStore';
 import useRefMarkerColor from '../../../hooks/useRefMarkerColor';
 import { Structure } from '../../../utils/constants';
-import { HexColor, Point } from '../../../utils/types';
 import TargetIcon from '../custom-map-dialog/TargetIcon';
 
 import './MapDisplay.scss';
@@ -15,18 +15,17 @@ const LeafletTowerIcon = new Icon({
 });
 
 type StructureMarkerProps = {
-  type: Structure,
-  color: HexColor,
-  displayCoordinate: Point
+  structure: StructureInfo
 };
 
-function StructureMarker({ type, color, displayCoordinate }: StructureMarkerProps) {
+function StructureMarker({ structure }: StructureMarkerProps) {
+  const { intendedToDisplay, selectStructureForEdge, getTeam } = useBattleMapStore();
   // Setting the filter over the marker
-  const markerRef = useRefMarkerColor(color);
+  const markerRef = useRefMarkerColor(getTeam(structure.team)?.color ?? '#fff');
 
   let markerIcon: Icon;
 
-  switch (type) {
+  switch (structure.type) {
     case Structure.TOWER:
       markerIcon = LeafletTowerIcon;
       break;
@@ -39,7 +38,10 @@ function StructureMarker({ type, color, displayCoordinate }: StructureMarkerProp
     <Marker
       ref={markerRef}
       icon={markerIcon}
-      position={displayCoordinate}
+      position={intendedToDisplay(structure.coordinates)}
+      eventHandlers={{
+        click: () => selectStructureForEdge(structure.id),
+      }}
     />
   );
 }

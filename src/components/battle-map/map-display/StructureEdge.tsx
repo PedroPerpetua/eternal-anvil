@@ -14,7 +14,7 @@ type StructureEdgeProps = {
 
 function StructureEdge({ edge }: StructureEdgeProps) {
   const {
-    getStructure, intendedToDisplay, hideEdge, getTeam,
+    getStructure, intendedToDisplay, getTeam, deleteEdge,
   } = useBattleMapStore();
   const [hovering, setHovering] = useState(false);
   const structure1 = getStructure(edge[0]);
@@ -37,7 +37,7 @@ function StructureEdge({ edge }: StructureEdgeProps) {
   }
 
   const eventHandlers = {
-    click: () => hideEdge(edge),
+    click: () => deleteEdge(edge),
     mouseover: () => setHovering(true),
     mouseout: () => setHovering(false),
   };

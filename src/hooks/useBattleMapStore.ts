@@ -67,10 +67,20 @@ const battleMapStore_structures = atom<Map<Id, StructureInfo>>({
 
 export type Edge = [Id, Id];
 
+export type EdgeController = {
+  selectionMode: boolean,
+  selectedStructure: Id | null,
+  edges: Array<Edge>,
+};
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const battleMapStore_hiddenEdges = atom<Array<Edge>>({
-  key: 'battleMapStore_hiddenEdges',
-  default: [],
+const battleMapStore_edgeController = atom<EdgeController>({
+  key: 'battleMapStore_edgeController',
+  default: {
+    selectionMode: false,
+    selectedStructure: null,
+    edges: [],
+  },
 });
 
 function useBattleMapStore() {
@@ -78,14 +88,14 @@ function useBattleMapStore() {
   const resetMapInfo = useResetRecoilState(battleMapStore_mapInfo);
   const teamsDB = useRecoilDB(battleMapStore_teams);
   const structuresDB = useRecoilDB(battleMapStore_structures);
-  const [hiddenEdges, setHiddenEdges] = useRecoilState(battleMapStore_hiddenEdges);
-  const resetEdges = useResetRecoilState(battleMapStore_hiddenEdges);
+  const [edgesController, setEdgesController] = useRecoilState(battleMapStore_edgeController);
+  const resetEdgesController = useResetRecoilState(battleMapStore_edgeController);
 
   const reset = () => {
     resetMapInfo();
     teamsDB.resetDB();
     structuresDB.resetDB();
-    resetEdges();
+    resetEdgesController();
   };
 
   const intendedToDisplay = (point: Point) => transformPoint(mapInfo.transformationMatrix, point);
@@ -96,33 +106,43 @@ function useBattleMapStore() {
     edge1.every((structure) => edge2.includes(structure))
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
-  const _getEdges = (all = false) => {
-    // https://stackoverflow.com/a/22566654/13525157
-    const structures = structuresDB.asArray();
-    const pairs = structures.map(
-      (struct1, i) => structures.slice(i + 1).map((struct2) => [struct1.id, struct2.id] as Edge),
-    ).flat();
-    if (all) return pairs;
-    return pairs.filter((edge) => !hiddenEdges.some((hidden) => compareEdges(hidden, edge)));
+  const toggleSelectionMode = () => {
+    setEdgesController({ ...edgesController, selectionMode: !edgesController.selectionMode });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getEdges = useCallback(_getEdges, [structuresDB.count(), hiddenEdges.length]);
-
-  const hideEdge = (edge: Edge) => {
-    const inHiddenEdges = hiddenEdges.findIndex((hiddenEdge) => compareEdges(hiddenEdge, edge));
-    if (inHiddenEdges === -1) setHiddenEdges([...hiddenEdges, edge]);
+  const selectStructureForEdge = (structureId: Id) => {
+    if (!edgesController.selectionMode) return;
+    if (structuresDB.getItem(structureId) === null) {
+      // Submitted id is invalid.
+      return;
+    }
+    if (
+      edgesController.selectedStructure === null
+      || structuresDB.getItem(edgesController.selectedStructure) === null
+    ) {
+      // No valid currently selected edge
+      setEdgesController({ ...edgesController, selectedStructure: structureId });
+      return;
+    }
+    const newEdge = [edgesController.selectedStructure, structureId] as [Id, Id];
+    if (edgesController.edges.some((edge) => compareEdges(edge, newEdge))) {
+      // Edge already exists
+      setEdgesController({ ...edgesController, selectedStructure: null, selectionMode: false });
+      return;
+    }
+    setEdgesController({
+      selectionMode: false, selectedStructure: null, edges: [...edgesController.edges, newEdge],
+    });
   };
 
-  const unhideEdge = (edge: Edge) => {
-    const newEdges = [...hiddenEdges].filter((hiddenEdge) => !compareEdges(hiddenEdge, edge));
-    setHiddenEdges(newEdges);
+  const deleteEdge = (edge: Edge) => {
+    const newEdges = [...edgesController.edges].filter((e) => !compareEdges(e, edge));
+    setEdgesController({ ...edgesController, edges: newEdges });
   };
 
   const removeAllEdgesFromStructure = (structureId: Id) => {
-    const newEdges = [...hiddenEdges].filter((hiddenEdge) => !hiddenEdge.includes(structureId));
-    setHiddenEdges(newEdges);
+    const newEdges = [...edgesController.edges].filter((edge) => edge.includes(structureId));
+    setEdgesController({ ...edgesController, edges: newEdges });
   };
 
   // Handle teams ------------------------------------------------------------------------------- */
@@ -186,10 +206,10 @@ function useBattleMapStore() {
     modifyStructure,
     deleteStructure,
     // edges
-    getEdges,
-    hiddenEdges,
-    hideEdge,
-    unhideEdge,
+    edgesController,
+    toggleSelectionMode,
+    selectStructureForEdge,
+    deleteEdge,
   };
 }
 

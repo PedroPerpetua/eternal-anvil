@@ -3,15 +3,13 @@ import { MapContainer } from 'react-leaflet';
 
 import StructureEdge from './StructureEdge';
 import StructureMarker from './StructureMarker';
-import useBattleMapStore, { Edge } from '../../../hooks/useBattleMapStore';
+import useBattleMapStore from '../../../hooks/useBattleMapStore';
 import ImageMapLayer from '../../common/image-map-layer/ImageMapLayer';
 
 import './MapDisplay.scss';
 
 function MapDisplay() {
-  const {
-    mapInfo, structures, getTeam, intendedToDisplay, getEdges,
-  } = useBattleMapStore();
+  const { mapInfo, structures, edgesController } = useBattleMapStore();
 
   return (
     <MapContainer
@@ -25,15 +23,14 @@ function MapDisplay() {
       <ImageMapLayer image={mapInfo.imageMapInfo} />
       {
         structures.map((structure, i) => (
-          <StructureMarker
-            key={structure.id}
-            type={structure.type}
-            color={getTeam(structure.team)?.color ?? '#ffffff'}
-            displayCoordinate={intendedToDisplay(structure.coordinates)}
-          />
+          <StructureMarker key={structure.id} structure={structure} />
         ))
       }
-      { getEdges().map((edge) => (<StructureEdge edge={edge} key={edge[0] + edge[1]} />)) }
+      {
+        edgesController.edges.map((edge) => (
+          <StructureEdge edge={edge} key={edge[0] + edge[1]} />
+        ))
+      }
     </MapContainer>
   );
 }
