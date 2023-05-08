@@ -2,6 +2,10 @@ import { Matrix, applyToPoint, fromTriangles } from 'transformation-matrix';
 
 import { Point, Triangle } from './types';
 
+export function halfway(point1: Point, point2: Point) {
+  return [(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2] as Point;
+}
+
 /**
  * Calculate the distance between two points, with an optional extra distance to be added to the
  * result.

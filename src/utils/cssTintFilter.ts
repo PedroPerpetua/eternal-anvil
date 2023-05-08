@@ -1,16 +1,40 @@
 /* eslint-disable */
 // @ts-nocheck
-// Some complicated math here taken from https://stackoverflow.com/a/43960991/4767533
 import moize from 'moize';
 import { HexColor } from './types';
 
-function hexToRGB(colorHex: HexColor) {
+export function hexToRGB(colorHex: HexColor) {
   const convertRGB = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorHex);
   if (!convertRGB) return [0, 0, 0] as [number, number, number];
   convertRGB.shift()
   return convertRGB.map((v) => parseInt(v, 16)) as [number, number, number];
 }
 
+// https://stackoverflow.com/a/13532993/13525157
+function _shadeColor(color: HexColor, percent: number) {
+  let [red, green, blue] = hexToRGB(color);
+  red = parseInt(red * (100 + percent) / 100);
+  green = parseInt(green * (100 + percent) / 100);
+  blue = parseInt(blue * (100 + percent) / 100);
+
+  red = (red<255)?red:255;
+  green = (green<255)?green:255;
+  blue = (blue<255)?blue:255;
+
+  red = Math.round(red)
+  green = Math.round(green)
+  blue = Math.round(blue)
+
+  const redString = ((red.toString(16).length==1)?"0"+red.toString(16):red.toString(16));
+  const greenString = ((green.toString(16).length==1)?"0"+green.toString(16):green.toString(16));
+  const blueString = ((blue.toString(16).length==1)?"0"+blue.toString(16):blue.toString(16));
+
+  return `#${redString}${greenString}${blueString}`;
+}
+
+export const shadeColor = moize(_shadeColor);
+
+// Some complicated math here taken from https://stackoverflow.com/a/43960991/4767533
 class Color {
   constructor(r, g, b) {
     this.set(r, g, b);

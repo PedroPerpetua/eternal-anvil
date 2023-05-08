@@ -24,7 +24,9 @@ export type DistancePenalty = {
  * Represents an enum of all the distance penalties.
  */
 export type DistancePenaltyMap = {
-  [key: string]: DistancePenalty;
+  [
+  key in 'JOIN_FORT_RELIC' | 'GOBLIN_TOWER' | 'SUPPORT' | 'RAID' | 'CONQUER_DESTROY'
+  ]: DistancePenalty;
 };
 
 /**

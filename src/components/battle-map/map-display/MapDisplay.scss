@@ -1,0 +1,9 @@
+#map-display {
+  width: 50vw;
+  height: 50vh;
+  background-color: #9e8357;
+
+  .tower-icon {
+    filter: invert(27%) sepia(93%) saturate(5891%) hue-rotate(354deg) brightness(107%) contrast(95%);
+  }
+}

@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 
 import CustomMapDisplay from './CustomMapDisplay';
+import useBattleMapStore from '../../../hooks/useBattleMapStore';
 import useCustomMapStore from '../../../hooks/useCustomMapStore';
 import { EMPTY_POINT } from '../../../utils/constants';
 import { Point } from '../../../utils/types';
@@ -22,6 +23,8 @@ function CustomMapDialog() {
     computeTransformationMatrix,
   } = useCustomMapStore();
 
+  const { setMapInfo } = useBattleMapStore();
+
   const [testCoordinate, setTestCoordinate] = useState<Point>(EMPTY_POINT);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,8 +33,9 @@ function CustomMapDialog() {
 
   const handleSave = () => {
     if (customImageMapInfo === null) return;
-    if (computeTransformationMatrix() === null) return;
-    // setMapInfo({ customImageMapInfo, transformationMatrix });
+    const matrix = computeTransformationMatrix();
+    if (matrix === null) return;
+    setMapInfo({ imageMapInfo: customImageMapInfo, transformationMatrix: matrix });
     setIsOpen(false);
   };
 
