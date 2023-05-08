@@ -166,6 +166,9 @@ function useBattleMapStore() {
   const createStructure = (teamId: Id, structureType: Structure, coordinates: Point) => {
     const team = teamsDB.getItem(teamId);
     if (!team) return;
+    if (structuresDB.asArray().some(
+      (struct) => struct.coordinates.every((c, i) => c === coordinates[i]),
+    )) return;
     const structure = structuresDB.createItem({ type: structureType, coordinates, team: teamId });
     // Add the structure to the team
     modifyTeam(teamId, { structures: [...team.structures, structure.id] });

@@ -35,10 +35,6 @@ function AddStructure() {
           { teams.map((team) => (
             <MenuItem value={team.id} key={team.id} style={{ backgroundColor: team.color }}>
               { team.name }
-              { ' ' }
-              (
-              { team.id }
-              )
             </MenuItem>
           )) }
         </Select>
