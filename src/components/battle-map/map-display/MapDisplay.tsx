@@ -22,7 +22,7 @@ function MapDisplay() {
     >
       <ImageMapLayer image={mapInfo.imageMapInfo} />
       {
-        structures.map((structure, i) => (
+        structures.map((structure) => (
           <StructureMarker key={structure.id} structure={structure} />
         ))
       }

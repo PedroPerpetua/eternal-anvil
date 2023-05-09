@@ -1,12 +1,12 @@
-import { useCallback } from 'react';
 import { atom, useRecoilState, useResetRecoilState } from 'recoil';
 import { Matrix } from 'transformation-matrix';
 
 import { CustomImageMapInfo } from './useCustomMapStore';
 import useRecoilDB from './useRecoilDB';
-import { Structure } from '../utils/constants';
 import { computeAffineMatrix, transformPoint } from '../utils/math';
-import { Point, HexColor, Id } from '../utils/types';
+import {
+  StructureMap, Point, HexColor, Id,
+} from '../utils/types';
 import { generateId } from '../utils/utilities';
 
 export type MapInfo = {
@@ -54,7 +54,7 @@ const battleMapStore_teams = atom<Map<Id, TeamInfo>>({
 
 export type StructureInfo = {
   readonly id: Id,
-  type: Structure,
+  type: keyof StructureMap,
   coordinates: Point,
   team: Id
 };
@@ -163,7 +163,7 @@ function useBattleMapStore() {
   /* Handle structures -------------------------------------------------------------------------- */
   const getStructure = (id: Id) => structuresDB.getItem(id);
 
-  const createStructure = (teamId: Id, structureType: Structure, coordinates: Point) => {
+  const createStructure = (teamId: Id, structureType: keyof StructureMap, coordinates: Point) => {
     const team = teamsDB.getItem(teamId);
     if (!team) return;
     if (structuresDB.asArray().some(

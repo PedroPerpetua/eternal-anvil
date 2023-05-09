@@ -4,8 +4,8 @@ import {
 } from '@mui/material';
 
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
-import { EMPTY_POINT, Structure } from '../../../utils/constants';
-import { Id, Point } from '../../../utils/types';
+import { EMPTY_POINT, STRUCTURES } from '../../../utils/constants';
+import { Id, Point, StructureMap } from '../../../utils/types';
 import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
 
 function AddStructure() {
@@ -14,8 +14,8 @@ function AddStructure() {
   } = useBattleMapStore();
   const initialTeamId = teams?.[0].id ?? null;
   const [teamId, setTeamId] = useState<Id | null>(initialTeamId);
-  const initialStructure = Structure.TOWER;
-  const [structureType, setStructureType] = useState<Structure>(initialStructure);
+  const initialStructure: keyof StructureMap = 'TOWER';
+  const [structureType, setStructureType] = useState<keyof StructureMap>(initialStructure);
   const [coordinate, setCoordinate] = useState<Point>(EMPTY_POINT);
 
   const handleSubmit = () => {
@@ -37,6 +37,16 @@ function AddStructure() {
               { team.name }
             </MenuItem>
           )) }
+        </Select>
+        <Select
+          value={structureType}
+          onChange={(e) => setStructureType(e.target.value as keyof StructureMap)}
+        >
+          {
+            Object.entries(STRUCTURES).map(([key, structure]) => (
+              <MenuItem value={key} key={key}>{ structure.name }</MenuItem>
+            ))
+          }
         </Select>
         <CoordinateInput label="Position" value={coordinate} setValue={setCoordinate} />
       </CardContent>

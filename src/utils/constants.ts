@@ -1,4 +1,11 @@
-import { DistancePenaltyMap, Point } from './types';
+import { Icon } from 'leaflet';
+
+import { DistancePenaltyMap, Point, StructureMap } from './types';
+import ArkIcon from '../assets/ark-icon.png';
+import FortIcon from '../assets/fort-icon.png';
+import PortalIcon from '../assets/portal-icon.png';
+import RelicIcon from '../assets/relic-icon.png';
+import TowerIcon from '../assets/tower-icon.png';
 
 export const INFINITE_CHAR = '∞';
 
@@ -32,10 +39,25 @@ export const DISTANCE_PENALTIES: DistancePenaltyMap = {
   },
 };
 
-export enum Structure {
-  ARK = 'Ark',
-  TOWER = 'Tower',
-  PORTAL = 'Portal',
-  RELIC = 'Relic',
-  GOBLIN_FORT = 'Goblin Fort',
-}
+export const STRUCTURES: StructureMap = {
+  ARK: {
+    name: 'Ark',
+    icon: new Icon({ iconUrl: ArkIcon, iconSize: [52, 40] }),
+  },
+  TOWER: {
+    name: 'Tower',
+    icon: new Icon({ iconUrl: TowerIcon, iconSize: [40, 40] }),
+  },
+  PORTAL: {
+    name: 'Portal',
+    icon: new Icon({ iconUrl: PortalIcon, iconSize: [40, 40] }),
+  },
+  RELIC: {
+    name: 'Ancient Relic',
+    icon: new Icon({ iconUrl: RelicIcon, iconSize: [80, 80] }),
+  },
+  FORT: {
+    name: 'Goblin Fort',
+    icon: new Icon({ iconUrl: FortIcon, iconSize: [60, 89] }),
+  },
+};
