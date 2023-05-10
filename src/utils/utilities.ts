@@ -30,6 +30,26 @@ export function formatSeconds(seconds: number) {
 }
 
 /**
+ * Asynchronous wrapper around a FileReader's method.
+ * @parm file File to read.
+ * @returns The loaded content as a string.
+ */
+export function readFileAsString(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      if (typeof fr.result !== 'string') {
+        reject(new Error(`Reader returned '${fr.result}' (type '${typeof fr.result}'.`));
+        return;
+      }
+      resolve(fr.result);
+    };
+    fr.onerror = reject;
+    fr.readAsText(file);
+  });
+}
+
+/**
  * Asynchronous wrapper around a FileReader's readAsDataURL method.
  * @param file File to read.
  * @returns The loaded DataURL.

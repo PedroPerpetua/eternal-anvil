@@ -94,6 +94,22 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
     resetItems();
   };
 
+  /**
+   * Method to provided a serialized representation of the database that can be used to restore
+   * the state.
+   * @returns An object capable of being JSON stringified.
+   */
+  const toSerialized = () => Array.from(items.entries());
+
+  /**
+   * Method to restore the database state from the previously serialized object (using the
+   * `toSerialized` method).
+   * @param serialized The previously serialized object, already parsed.
+   */
+  const fromSerialized = (serialized: Array<[Id, ItemType]>) => {
+    setItems(new Map(serialized));
+  };
+
   return {
     items,
     count,
@@ -103,6 +119,8 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
     modifyItem,
     deleteItem,
     resetDB,
+    toSerialized,
+    fromSerialized,
   };
 }
 

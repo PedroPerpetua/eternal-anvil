@@ -73,14 +73,16 @@ export type EdgeController = {
   edges: Array<Edge>,
 };
 
+const defaultEdgeController: EdgeController = {
+  selectionMode: false,
+  selectedStructure: null,
+  edges: [],
+};
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const battleMapStore_edgeController = atom<EdgeController>({
   key: 'battleMapStore_edgeController',
-  default: {
-    selectionMode: false,
-    selectedStructure: null,
-    edges: [],
-  },
+  default: defaultEdgeController,
 });
 
 function useBattleMapStore() {
@@ -190,6 +192,32 @@ function useBattleMapStore() {
     // remove
   };
 
+  /* serialization ------------------------------------------------------------------------------ */
+
+  const serialize = () => JSON.stringify({
+    mapInfo,
+    teams: teamsDB.toSerialized(),
+    structures: structuresDB.toSerialized(),
+    edges: edgesController.edges,
+  });
+
+  const deserialize = (json: string) => {
+    try {
+      const info: {
+        mapInfo: MapInfo,
+        teams: Array<[Id, TeamInfo]>,
+        structures: Array<[Id, StructureInfo]>,
+        edges: Array<Edge>
+      } = JSON.parse(json);
+      setMapInfo(info.mapInfo);
+      teamsDB.fromSerialized(info.teams);
+      structuresDB.fromSerialized(info.structures);
+      setEdgesController({ ...defaultEdgeController, edges: info.edges });
+    } catch (e) {
+      console.error('FAILED TO DESERIALIZE', e);
+    }
+  };
+
   return {
     reset,
     // customMapInfo
@@ -213,6 +241,9 @@ function useBattleMapStore() {
     toggleSelectionMode,
     selectStructureForEdge,
     deleteEdge,
+    // serialization
+    serialize,
+    deserialize,
   };
 }
 
