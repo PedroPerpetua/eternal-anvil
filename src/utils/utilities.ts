@@ -1,5 +1,5 @@
 import { INFINITE_CHAR } from './constants';
-import { HexColor, Id } from './types';
+import { Id } from './types';
 
 /**
  * Shortcut function to generate a random unique universal identifier.

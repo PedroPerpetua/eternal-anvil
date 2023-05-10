@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
+import { REALM_COLORS } from '../../../utils/constants';
 import { HexColor } from '../../../utils/types';
 
 function AddTeam() {
@@ -27,7 +28,12 @@ function AddTeam() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <SketchPicker color={color} onChange={(c) => setColor(c.hex as HexColor)} disableAlpha />
+        <SketchPicker
+          color={color}
+          onChange={(c) => setColor(c.hex as HexColor)}
+          disableAlpha
+          presetColors={REALM_COLORS}
+        />
       </CardContent>
       <CardActions>
         <Button onClick={handleClick}>Add Team</Button>

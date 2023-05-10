@@ -1,3 +1,4 @@
+import { HexColor } from '@hello-pangea/color-picker';
 import { Icon } from 'leaflet';
 
 import { DistancePenaltyMap, Point, StructureMap } from './types';
@@ -61,3 +62,7 @@ export const STRUCTURES: StructureMap = {
     icon: new Icon({ iconUrl: FortIcon, iconSize: [60, 89] }),
   },
 };
+
+export const REALM_COLORS: Array<HexColor> = [
+  '#d9d9d8', '#9dd6b4', '#d9ba69', '#ff7a7a', '#d9d8d9', '#dddd78', '#b0b3ee', '#bff4fc',
+];
