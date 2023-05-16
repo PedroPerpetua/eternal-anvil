@@ -1,0 +1,15 @@
+#map-display {
+  width: 50vw;
+  height: 50vh;
+  background-color: #9e8357;
+
+  .marker-text {
+    & p {
+      font-size: large;
+      font-weight: bold;
+      text-align: center;
+      width: 100px;
+      transform: translateX(-50%);
+    }
+  }
+}

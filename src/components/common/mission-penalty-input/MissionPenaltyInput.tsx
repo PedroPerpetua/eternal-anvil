@@ -1,7 +1,8 @@
 import { TextField, MenuItem, Typography } from '@mui/material';
-import { DISTANCE_PENALTIES } from '../../constants';
-import './MissionPenaltyInput.scss';
 
+import { DISTANCE_PENALTIES } from '../../../utils/constants';
+
+import './MissionPenaltyInput.scss';
 
 type MissionPenaltyInputProps = {
   value: number;

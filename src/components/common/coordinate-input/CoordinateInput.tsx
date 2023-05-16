@@ -1,15 +1,15 @@
 import { Typography } from '@mui/material';
-import { Point } from '../../types';
-import SingleCoordinateInput from './SingleCoordinateInput';
-import './CoordinateInput.scss';
 
+import SingleCoordinateInput from './SingleCoordinateInput';
+import { Point } from '../../../utils/types';
+
+import './CoordinateInput.scss';
 
 type CoordinateInputProps = {
   label: string;
   value: Point;
   setValue: (newPoint: Point) => void;
 };
-
 
 function CoordinateInput({ label, value, setValue }: CoordinateInputProps) {
   return (
