@@ -11,7 +11,7 @@ import { generateId } from '../utils/utilities';
 
 export type MapInfo = {
   imageMapInfo: CustomImageMapInfo | null,
-  transformationMatrix: Matrix
+  transformationMatrix: Matrix,
 };
 
 // By default, apply a rotation that "mimics" the game (close enough)
@@ -36,14 +36,12 @@ export type TeamInfo = {
   readonly id: Id,
   name: string,
   color: HexColor,
-  structures: Array<Id>,
 };
 
 const defaultTeam: TeamInfo = {
   id: generateId(),
   name: 'Your Realm',
   color: '#115aad',
-  structures: [],
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -56,7 +54,7 @@ export type StructureInfo = {
   readonly id: Id,
   type: keyof StructureMap,
   coordinates: Point,
-  team: Id
+  team: Id,
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -142,8 +140,10 @@ function useBattleMapStore() {
     setEdgesController({ ...edgesController, edges: newEdges });
   };
 
-  const removeAllEdgesFromStructure = (structureId: Id) => {
-    const newEdges = [...edgesController.edges].filter((edge) => edge.includes(structureId));
+  const deleteAllEdgesFromStructure = (...structureId: Array<Id>) => {
+    const newEdges = [...edgesController.edges].filter(
+      (edge) => !edge.some((id) => structureId.includes(id)),
+    );
     setEdgesController({ ...edgesController, edges: newEdges });
   };
 
@@ -151,7 +151,7 @@ function useBattleMapStore() {
   const getTeam = (id: Id) => teamsDB.getItem(id);
 
   const createTeam = (name: string, color: HexColor) => {
-    teamsDB.createItem({ name, color, structures: [] });
+    teamsDB.createItem({ name, color });
   };
 
   const modifyTeam = (id: Id, newData: Partial<TeamInfo>) => {
@@ -160,36 +160,33 @@ function useBattleMapStore() {
 
   const deleteTeam = (id: Id) => {
     teamsDB.deleteItem(id);
+    // Delete all structures associated with it
+    deleteStructure(...structuresDB.asArray().reduce<Array<Id>>((ids, structure) => {
+      if (structure.team === id) ids.push(structure.id);
+      return ids;
+    }, new Array<Id>()));
   };
 
   /* Handle structures -------------------------------------------------------------------------- */
   const getStructure = (id: Id) => structuresDB.getItem(id);
 
   const createStructure = (teamId: Id, structureType: keyof StructureMap, coordinates: Point) => {
-    const team = teamsDB.getItem(teamId);
+    const team = getTeam(teamId);
     if (!team) return;
     if (structuresDB.asArray().some(
       (struct) => struct.coordinates.every((c, i) => c === coordinates[i]),
     )) return;
-    const structure = structuresDB.createItem({ type: structureType, coordinates, team: teamId });
-    // Add the structure to the team
-    modifyTeam(teamId, { structures: [...team.structures, structure.id] });
+    structuresDB.createItem({ type: structureType, coordinates, team: teamId });
   };
 
   const modifyStructure = (id: Id, newData: Partial<StructureInfo>) => {
     structuresDB.modifyItem(id, newData);
   };
 
-  const deleteStructure = (id: Id) => {
-    const structure = structuresDB.deleteItem(id);
-    if (structure === null) return;
+  const deleteStructure = (...ids: Array<Id>) => {
+    structuresDB.deleteItem(...ids);
     // Remove the structure from all edges
-    removeAllEdgesFromStructure(id);
-    // Remove the structure from the team
-    const team = teamsDB.getItem(structure.team);
-    if (team === null) return;
-    modifyTeam(team.id, { structures: team.structures.filter((sId) => sId !== id) });
-    // remove
+    deleteAllEdgesFromStructure(...ids);
   };
 
   /* serialization ------------------------------------------------------------------------------ */

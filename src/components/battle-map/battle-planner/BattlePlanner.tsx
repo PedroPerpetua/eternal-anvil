@@ -1,7 +1,7 @@
 import AddStructure from './AddStructure';
-import AddTeam from './AddTeam';
 import Serializer from './Serializer';
 import MapDisplay from '../map-display/MapDisplay';
+import TeamDisplay from '../teams/TeamDisplay';
 
 function BattlePlanner() {
   return (
@@ -9,7 +9,7 @@ function BattlePlanner() {
       <Serializer />
       <MapDisplay />
       <AddStructure />
-      <AddTeam />
+      <TeamDisplay />
     </>
   );
 }

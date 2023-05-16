@@ -16,33 +16,33 @@ interface DBItem {
  * will synchronize with each other.
  * @param recoilState a recoil atom to base the store off of; this should be an atom that contains
  * a Map of ids to the items, and the items must also have the ids in them.
- * @returns an object with multiple functions to manage the "State database".
+ * @returns an object with multiple functions to manage the "state database".
  */
 function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, ItemType>>) {
   const [items, setItems] = useRecoilState(recoilState);
   const resetItems = useResetRecoilState(recoilState);
 
   /**
-   * Method to return the current number of items in this "state database".
+   * Method to return the current number of items in this database.
    * @returns The current count.
    */
   const count = () => items.size;
 
   /**
-   * Method to return all items in the "state database" as an unsorted array.
+   * Method to return all items in the database as an unsorted array.
    * @returns An array of all items, unsorted.
    */
   const asArray = () => [...items.values()];
 
   /**
-   * Method to retrieve a single item from the "state database".
+   * Method to retrieve a single item from the database.
    * @param id The item's id.
    * @returns The item if it exists; otherwise null.
    */
   const getItem = (id: Id) => items.get(id) ?? null;
 
   /**
-   * Method to create a new item entry in the "state database".
+   * Method to create a new item entry in the database.
    * @param info The item's info.
    * @returns The created item, with it's id inserted.
    */
@@ -58,7 +58,7 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
   };
 
   /**
-   * Method to modify a single item in the "state database".
+   * Method to modify a single item in the database.
    * @param id The item's id.
    * @param newData A partial (or complete) object with new data to replace.
    * @returns The modified item; or null if it doesn't exist.
@@ -74,17 +74,13 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
   };
 
   /**
-   * Method to delete a single item in the "state database".
-   * @param id The item's id.
-   * @returns The deleted item; or null if it didn't exist before deletion.
+   * Method to delete one or more items in the database.
+   * @param ids One or more ids.
    */
-  const deleteItem = (id: Id) => {
-    const item = getItem(id);
-    if (item === null) return null;
+  const deleteItem = (...ids: Array<Id>) => {
     const newItems = new Map(items);
-    newItems.delete(id);
+    ids.forEach((id) => newItems.delete(id));
     setItems(newItems);
-    return item;
   };
 
   /**
