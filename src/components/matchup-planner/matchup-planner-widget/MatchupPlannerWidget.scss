@@ -1,0 +1,38 @@
+#matchup-planner-widget-modal {
+  .container {
+    width: 90vw;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  .warlord-card {
+    width: 315px;
+    height: 135px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #3d2419;
+    margin: 5px;
+    background-position: center;
+
+    .delete-button {
+      float: right;
+      background-color: red;
+      padding: 3px;
+      margin: 5px;
+    }
+  }
+}
+
+#matchup-planner-widget-fab {
+  margin: 0;
+  top: auto;
+  right: 20px;
+  bottom: 100px;
+  left: auto;
+  position: fixed;
+}

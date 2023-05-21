@@ -21,6 +21,7 @@
     "moize": "6.1.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-image-crop": "10.0.9",
     "react-leaflet": "4.2.1",
     "recoil": "0.7.7",
     "transformation-matrix": "2.15.0",
