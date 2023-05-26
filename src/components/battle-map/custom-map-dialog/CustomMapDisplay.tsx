@@ -40,7 +40,7 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
 
   return (
     <MapContainer
-      id="custom-map-display"
+      className="custom-map-display"
       crs={CRS.Simple}
       zoom={1}
       zoomSnap={0.1}

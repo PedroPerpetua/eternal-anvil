@@ -1,28 +1,23 @@
-import { useEffect, useState } from 'react';
-import { Fab, Icon, Modal } from '@mui/material';
+import { useState } from 'react';
+import {
+  Fab, Icon, Modal, Grid,
+} from '@mui/material';
 
 import WarlordCropper from './WarlordCropper';
+import WarlordList from './WarlordList';
 import SwordsIcon from '../../../assets/swords-icon.svg';
-import { readFileAsURL } from '../../../utils/utilities';
-import PasteArea from '../../common/paste-area/PasteArea';
+import useSortableState from '../../../hooks/useSortableState';
 
 import './MatchupPlannerWidget.scss';
 
 function MatchupPlannerWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const [image, setImage] = useState<string>('');
-
-  const handlePaste = (file: File) => {
-    readFileAsURL(file).then((url) => setImage(url));
-  };
-
-  const handleCrop = (croppedImage: string[]) => {
-    console.log('CROPPED', croppedImage);
-  };
-
-  useEffect(() => {
-    if (!isOpen) setImage('');
-  }, [isOpen]);
+  const {
+    items: leftImages,
+    addItem: addLeftImage,
+    removeItem: removeLeftImage,
+    moveItemDragEndEventHandler: moveLeftImageHandler,
+  } = useSortableState<string>([]);
 
   return (
     <>
@@ -31,19 +26,23 @@ function MatchupPlannerWidget() {
         open={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <PasteArea variant="single" onPaste={handlePaste}>
-          <div className="container">
-            {
-          image === ''
-            ? 'Upload image'
-            : (
-              <WarlordCropper image={image} onFinished={handleCrop} />
-
-            )
-
-        }
-          </div>
-        </PasteArea>
+        <div className="modal-container">
+          <Grid container>
+            <Grid xs={3}>
+              <WarlordCropper onFinished={(i) => addLeftImage(...i)} />
+              <WarlordList
+                images={leftImages}
+                removeImage={removeLeftImage}
+                moveImageHandler={moveLeftImageHandler}
+              />
+            </Grid>
+            <Grid xs={3} />
+            <Grid xs={3} />
+            <Grid xs={3}>
+              <WarlordCropper onFinished={(i) => {}} />
+            </Grid>
+          </Grid>
+        </div>
       </Modal>
       <Fab id="matchup-planner-widget-fab" onClick={() => setIsOpen(true)}>
         <Icon>
