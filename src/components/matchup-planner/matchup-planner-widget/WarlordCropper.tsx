@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { DndContext } from '@dnd-kit/core';
 import { Button, Grid, Modal } from '@mui/material';
 import ReactCrop, { PixelCrop } from 'react-image-crop';
 
 import WarlordList from './WarlordList';
-import useSortableState from '../../../hooks/useSortableState';
+import useSortableContext from '../../../hooks/useSortableContext';
 import { canvasPreview } from '../../../utils/canvas';
 import { readFileAsURL } from '../../../utils/utilities';
 import PasteArea from '../../common/paste-area/PasteArea';
@@ -18,12 +19,14 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
   const imageRef = useRef<HTMLImageElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const {
-    items: images,
-    addItem: addImage,
-    removeItem: removeImage,
-    moveItemDragEndEventHandler: moveImageHandler,
-    clearItems: clearImages,
-  } = useSortableState<string>([]);
+    items: containers,
+    addSortableItem: addImage,
+    removeSortableItem: removeImage,
+    clearSortableItems: clearImages,
+    handlers,
+    sensors,
+  } = useSortableContext<'croppedContainer', string>(['croppedContainer']);
+  const images = containers.get('croppedContainer') ?? [];
   const [currentCrop, setCurrentCrop] = useState<PixelCrop>();
 
   const handlePaste = (file: File) => {
@@ -32,7 +35,7 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
 
   const handleCrop = () => {
     if (!previewCanvasRef.current) return;
-    addImage(previewCanvasRef.current.toDataURL());
+    addImage('croppedContainer', previewCanvasRef.current.toDataURL());
     setCurrentCrop(undefined);
   };
 
@@ -65,13 +68,13 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
             image === ''
               ? 'Paste an image'
               : (
-                <Grid container>
-                  <Grid item xs={6}>
+                <Grid container height="100%" maxHeight="100%">
+                  <Grid item xs={6} height="inherit" maxHeight="inherit">
                     <ReactCrop crop={currentCrop} onChange={(c) => setCurrentCrop(c)}>
                       <img ref={imageRef} src={image} alt="crop" />
                     </ReactCrop>
                   </Grid>
-                  <Grid item xs={3} container direction="column">
+                  <Grid item xs={3} container direction="column" height="inherit" maxHeight="inherit">
                     <Grid item xs={9}>
                       { currentCrop && (
                       <canvas
@@ -92,12 +95,19 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
                       <Button onClick={handleFinish}>Finish</Button>
                     </Grid>
                   </Grid>
-                  <Grid item xs={3}>
-                    <WarlordList
-                      images={[...images].reverse()}
-                      moveImageHandler={moveImageHandler}
-                      removeImage={removeImage}
-                    />
+                  <Grid item xs={3} height="inherit" maxHeight="inherit">
+                    <DndContext
+                      /* eslint-disable react/jsx-props-no-spreading */
+                      {...handlers}
+                      /* eslint-enable react/jsx-props-no-spreading */
+                      sensors={sensors}
+                    >
+                      <WarlordList
+                        images={[...images].reverse()}
+                        removeImage={removeImage}
+                      />
+
+                    </DndContext>
                   </Grid>
                 </Grid>
               )

@@ -17,12 +17,14 @@
 #warlord-cropper-modal {
   .modal-container {
     width: 80vw;
+    height: 80vh;
   }
 }
 
 .warlord-list {
-  overflow-y: scroll;
-  height: 75vh;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .warlord-card {
     width: 315px;
