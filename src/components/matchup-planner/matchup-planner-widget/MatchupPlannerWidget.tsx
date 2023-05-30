@@ -1,12 +1,14 @@
 import { useState } from 'react';
+import { DndContext } from '@dnd-kit/core';
 import {
   Fab, Icon, Modal, Grid,
 } from '@mui/material';
 
+import { WarlordCardOverlay } from './WarlordCard';
 import WarlordCropper from './WarlordCropper';
 import WarlordList from './WarlordList';
 import SwordsIcon from '../../../assets/swords-icon.svg';
-import useSortableState from '../../../hooks/useSortableState';
+import useSortableContext from '../../../hooks/useSortableContext';
 
 import './MatchupPlannerWidget.scss';
 
@@ -14,10 +16,12 @@ function MatchupPlannerWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const {
     items: leftImages,
-    addItem: addLeftImage,
-    removeItem: removeLeftImage,
-    moveItemDragEndEventHandler: moveLeftImageHandler,
-  } = useSortableState<string>([]);
+    activeItem,
+    addSortableItem: addLeftImage,
+    removeSortableItem: removeLeftImage,
+    handlers: leftHandlers,
+    sensors: leftSensors,
+  } = useSortableContext<'bench' | 'active', string>(['bench', 'active']);
 
   return (
     <>
@@ -28,15 +32,29 @@ function MatchupPlannerWidget() {
       >
         <div className="modal-container">
           <Grid container>
-            <Grid xs={3}>
-              <WarlordCropper onFinished={(i) => addLeftImage(...i)} />
-              <WarlordList
-                images={leftImages}
-                removeImage={removeLeftImage}
-                moveImageHandler={moveLeftImageHandler}
-              />
-            </Grid>
-            <Grid xs={3} />
+            <DndContext
+              /* eslint-disable react/jsx-props-no-spreading */
+              {...leftHandlers}
+              /* eslint-enable react/jsx-props-no-spreading */
+              sensors={leftSensors}
+            >
+              <Grid xs={3}>
+                <WarlordCropper onFinished={(i) => addLeftImage('bench', ...i)} />
+                <WarlordList
+                  images={leftImages.get('bench') ?? []}
+                  removeImage={removeLeftImage}
+                  activeId={activeItem?.id}
+                />
+              </Grid>
+              <Grid xs={3}>
+                <WarlordList
+                  images={leftImages.get('active') ?? []}
+                  removeImage={removeLeftImage}
+                  activeId={activeItem?.id}
+                />
+              </Grid>
+              <WarlordCardOverlay image={activeItem?.value ?? null} />
+            </DndContext>
             <Grid xs={3} />
             <Grid xs={3}>
               <WarlordCropper onFinished={(i) => {}} />

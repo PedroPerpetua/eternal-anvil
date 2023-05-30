@@ -1,43 +1,39 @@
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { DragOverlay } from '@dnd-kit/core';
+import { snapCenterToCursor } from '@dnd-kit/modifiers';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { IconButton } from '@mui/material';
 
-import { Id } from '../../../utils/types';
-
 type WarlordCardProps = {
-  id: Id,
   image: string,
-  onDelete: () => void
+  onDelete: () => void,
+  selected?: boolean
 };
 
-function WarlordCard({ id, image, onDelete }: WarlordCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id });
-
+function WarlordCard({ image, onDelete, selected = false }: WarlordCardProps) {
   return (
-    <div
-      ref={setNodeRef}
-      className="warlord-card"
-      style={{
-        backgroundImage: `url(${image})`,
-        transform: CSS.Transform.toString(transform),
-        transition,
-      }}
-      /* eslint-disable react/jsx-props-no-spreading */
-      {...listeners}
-      {...attributes}
-      /* eslint-enable react/jsx-props-no-spreading */
-    >
+    <div className="warlord-card" style={{ opacity: selected ? 0.5 : 1 }}>
       <IconButton className="delete-button" onClick={onDelete}>
         <DeleteIcon htmlColor="darkred" />
       </IconButton>
+      <div className="inner" style={{ backgroundImage: `url(${image})` }} />
     </div>
+  );
+}
+
+type WarlordCardOverlayProps = {
+  image: string | null,
+};
+
+export function WarlordCardOverlay({ image }: WarlordCardOverlayProps) {
+  return (
+    <DragOverlay modifiers={[snapCenterToCursor]}>
+      { image && (
+        <div className="warlord-card">
+          <div className="inner" style={{ backgroundImage: `url(${image})` }} />
+        </div>
+      ) }
+    </DragOverlay>
+
   );
 }
 

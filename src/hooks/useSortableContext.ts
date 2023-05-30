@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import {
-  DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent,
+  DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragOverEvent,
 } from '@dnd-kit/core';
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 
 import { Id } from '../utils/types';
 import { generateId } from '../utils/utilities';
 
-type SortableItem<ValueType> = {
+export type SortableItem<ValueType> = {
   id: Id,
   value: ValueType,
 };
@@ -16,7 +16,7 @@ function useSortableContext<ContainerId extends string, ValueType>(
   initialContainers: ContainerId[] | Map<ContainerId, ValueType[]>,
 ) {
   // Parse the initial state
-  const initialItems: Map<ContainerId, SortableItem<ValueType>[]> = new Map(
+  const [items, setItems] = useState<Map<ContainerId, SortableItem<ValueType>[]>>(new Map(
     Array.isArray(initialContainers)
     // Array of containerIds, initialize all with empty arrays of items
       ? initialContainers.map((containerId) => [containerId, []])
@@ -24,15 +24,17 @@ function useSortableContext<ContainerId extends string, ValueType>(
       : [...initialContainers.entries()].map(([containerId, values]) => (
         [containerId, values.map((value) => ({ id: generateId(), value }))]
       )),
-  );
-  const [items, setItems] = useState(initialItems);
+  ));
+  const [activeItem, setActiveItem] = useState<SortableItem<ValueType> | null>(null);
 
-  const addSortableItem = (containerId: ContainerId, value: ValueType) => {
+  const addSortableItem = (containerId: ContainerId, ...values: ValueType[]) => {
     const container = items.get(containerId);
-    if (!container) throw new Error(`ContainerId ${containerId} not found; '${value}' not added.`);
-    const newItem = { id: generateId(), value };
+    if (!container) throw new Error(`ContainerId ${containerId} not found`);
     const newItems = new Map(items);
-    newItems.set(containerId, [...container, newItem]);
+    newItems.set(
+      containerId,
+      [...container, ...[...values].map((v) => ({ id: generateId(), value: v }))],
+    );
     setItems(newItems);
   };
 
@@ -54,12 +56,24 @@ function useSortableContext<ContainerId extends string, ValueType>(
 
   // DnD Handlers
   const onDragStart = (e: DragStartEvent) => {
-    console.log('DRAG START', e);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const container of items.values()) {
+      const item = container.find((i) => i.id === e.active.id);
+      if (item) {
+        setActiveItem(item);
+        break;
+      }
+    }
+  };
+
+  const onDragOver = (e: DragOverEvent) => {
   };
 
   const onDragEnd = (e: DragEndEvent) => {
+    setActiveItem(null);
     const { active, over } = e;
     if (!over) return;
+    if (over.id === active.id) return;
     const newItems = new Map(items);
     let startingContainer: ContainerId | null = null;
     let finalContainer: ContainerId | null = null;
@@ -71,7 +85,7 @@ function useSortableContext<ContainerId extends string, ValueType>(
         if (item.id === over.id) finalContainer = containerId;
       }
     }
-    if (!finalContainer || !startingContainer) return;
+    if (!startingContainer) return;
     if (finalContainer === startingContainer) {
       // Same container
       const newContainerItems = [...items.get(startingContainer) ?? []];
@@ -80,13 +94,12 @@ function useSortableContext<ContainerId extends string, ValueType>(
       const newIndex = idMap.indexOf(over.id as Id);
       newItems.set(startingContainer, arrayMove(newContainerItems, oldIndex, newIndex));
       setItems(newItems);
-      return;
     }
-    console.log('DRAG END', e);
   };
 
   const handlers = {
     onDragStart,
+    onDragOver,
     onDragEnd,
   };
 
@@ -104,6 +117,7 @@ function useSortableContext<ContainerId extends string, ValueType>(
 
   return {
     items,
+    activeItem,
     addSortableItem,
     removeSortableItem,
     clearSortableItems,

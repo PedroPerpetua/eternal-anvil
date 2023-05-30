@@ -3,6 +3,7 @@ import { DndContext } from '@dnd-kit/core';
 import { Button, Grid, Modal } from '@mui/material';
 import ReactCrop, { PixelCrop } from 'react-image-crop';
 
+import { WarlordCardOverlay } from './WarlordCard';
 import WarlordList from './WarlordList';
 import useSortableContext from '../../../hooks/useSortableContext';
 import { canvasPreview } from '../../../utils/canvas';
@@ -20,6 +21,7 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const {
     items: containers,
+    activeItem,
     addSortableItem: addImage,
     removeSortableItem: removeImage,
     clearSortableItems: clearImages,
@@ -105,8 +107,9 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
                       <WarlordList
                         images={[...images].reverse()}
                         removeImage={removeImage}
+                        activeId={activeItem?.id}
                       />
-
+                      <WarlordCardOverlay image={activeItem?.value ?? null} />
                     </DndContext>
                   </Grid>
                 </Grid>
