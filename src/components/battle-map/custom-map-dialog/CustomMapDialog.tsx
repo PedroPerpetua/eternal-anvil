@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import {
-  Button, Box, Modal, Grid,
-} from '@mui/material';
+import { Button, Box, Modal, Grid } from '@mui/material';
 
 import CustomMapDisplay from './CustomMapDisplay';
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
@@ -39,73 +37,6 @@ function CustomMapDialog() {
     setIsOpen(false);
   };
 
-  let content = null;
-  if (customImageMapInfo === null) {
-    content = (
-      <Button
-        startIcon={<FileUploadIcon />}
-        variant="contained"
-        component="label"
-      >
-        Upload Image
-        <input
-          hidden
-          accept="image/*"
-          type="file"
-          onChange={handleFile}
-        />
-      </Button>
-    );
-  } else {
-    content = (
-      <Grid container className="full-display" spacing={1}>
-        <Grid item xs={9}>
-          <CustomMapDisplay testPoint={testCoordinate} />
-        </Grid>
-        <Grid item xs={3}>
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                component="label"
-              >
-                Change image
-                <input
-                  hidden
-                  accept="image/*"
-                  type="file"
-                  onChange={handleFile}
-                />
-              </Button>
-
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                onClick={createReferenceMarker}
-              >
-                Add marker
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <CoordinateInput
-                label="Test Coordinate"
-                setValue={(p) => setTestCoordinate(p)}
-                value={testCoordinate}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button onClick={handleSave}>Save</Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button onClick={reset}>Clear custom map</Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-    );
-  }
-
   return (
     <>
       <Modal
@@ -113,8 +44,74 @@ function CustomMapDialog() {
         open={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <Box className="container">
-          { content }
+        <Box className="modal-container">
+          {
+            customImageMapInfo === null
+              // No image loaded, button to upload
+              ? (
+                <Button
+                  startIcon={<FileUploadIcon />}
+                  variant="contained"
+                  component="label"
+                >
+                  Upload Image
+                  <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    onChange={handleFile}
+                  />
+                </Button>
+              )
+              // Image loaded, get the widget
+              : (
+                <Grid container className="full-display" spacing={1}>
+                  <Grid item xs={9}>
+                    <CustomMapDisplay testPoint={testCoordinate} />
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Grid container spacing={1}>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="contained"
+                          component="label"
+                        >
+                          Change image
+                          <input
+                            hidden
+                            accept="image/*"
+                            type="file"
+                            onChange={handleFile}
+                          />
+                        </Button>
+
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Button
+                          variant="contained"
+                          onClick={createReferenceMarker}
+                        >
+                          Add marker
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <CoordinateInput
+                          label="Test Coordinate"
+                          setValue={(p) => setTestCoordinate(p)}
+                          value={testCoordinate}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button onClick={handleSave}>Save</Button>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Button onClick={reset}>Clear custom map</Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              )
+          }
         </Box>
       </Modal>
 

@@ -40,7 +40,7 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
 
   return (
     <MapContainer
-      id="custom-map-display"
+      className="custom-map-display"
       crs={CRS.Simple}
       zoom={1}
       zoomSnap={0.1}
@@ -49,9 +49,9 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
       <MaxBoundsController maxBounds={bounds} />
       <ImageMapLayer image={customImageMapInfo} />
       {
-        [...referenceMarkers.values()].map(
-          (marker) => (<ReferenceMarker key={marker.id} referenceMarker={marker} />),
-        )
+        [...referenceMarkers.values()].map((marker) => (
+          <ReferenceMarker key={marker.id} referenceMarker={marker} />
+        ))
       }
       {
           Number.isFinite(testPointCoordinates[0])

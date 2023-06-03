@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import {
-  Button, Select, MenuItem, Card, Typography, CardContent, CardActions,
+  Button,
+  Select,
+  MenuItem,
+  Card,
+  Typography,
+  CardContent,
+  CardActions,
 } from '@mui/material';
 
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
@@ -9,9 +15,7 @@ import { Id, Point, StructureMap } from '../../../utils/types';
 import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
 
 function AddStructure() {
-  const {
-    createStructure, teams, edgesController, toggleSelectionMode,
-  } = useBattleMapStore();
+  const { createStructure, teams, edgesController, toggleSelectionMode } = useBattleMapStore();
   const initialTeamId = teams?.[0].id ?? null;
   const [teamId, setTeamId] = useState<Id | null>(initialTeamId);
   const initialStructure: keyof StructureMap = 'TOWER';
