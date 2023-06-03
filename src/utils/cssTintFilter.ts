@@ -372,7 +372,7 @@ class Solver {
 function _cssTintFilter(color: HexColor, retries = 5) {
   const [red, green, blue] = hexToRGB(color);
   const solver = new Solver(new Color(red, green, blue));
-  const results: Array<{ loss: number, filter: str }> = [];
+  const results: { loss: number, filter: str }[] = [];
   for (let i = 0; i < retries; i++) {
     results.push(solver.solve());
   }

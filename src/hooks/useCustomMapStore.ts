@@ -123,13 +123,14 @@ function useCustomMapStore() {
   // eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
   const _computeTransformationMatrix = () => {
     if (!allMarkersPlaced) return null;
-    const [intendedTriangle, displayTriangle] = referenceMarkersDB.asArray().reduce(
+    const [intendedTriangle, displayTriangle] = referenceMarkersDB.asArray()
+      .reduce<[Point[], Point[]]>(
       ([intendedTriangleArray, displayTriangleArray], currentMarker) => {
         intendedTriangleArray.push(currentMarker.intendedCoordinates);
         displayTriangleArray.push(currentMarker.displayCoordinates);
         return [intendedTriangleArray, displayTriangleArray];
       },
-      [new Array<Point>(), new Array<Point>()],
+      [[], []],
     );
     try {
       return computeAffineMatrix(intendedTriangle as Triangle, displayTriangle as Triangle);

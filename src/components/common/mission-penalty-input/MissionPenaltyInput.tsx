@@ -19,24 +19,22 @@ function MissionPenaltyInput({ value, setValue }: MissionPenaltyInputProps) {
       onChange={(e) => setValue(Number(e.target.value))}
     >
       {
-        Object.entries(DISTANCE_PENALTIES).map(
-          ([key, penalty]) => (
-            <MenuItem key={key} value={penalty.penalty}>
-              <Typography display="inline">
-                { ' ' }
-                { penalty.shortName }
-                { ' ' }
-              </Typography>
-              <Typography display="inline" color="gray">
-                (+
-                { ' ' }
-                { penalty.penalty }
-                )
-              </Typography>
-              <Typography>{ penalty.description }</Typography>
-            </MenuItem>
-          ),
-        )
+        Object.entries(DISTANCE_PENALTIES).map(([key, penalty]) => (
+          <MenuItem key={key} value={penalty.penalty}>
+            <Typography display="inline">
+              { ' ' }
+              { penalty.shortName }
+              { ' ' }
+            </Typography>
+            <Typography display="inline" color="gray">
+              (+
+              { ' ' }
+              { penalty.penalty }
+              )
+            </Typography>
+            <Typography>{ penalty.description }</Typography>
+          </MenuItem>
+        ))
       }
     </TextField>
   );

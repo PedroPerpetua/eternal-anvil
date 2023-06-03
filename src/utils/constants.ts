@@ -63,6 +63,6 @@ export const STRUCTURES: StructureMap = {
   },
 };
 
-export const REALM_COLORS: Array<HexColor> = [
+export const REALM_COLORS: HexColor[] = [
   '#d9d9d8', '#9dd6b4', '#d9ba69', '#ff7a7a', '#d9d8d9', '#dddd78', '#b0b3ee', '#bff4fc',
 ];

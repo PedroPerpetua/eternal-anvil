@@ -105,6 +105,7 @@ function WarlordCropper({ onFinished }: WarlordCropperProps) {
                       sensors={sensors}
                     >
                       <WarlordList
+                        containerId="croppedContainer"
                         images={[...images].reverse()}
                         removeImage={removeImage}
                         activeId={activeItem?.id}

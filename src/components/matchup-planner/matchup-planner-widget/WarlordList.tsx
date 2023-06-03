@@ -7,15 +7,14 @@ import { SortableItem } from '../../../hooks/useSortableContext';
 import { Id } from '../../../utils/types';
 
 type WarlordListProps = {
+  containerId: string,
   images: SortableItem<string>[],
   removeImage: (id: Id) => void,
   activeId?: Id,
 };
 
-function WarlordList({ images, removeImage, activeId }: WarlordListProps) {
-  const { setNodeRef } = useDroppable({
-    id: crypto.randomUUID(),
-  });
+function WarlordList({ containerId, images, removeImage, activeId }: WarlordListProps) {
+  const { setNodeRef } = useDroppable({ id: containerId });
 
   return (
     <div className="warlord-list" ref={setNodeRef}>

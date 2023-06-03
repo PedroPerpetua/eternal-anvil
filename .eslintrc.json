@@ -100,6 +100,12 @@
         ]
       }
     ],
+    "object-curly-newline": ["error", {
+      "ObjectPattern": {"multiline": true},
+
+      "ImportDeclaration": { "multiline": true, "minProperties": 5 }
+    }],
+
     "react/react-in-jsx-scope": "off",
     "react/style-prop-object": "off",
     "react/require-default-props": "off"

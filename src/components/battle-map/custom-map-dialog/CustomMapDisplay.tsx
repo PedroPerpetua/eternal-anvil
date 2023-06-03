@@ -49,9 +49,9 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
       <MaxBoundsController maxBounds={bounds} />
       <ImageMapLayer image={customImageMapInfo} />
       {
-        [...referenceMarkers.values()].map(
-          (marker) => (<ReferenceMarker key={marker.id} referenceMarker={marker} />),
-        )
+        [...referenceMarkers.values()].map((marker) => (
+          <ReferenceMarker key={marker.id} referenceMarker={marker} />
+        ))
       }
       {
           Number.isFinite(testPointCoordinates[0])

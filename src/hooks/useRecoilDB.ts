@@ -77,7 +77,7 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
    * Method to delete one or more items in the database.
    * @param ids One or more ids.
    */
-  const deleteItem = (...ids: Array<Id>) => {
+  const deleteItem = (...ids: Id[]) => {
     const newItems = new Map(items);
     ids.forEach((id) => newItems.delete(id));
     setItems(newItems);
@@ -102,7 +102,7 @@ function useRecoilDB<ItemType extends DBItem>(recoilState: RecoilState<Map<Id, I
    * `toSerialized` method).
    * @param serialized The previously serialized object, already parsed.
    */
-  const fromSerialized = (serialized: Array<[Id, ItemType]>) => {
+  const fromSerialized = (serialized: [Id, ItemType][]) => {
     setItems(new Map(serialized));
   };
 

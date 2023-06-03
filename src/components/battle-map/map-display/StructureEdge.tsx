@@ -13,9 +13,7 @@ type StructureEdgeProps = {
 };
 
 function StructureEdge({ edge }: StructureEdgeProps) {
-  const {
-    getStructure, intendedToDisplay, getTeam, deleteEdge,
-  } = useBattleMapStore();
+  const { getStructure, intendedToDisplay, getTeam, deleteEdge } = useBattleMapStore();
   const [hovering, setHovering] = useState(false);
   const structure1 = getStructure(edge[0]);
   const structure2 = getStructure(edge[1]);

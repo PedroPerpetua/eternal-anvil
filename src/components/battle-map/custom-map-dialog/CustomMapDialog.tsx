@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import {
-  Button, Box, Modal, Grid,
-} from '@mui/material';
+import { Button, Box, Modal, Grid } from '@mui/material';
 
 import CustomMapDisplay from './CustomMapDisplay';
 import useBattleMapStore from '../../../hooks/useBattleMapStore';

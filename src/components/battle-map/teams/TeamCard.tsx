@@ -11,9 +11,7 @@ type TeamCardProps = {
 };
 
 function TeamCard({ team }: TeamCardProps) {
-  const {
-    modifyTeam, deleteTeam, structures, deleteStructure,
-  } = useBattleMapStore();
+  const { modifyTeam, deleteTeam, structures, deleteStructure } = useBattleMapStore();
   return (
     <Card style={{ backgroundColor: team.color, display: 'inline-block' }}>
       <CardContent>

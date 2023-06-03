@@ -3,14 +3,12 @@ import { LeafletEvent, Marker as LeafletMarker } from 'leaflet';
 import { Marker, Popup } from 'react-leaflet';
 
 import TargetIcon from './TargetIcon';
-import useCustomMapStore, {
-  ReferenceMarker as ReferenceMarkerType,
-} from '../../../hooks/useCustomMapStore';
+import useCustomMapStore, { ReferenceMarker as MarkerType } from '../../../hooks/useCustomMapStore';
 import useRefMarkerColor from '../../../hooks/useRefMarkerColor';
 import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
 
 type ReferenceMarkerProps = {
-  referenceMarker: ReferenceMarkerType
+  referenceMarker: MarkerType
 };
 
 function ReferenceMarker({ referenceMarker }: ReferenceMarkerProps) {

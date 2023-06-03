@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import CalculatorIcon from '@mui/icons-material/Calculate';
-import {
-  Box, Fab, Modal, Typography,
-} from '@mui/material';
+import { Box, Fab, Modal, Typography } from '@mui/material';
 
 import { INFINITE_CHAR, EMPTY_POINT } from '../../../utils/constants';
 import { calcDistance, calcTravelTime } from '../../../utils/math';

@@ -4,9 +4,7 @@ import { Matrix } from 'transformation-matrix';
 import { CustomImageMapInfo } from './useCustomMapStore';
 import useRecoilDB from './useRecoilDB';
 import { computeAffineMatrix, transformPoint } from '../utils/math';
-import {
-  StructureMap, Point, HexColor, Id,
-} from '../utils/types';
+import { StructureMap, Point, HexColor, Id } from '../utils/types';
 import { generateId } from '../utils/utilities';
 
 export type MapInfo = {
@@ -68,7 +66,7 @@ export type Edge = [Id, Id];
 export type EdgeController = {
   selectionMode: boolean,
   selectedStructure: Id | null,
-  edges: Array<Edge>,
+  edges: Edge[],
 };
 
 const defaultEdgeController: EdgeController = {
@@ -140,7 +138,7 @@ function useBattleMapStore() {
     setEdgesController({ ...edgesController, edges: newEdges });
   };
 
-  const deleteAllEdgesFromStructure = (...structureId: Array<Id>) => {
+  const deleteAllEdgesFromStructure = (...structureId: Id[]) => {
     const newEdges = [...edgesController.edges].filter(
       (edge) => !edge.some((id) => structureId.includes(id)),
     );
@@ -161,10 +159,10 @@ function useBattleMapStore() {
   const deleteTeam = (id: Id) => {
     teamsDB.deleteItem(id);
     // Delete all structures associated with it
-    deleteStructure(...structuresDB.asArray().reduce<Array<Id>>((ids, structure) => {
+    deleteStructure(...structuresDB.asArray().reduce<Id[]>((ids, structure) => {
       if (structure.team === id) ids.push(structure.id);
       return ids;
-    }, new Array<Id>()));
+    }, []));
   };
 
   /* Handle structures -------------------------------------------------------------------------- */
@@ -183,7 +181,7 @@ function useBattleMapStore() {
     structuresDB.modifyItem(id, newData);
   };
 
-  const deleteStructure = (...ids: Array<Id>) => {
+  const deleteStructure = (...ids: Id[]) => {
     structuresDB.deleteItem(...ids);
     // Remove the structure from all edges
     deleteAllEdgesFromStructure(...ids);
@@ -202,9 +200,9 @@ function useBattleMapStore() {
     try {
       const info: {
         mapInfo: MapInfo,
-        teams: Array<[Id, TeamInfo]>,
-        structures: Array<[Id, StructureInfo]>,
-        edges: Array<Edge>
+        teams: [Id, TeamInfo][],
+        structures: [Id, StructureInfo][],
+        edges: Edge[]
       } = JSON.parse(json);
       setMapInfo(info.mapInfo);
       teamsDB.fromSerialized(info.teams);

@@ -82,3 +82,18 @@ export function readImageFromURL(url: string) {
     image.src = url;
   });
 }
+
+/**
+ * Split an array into two arrays given a condition to sort the elements out.
+ * @param arr The array to split
+ * @param condition The condition to check for.
+ * @returns An array of two arrays with the elements that meet the condition in the first one, and
+ * the values that don't in the second one.
+ */
+export function splitArray<ValueType>(arr: ValueType[], condition: (el: ValueType) => boolean) {
+  return arr.reduce<[ValueType[], ValueType[]]>(([split1, split2], element) => {
+    if (condition(element)) split1.push(element);
+    else split2.push(element);
+    return [split1, split2];
+  }, [[], []]);
+}
