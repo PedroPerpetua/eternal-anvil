@@ -3,6 +3,8 @@ import { snapCenterToCursor } from '@dnd-kit/modifiers';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { IconButton } from '@mui/material';
 
+import './WarlordCard.scss';
+
 type WarlordCardProps = {
   image: string,
   onDelete: () => void,

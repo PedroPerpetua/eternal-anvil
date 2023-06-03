@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { DndContext } from '@dnd-kit/core';
 import { Fab, Icon, Modal, Grid } from '@mui/material';
 
-import { WarlordCardOverlay } from './WarlordCard';
-import WarlordCropper from './WarlordCropper';
-import WarlordList from './WarlordList';
 import SwordsIcon from '../../../assets/swords-icon.svg';
 import useSortableContext from '../../../hooks/useSortableContext';
+import { WarlordCardOverlay } from '../warlord-card/WarlordCard';
+import WarlordCropper from '../warlord-cropper/WarlordCropper';
+import WarlordList from '../warlord-list/WarlordList';
 
 import './MatchupPlannerWidget.scss';
 

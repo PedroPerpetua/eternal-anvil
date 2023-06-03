@@ -3,12 +3,12 @@ import { DndContext } from '@dnd-kit/core';
 import { Button, Grid, Modal } from '@mui/material';
 import ReactCrop, { PixelCrop } from 'react-image-crop';
 
-import { WarlordCardOverlay } from './WarlordCard';
-import WarlordList from './WarlordList';
 import useSortableContext from '../../../hooks/useSortableContext';
 import { canvasPreview } from '../../../utils/canvas';
 import { readFileAsURL } from '../../../utils/utilities';
 import PasteArea from '../../common/paste-area/PasteArea';
+import { WarlordCardOverlay } from '../warlord-card/WarlordCard';
+import WarlordList from '../warlord-list/WarlordList';
 
 type WarlordCropperProps = {
   onFinished: (croppedImages: string[]) => void,

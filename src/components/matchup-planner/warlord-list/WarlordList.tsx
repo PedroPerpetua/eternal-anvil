@@ -1,10 +1,12 @@
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 
-import Draggable from './Draggable';
-import WarlordCard from './WarlordCard';
 import { SortableItem } from '../../../hooks/useSortableContext';
 import { Id } from '../../../utils/types';
+import Draggable from '../../common/draggable/Draggable';
+import WarlordCard from '../warlord-card/WarlordCard';
+
+import './WarlordList.scss';
 
 type WarlordListProps = {
   containerId: string,
