@@ -20,6 +20,12 @@
     "react"
   ],
   "rules": {
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      {
+        "variables": false
+      }
+    ],
     "import/extensions": [
       "error",
       {
@@ -72,13 +78,27 @@
         "warnOnUnassignedImports": true
       }
     ],
-    "@typescript-eslint/no-use-before-define": [
-      "error",
+    "no-console": [
+      "warn",
       {
-        "variables": false
+        "allow": [
+          "warn",
+          "error"
+        ]
       }
     ],
-    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "object-curly-newline": [
+      "error",
+      {
+        "ImportDeclaration": {
+          "minProperties": 5,
+          "multiline": true
+        },
+        "ObjectPattern": {
+          "multiline": true
+        }
+      }
+    ],
     "quotes": [
       "error",
       "single"
@@ -100,15 +120,9 @@
         ]
       }
     ],
-    "object-curly-newline": ["error", {
-      "ObjectPattern": {"multiline": true},
-
-      "ImportDeclaration": { "multiline": true, "minProperties": 5 }
-    }],
-
     "react/react-in-jsx-scope": "off",
-    "react/style-prop-object": "off",
-    "react/require-default-props": "off"
+    "react/require-default-props": "off",
+    "react/style-prop-object": "off"
   },
   "settings": {
     "import/resolver": {
