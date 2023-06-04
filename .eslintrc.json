@@ -63,13 +63,13 @@
           },
           {
             "group": "index",
-            "pattern": "@**/**/*.css",
+            "pattern": "{**/,./**/}*.css",
             "position": "before"
           },
           {
             "group": "index",
-            "pattern": "./**/*.scss",
-            "position": "after"
+            "pattern": "{**/,./**/}*.scss",
+            "position": "before"
           }
         ],
         "pathGroupsExcludedImportTypes": [
