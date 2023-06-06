@@ -1,14 +1,13 @@
 import {
-  AppBar, Toolbar, Typography, Icon, Button, Box,
+  AppBar, Toolbar, Typography, Icon, Box,
 } from '@mui/material';
 
 import WebsiteIcon from '../../../assets/icon.png';
+import About from '../about/About';
 
 import './Header.scss';
 
 function Header() {
-  const handleAbout = () => console.log('hello');
-
   return (
     <Box>
       <AppBar position="static" id="header" className="noSelect">
@@ -20,7 +19,7 @@ function Header() {
             <Typography variant="h6" noWrap className="title">Eternal Anvil</Typography>
             <Typography variant="subtitle2" noWrap className="subtitle">Arkheim Toolkit</Typography>
           </div>
-          <Button onClick={handleAbout}>About</Button>
+          <About />
         </Toolbar>
       </AppBar>
     </Box>
