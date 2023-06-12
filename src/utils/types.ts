@@ -1,5 +1,3 @@
-import { Icon } from 'leaflet';
-
 /*
  * For the purpose of "empty numbers" (missing input) we use Infinity to make type checking more
  * fluid.
@@ -43,7 +41,8 @@ export type DistancePenaltyMap = {
 
 export type Structure = {
   name: string;
-  icon: Icon;
+  icon: string;
+  size: [number, number]
 };
 
 export type StructureMap = {

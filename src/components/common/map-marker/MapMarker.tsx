@@ -42,9 +42,6 @@ function MapMarker({ icon, iconSize, iconColor, markerProps }: MapMarkerProps) {
       });
       const stack = new Stack([originalImage, colorOverlay]);
       const processedImage = stack.getMinImage();
-      console.log('RGB', red, green, blue);
-      console.log('OVERLAY', colorOverlay.toDataURL());
-      console.log('FINAL', processedImage.toDataURL());
       setImage(processedImage.toDataURL());
     };
     effect();

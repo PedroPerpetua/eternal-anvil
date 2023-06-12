@@ -1,7 +1,4 @@
-import { HexColor } from '@hello-pangea/color-picker';
-import { Icon } from 'leaflet';
-
-import { DistancePenaltyMap, Point, StructureMap } from './types';
+import { DistancePenaltyMap, Point, StructureMap, HexColor } from './types';
 import ArkIcon from '../assets/ark-icon.png';
 import FortIcon from '../assets/fort-icon.png';
 import PortalIcon from '../assets/portal-icon.png';
@@ -43,23 +40,28 @@ export const DISTANCE_PENALTIES: DistancePenaltyMap = {
 export const STRUCTURES: StructureMap = {
   ARK: {
     name: 'Ark',
-    icon: new Icon({ iconUrl: ArkIcon, iconSize: [52, 40] }),
+    icon: ArkIcon,
+    size: [52, 40],
   },
   TOWER: {
     name: 'Tower',
-    icon: new Icon({ iconUrl: TowerIcon, iconSize: [40, 40] }),
+    icon: TowerIcon,
+    size: [40, 40],
   },
   PORTAL: {
     name: 'Portal',
-    icon: new Icon({ iconUrl: PortalIcon, iconSize: [40, 40] }),
+    icon: PortalIcon,
+    size: [40, 40],
   },
   RELIC: {
     name: 'Ancient Relic',
-    icon: new Icon({ iconUrl: RelicIcon, iconSize: [80, 80] }),
+    icon: RelicIcon,
+    size: [52, 60],
   },
   FORT: {
     name: 'Goblin Fort',
-    icon: new Icon({ iconUrl: FortIcon, iconSize: [60, 89] }),
+    icon: FortIcon,
+    size: [40, 60],
   },
 };
 
