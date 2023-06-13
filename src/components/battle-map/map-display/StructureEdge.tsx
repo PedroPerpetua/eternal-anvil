@@ -4,7 +4,7 @@ import { Marker, Polyline } from 'react-leaflet';
 
 import useBattleMapStore, { Edge } from '../../../hooks/useBattleMapStore';
 import { DISTANCE_PENALTIES } from '../../../utils/constants';
-import { blendColors, shadeColor } from '../../../utils/cssTintFilter';
+import { blendColors, shadeColor } from '../../../utils/images';
 import { calcDistance, halfway } from '../../../utils/math';
 import { HexColor } from '../../../utils/types';
 

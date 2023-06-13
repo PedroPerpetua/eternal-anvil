@@ -4,7 +4,7 @@ import { Button, Grid, Modal } from '@mui/material';
 import ReactCrop, { PixelCrop } from 'react-image-crop';
 
 import useSortableContext from '../../../hooks/useSortableContext';
-import { canvasPreview } from '../../../utils/canvas';
+import { canvasPreview } from '../../../utils/images';
 import { readFileAsURL } from '../../../utils/utilities';
 import PasteArea from '../../common/paste-area/PasteArea';
 import { WarlordCardOverlay } from '../warlord-card/WarlordCard';
