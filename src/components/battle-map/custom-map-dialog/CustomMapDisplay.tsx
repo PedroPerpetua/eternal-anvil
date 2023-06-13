@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { CRS, LatLngBounds, latLngBounds } from 'leaflet';
-import { MapContainer, Marker, useMap } from 'react-leaflet';
+import { MapContainer, useMap } from 'react-leaflet';
 
 import ReferenceMarker from './ReferenceMarker';
-import TargetIcon from './TargetIcon';
+import TargetIcon from '../../../assets/target.png';
 import useCustomMapStore from '../../../hooks/useCustomMapStore';
 import { EMPTY_POINT } from '../../../utils/constants';
 import { transformPoint } from '../../../utils/math';
 import { Point } from '../../../utils/types';
 import ImageMapLayer from '../../common/image-map-layer/ImageMapLayer';
+import MapMarker from '../../common/map-marker/MapMarker';
 
 type CustomMapDisplayProps = {
   testPoint: Point
@@ -57,9 +58,13 @@ function CustomMapDisplay({ testPoint }: CustomMapDisplayProps) {
           Number.isFinite(testPointCoordinates[0])
           && Number.isFinite(testPointCoordinates[1])
           && (
-          <Marker
-            position={testPointCoordinates}
+          <MapMarker
             icon={TargetIcon}
+            iconColor="#000000"
+            iconSize={[35, 35]}
+            markerProps={{
+              position: testPointCoordinates,
+            }}
           />
           )
       }

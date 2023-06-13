@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, PropsWithChildren, ClipboardEvent } from 'react';
 
 type PasteAreaSingleProps = {
   onPaste: (file: File) => void,
@@ -10,7 +10,7 @@ type PasteAreaMultipleProps = {
   variant: 'multiple',
 };
 
-type PasteAreaProps = React.PropsWithChildren<PasteAreaSingleProps | PasteAreaMultipleProps>;
+type PasteAreaProps = PropsWithChildren<PasteAreaSingleProps | PasteAreaMultipleProps>;
 
 function PasteArea({ onPaste, variant, children }: PasteAreaProps) {
   const [pasted, setPasted] = useState(false);
@@ -22,7 +22,7 @@ function PasteArea({ onPaste, variant, children }: PasteAreaProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiFiles.length, onPaste, variant]);
 
-  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+  const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
     const newFiles = e.clipboardData.files;
     if (variant === 'multiple') {
       setMultiFiles([...multiFiles, ...Array.from(newFiles)]);
