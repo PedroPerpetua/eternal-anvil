@@ -4,11 +4,11 @@ import { CSS } from '@dnd-kit/utilities';
 
 import { Id } from '../../../utils/types';
 
-type DraggableProps = {
+type DraggableProps = PropsWithChildren<{
   id: Id,
-};
+}>;
 
-function Draggable({ id, children }: PropsWithChildren<DraggableProps>) {
+function Draggable({ id, children }: DraggableProps) {
   const {
     attributes,
     listeners,

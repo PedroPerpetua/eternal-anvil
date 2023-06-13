@@ -1,11 +1,11 @@
 import { Box, Button } from '@mui/material';
 import { LeafletEvent, Marker as LeafletMarker } from 'leaflet';
-import { Marker, Popup } from 'react-leaflet';
+import { Popup } from 'react-leaflet';
 
-import TargetIcon from './TargetIcon';
+import TargetIcon from '../../../assets/target.png';
 import useCustomMapStore, { ReferenceMarker as MarkerType } from '../../../hooks/useCustomMapStore';
-import useRefMarkerColor from '../../../hooks/useRefMarkerColor';
 import CoordinateInput from '../../common/coordinate-input/CoordinateInput';
+import MapMarker from '../../common/map-marker/MapMarker';
 
 type ReferenceMarkerProps = {
   referenceMarker: MarkerType
@@ -13,7 +13,6 @@ type ReferenceMarkerProps = {
 
 function ReferenceMarker({ referenceMarker }: ReferenceMarkerProps) {
   const { modifyReferenceMarker, deleteReferenceMarker } = useCustomMapStore();
-  const markerRef = useRefMarkerColor('#2D124E');
 
   const handleDrag = (e: LeafletEvent) => {
     // If drag becomes too laggy, we can swap this to onDragEnd.
@@ -26,12 +25,17 @@ function ReferenceMarker({ referenceMarker }: ReferenceMarkerProps) {
   };
 
   return (
-    <Marker
-      draggable
+    <MapMarker
       icon={TargetIcon}
-      ref={markerRef}
-      eventHandlers={{ drag: handleDrag }}
-      position={referenceMarker.displayCoordinates}
+      iconColor="#2D124E"
+      iconSize={[35, 35]}
+      markerProps={{
+        draggable: true,
+        eventHandlers: {
+          drag: handleDrag,
+        },
+        position: referenceMarker.displayCoordinates,
+      }}
     >
       <Popup>
         <Box>
@@ -47,7 +51,7 @@ function ReferenceMarker({ referenceMarker }: ReferenceMarkerProps) {
           </Button>
         </Box>
       </Popup>
-    </Marker>
+    </MapMarker>
   );
 }
 
