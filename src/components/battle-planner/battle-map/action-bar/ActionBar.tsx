@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
+import { Tabs, Tab } from '@mui/material';
+import { useRecoilValue } from 'recoil';
 
 import SettingsTab from './settings-tab/SettingsTab';
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import SettingsIcon from '../../../../assets/settings-icon.png';
 import CustomIcon from '../../../common/custom-icon/CustomIcon';
+import { battleMap_draggingMap } from '../map-drag-controller/MapDragController';
 
 import './ActionBar.scss';
 
 function ActionBar() {
+  const draggingMap = useRecoilValue(battleMap_draggingMap);
   const [hovering, setHovering] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
   const [containerMaxHeight, setContainerMaxHeight] = useState<string>('inherit');
@@ -22,7 +25,11 @@ function ActionBar() {
       id="action-bar"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      style={{ height: containerMaxHeight }}
+      style={{
+        height: containerMaxHeight,
+        opacity: draggingMap ? '25%' : 'inherit',
+        pointerEvents: draggingMap ? 'none' : 'inherit',
+      }}
       ref={onMount}
     >
 

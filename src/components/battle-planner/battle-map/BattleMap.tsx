@@ -1,6 +1,7 @@
 import { CRS } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 
+import MapDragController from './map-drag-controller/MapDragController';
 import StructureEdge from './StructureEdge';
 import StructureMarker from './StructureMarker';
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
@@ -20,6 +21,7 @@ function BattleMap() {
       zoomSnap={0.1}
       maxBoundsViscosity={1}
     >
+      <MapDragController />
       <ImageMapLayer image={mapInfo.imageMapInfo} />
       {
         structures.map((structure) => (
