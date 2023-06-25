@@ -3,6 +3,7 @@ import { Box, Button, Modal, Typography } from '@mui/material';
 
 function About() {
   const [isOpen, setIsOpen] = useState(false);
+  // TODO: Place content here
 
   return (
     <>

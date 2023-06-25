@@ -6,14 +6,14 @@ import StructureMarker from './StructureMarker';
 import useBattleMapStore from '../../../hooks/useBattleMapStore';
 import ImageMapLayer from '../../common/image-map-layer/ImageMapLayer';
 
-import './MapDisplay.scss';
+import './BattleMap.scss';
 
-function MapDisplay() {
+function BattleMap() {
   const { mapInfo, structures, edgesController } = useBattleMapStore();
 
   return (
     <MapContainer
-      id="map-display"
+      id="battle-map"
       crs={CRS.Simple}
       zoom={1}
       center={[0, 0]}
@@ -35,4 +35,4 @@ function MapDisplay() {
   );
 }
 
-export default MapDisplay;
+export default BattleMap;

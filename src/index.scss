@@ -2,6 +2,22 @@ body {
   margin: 0;
 }
 
+#wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  #content {
+    flex: 1;
+  }
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .modal-container {
   position: absolute;
   top: 50%;
@@ -12,7 +28,8 @@ body {
   border-radius: 5px;
 }
 
-.noSelect {
+// Disable text selection
+.no-select {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */
