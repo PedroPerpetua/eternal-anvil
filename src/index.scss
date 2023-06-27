@@ -13,9 +13,9 @@ body {
 }
 
 .center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .modal-container {
@@ -37,4 +37,12 @@ body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+.no-drag {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
 }

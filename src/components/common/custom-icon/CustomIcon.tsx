@@ -2,10 +2,11 @@ import { Icon } from '@mui/material';
 
 type CustomIconProps = {
   src: string,
-  size: 'large' | 'medium' | 'small'
+  size?: 'large' | 'medium' | 'small',
+  className?: string
 };
 
-function CustomIcon({ src, size = 'medium' }: CustomIconProps) {
+function CustomIcon({ src, size = 'medium', className = '' }: CustomIconProps) {
   let imgSize;
   switch (size) {
     case 'large':
@@ -22,8 +23,8 @@ function CustomIcon({ src, size = 'medium' }: CustomIconProps) {
       break;
   }
   return (
-    <Icon fontSize={size}>
-      <img src={src} width={imgSize} height={imgSize} alt="" />
+    <Icon fontSize={size} className={['center-content', className].join(' ')}>
+      <img src={src} width={imgSize} height={imgSize} alt="" className="no-drag" />
     </Icon>
   );
 }

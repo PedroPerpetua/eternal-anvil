@@ -3,6 +3,7 @@ import {
 } from '@mui/material';
 
 import WebsiteIcon from '../../../assets/icon.png';
+import CustomIcon from '../../common/custom-icon/CustomIcon';
 import About from '../about/About';
 
 import './Header.scss';
@@ -12,9 +13,7 @@ function Header() {
     <Box>
       <AppBar position="static" id="header" className="noSelect">
         <Toolbar>
-          <Icon className="icon">
-            <img src={WebsiteIcon} alt="Eternal Anvil" />
-          </Icon>
+          <CustomIcon src={WebsiteIcon} className="icon" />
           <div className="title-container">
             <Typography variant="h6" noWrap className="title">Eternal Anvil</Typography>
             <Typography variant="subtitle2" noWrap className="subtitle">Arkheim Toolkit</Typography>

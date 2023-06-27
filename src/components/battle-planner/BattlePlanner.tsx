@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import ActionBar from './battle-map/action-bar/ActionBar';
+import ActionBar from './action-bar/ActionBar';
 import BattleMap from './battle-map/BattleMap';
 
 import './BattlePlanner.scss';
