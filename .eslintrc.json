@@ -68,7 +68,12 @@
           },
           {
             "group": "index",
-            "pattern": "./**/*.scss",
+            "pattern": "**/*.css",
+            "position": "after"
+          },
+          {
+            "group": "index",
+            "pattern": "./**/*.css",
             "position": "after"
           }
         ],

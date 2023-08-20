@@ -1,7 +1,6 @@
 /* eslint-disable */
 // @ts-nocheck
 import moize from 'moize';
-import { HexColor } from './types';
 import { PixelCrop } from 'react-image-crop';
 import Image, { ImageKind, Stack } from 'image-js';
 
@@ -10,7 +9,7 @@ import Image, { ImageKind, Stack } from 'image-js';
  * @param colorHex The hex value of the color to convert.
  * @returns Three values corresponding to red, green and blue.
  */
-export function hexToRGB(colorHex: HexColor) {
+export function hexToRGB(colorHex: string) {
   const convertRGB = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorHex);
   if (!convertRGB) return [0, 0, 0] as [number, number, number];
   convertRGB.shift()
@@ -24,7 +23,7 @@ export function hexToRGB(colorHex: HexColor) {
  * @param color The color to tint the image with, in hex.
  * @returns a DataURL for the tinted image.
  */
-export async function tintImage(imageURL: string, color: HexColor) {
+export async function tintImage(imageURL: string, color: string) {
   const originalImage = await Image.load(imageURL);
   // Create an overlay that's just the solid color
   const [red, green, blue] = hexToRGB(color);
@@ -129,13 +128,13 @@ function mix_cmyks(...cmyks) {
  * @param hexes The hex color codes to blend.
  * @returns A hex color resulting of the blend of all the provided colors.
  */
-function mix_hexes(...hexes: HexColor[]) {
+function mix_hexes(...hexes: string[]) {
   let rgbs = hexes.map(hex => hex2dec(hex));
   let cmyks = rgbs.map(rgb => rgb2cmyk(...rgb));
   let mixture_cmyk = mix_cmyks(...cmyks);
   let mixture_rgb = cmyk2rgb(...mixture_cmyk);
   let mixture_hex = rgb2hex(...mixture_rgb);
-  return mixture_hex as HexColor;
+  return mixture_hex;
 }
 
 export const blendColors = moize(mix_hexes)

@@ -1,10 +1,18 @@
 import { Matrix, applyToPoint, fromTriangles } from 'transformation-matrix';
+/*
+ * For the purpose of "empty numbers" (missing input) we use Infinity to make type checking more
+ * fluid.
+*/
+export type Point = [number, number];
 
-import { Point, Triangle } from './types';
+export const EMPTY_POINT: Point = [Infinity, Infinity];
 
-export function halfway(point1: Point, point2: Point) {
-  return [(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2] as Point;
-}
+/**
+ * A collection of points. Note: may actually be more than three points; this is primarily used for
+ * affine transformations, and the transform-matrix lib uses only the first three points of an
+ * array.
+ */
+export type Triangle = [Point, Point, Point];
 
 /**
  * Calculate the distance between two points, with an optional extra distance to be added to the
