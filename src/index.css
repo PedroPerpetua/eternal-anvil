@@ -2,6 +2,12 @@ body {
   margin: 0;
 }
 
+.center-content {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
 .modal-container {
   position: absolute;
   top: 50%;

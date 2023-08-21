@@ -1,6 +1,8 @@
+import WebsiteLayout from './components/website/WebsiteLayout';
+
 function App() {
   return (
-    <div>Hello world</div>
+    <WebsiteLayout />
   );
 }
 
