@@ -1,0 +1,53 @@
+import { Box, ButtonGroup, Stack } from '@mui/material';
+import { useMap } from 'react-leaflet';
+
+import { ActionBarContextProvider } from './ActionBarContext';
+import AddStructureCard from './AddStructureCard';
+import RealmsCard from './RealmsCard';
+import SettingsCard from './SettingsCard';
+import { useAppSelector } from '../../../store';
+
+function ActionBar() {
+  const map = useMap();
+  const dragging = useAppSelector((state) => state.mapInfo.dragging);
+
+  return (
+    <ActionBarContextProvider>
+      <Box className="leaflet-top leaflet-left" sx={{ width: '20%' }}>
+        <Box
+          className="leaflet-control leaflet-bar"
+          sx={{
+            opacity: dragging ? '25%' : undefined,
+            pointerEvents: dragging ? 'none' : undefined,
+            border: 'none !important',
+            width: '100%',
+          }}
+          onMouseOver={() => { if (!dragging) map.dragging.disable(); }}
+          onMouseOut={() => { if (!dragging) map.dragging.enable(); }}
+        >
+          <Stack direction="row" spacing={2}>
+            <Box>
+              <ButtonGroup
+                disableElevation
+                variant="text"
+                orientation="vertical"
+                color="gameButtonBackground"
+                size="large"
+                sx={{ border: '1px solid black' }}
+              >
+                <AddStructureCard.Button />
+                <RealmsCard.Button />
+                <SettingsCard.Button />
+              </ButtonGroup>
+            </Box>
+            <AddStructureCard />
+            <RealmsCard />
+            <SettingsCard />
+          </Stack>
+        </Box>
+      </Box>
+    </ActionBarContextProvider>
+  );
+}
+
+export default ActionBar;

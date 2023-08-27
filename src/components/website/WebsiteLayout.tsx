@@ -8,9 +8,9 @@ type WebsiteLayoutProps = PropsWithChildren<object>;
 
 function WebsiteLayout({ children }: WebsiteLayoutProps) {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
-      <Container maxWidth="xl" sx={{ flex: 1 }}>
+      <Container maxWidth="xl" sx={{ flex: 1, height: '100%', padding: '25px' }}>
         { children }
       </Container>
       <Footer />

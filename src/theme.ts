@@ -8,6 +8,12 @@ const theme = createTheme({
     primary: {
       main: '#863594ff',
     },
+    gameButtonBackground: {
+      main: '#056e55',
+      light: '#3e917d',
+      dark: '#023027',
+      contrastText: '#e9dfc2',
+    },
   },
 });
 

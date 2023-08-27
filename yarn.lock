@@ -1064,7 +1064,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reduxjs/toolkit@npm:^1.9.5":
+"@reduxjs/toolkit@npm:1.9.5":
   version: 1.9.5
   resolution: "@reduxjs/toolkit@npm:1.9.5"
   dependencies:
@@ -1522,7 +1522,7 @@ __metadata:
     "@hello-pangea/color-picker": 3.2.2
     "@mui/icons-material": 5.14.3
     "@mui/material": 5.14.5
-    "@reduxjs/toolkit": ^1.9.5
+    "@reduxjs/toolkit": 1.9.5
     "@types/leaflet": 1.9.3
     "@types/react": 18.2.20
     "@types/react-dom": 18.2.7
@@ -1543,7 +1543,7 @@ __metadata:
     react-dom: 18.2.0
     react-image-crop: 10.1.5
     react-leaflet: 4.2.1
-    react-redux: ^8.1.2
+    react-redux: 8.1.2
     transformation-matrix: 2.15.0
     typescript: 5.1.6
     vite: 4.4.9
@@ -4809,7 +4809,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-redux@npm:^8.1.2":
+"react-redux@npm:8.1.2":
   version: 8.1.2
   resolution: "react-redux@npm:8.1.2"
   dependencies:

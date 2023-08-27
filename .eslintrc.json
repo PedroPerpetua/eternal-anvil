@@ -127,7 +127,13 @@
     ],
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
-    "react/style-prop-object": "off"
+    "react/style-prop-object": "off",
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "exceptions": ["Marker"]
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
