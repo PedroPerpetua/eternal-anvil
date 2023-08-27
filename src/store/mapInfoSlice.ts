@@ -1,12 +1,13 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Matrix } from 'transformation-matrix';
 
-import { computeAffineMatrix } from '../utils/math';
+import { EMPTY_POINT, Point, computeAffineMatrix } from '../utils/math';
 
 type MapInfo = {
   image: string | null,
   transformationMatrix: Matrix,
   dragging: boolean,
+  currentMouseHover: Point,
 };
 
 // By default, apply a rotation that "mimics" the game (close enough)
@@ -21,6 +22,7 @@ const initialState: MapInfo = {
   image: null,
   transformationMatrix: initialMatrix,
   dragging: false,
+  currentMouseHover: EMPTY_POINT,
 };
 
 const mapInfoSlice = createSlice({
@@ -34,9 +36,12 @@ const mapInfoSlice = createSlice({
     setDragging: (state, action: PayloadAction<MapInfo['dragging']>) => {
       state.dragging = action.payload;
     },
+    setCurrentMouseHover: (state, action: PayloadAction<MapInfo['currentMouseHover']>) => {
+      state.currentMouseHover = action.payload;
+    },
   },
 });
 
-export const { setMapInfo, setDragging } = mapInfoSlice.actions;
+export const { setMapInfo, setDragging, setCurrentMouseHover } = mapInfoSlice.actions;
 
 export default mapInfoSlice.reducer;
