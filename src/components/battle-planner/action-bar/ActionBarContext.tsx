@@ -1,6 +1,9 @@
 import {
   createContext, useContext, useState, PropsWithChildren, useMemo,
 } from 'react';
+import { ThemeProvider } from '@mui/material';
+
+import actionBarTheme from './actionBarTheme';
 
 export type TabId = 'addStructure' | 'realms' | 'settings';
 
@@ -27,8 +30,10 @@ export function ActionBarContextProvider({ children }: ActionBarContextProviderP
     [currentTab, setCurrentTab],
   );
   return (
-    <ActionBarContext.Provider value={memoizedContext}>
-      { children }
-    </ActionBarContext.Provider>
+    <ThemeProvider theme={actionBarTheme}>
+      <ActionBarContext.Provider value={memoizedContext}>
+        { children }
+      </ActionBarContext.Provider>
+    </ThemeProvider>
   );
 }

@@ -42,6 +42,10 @@ export const STRUCTURES_DATA: Record<StructureType, StructureData> = {
   },
 };
 
+// Colors
+
 export const DEFAULT_REALM_COLORS = [
   '#d9d9d8', '#9dd6b4', '#d9ba69', '#ff7a7a', '#d9d8d9', '#dddd78', '#b0b3ee', '#bff4fc',
 ];
+
+export const NEUTRAL_COLOR = '#7b35a3';

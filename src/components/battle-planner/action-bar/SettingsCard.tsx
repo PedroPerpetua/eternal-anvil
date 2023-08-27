@@ -6,7 +6,7 @@ import SettingsIcon from '../../../assets/settings-icon.png';
 const VALUE: TabId = 'settings';
 
 function SettingsButton() {
-  return <ActionBarButton value={VALUE} iconSrc={SettingsIcon} />;
+  return <ActionBarButton value={VALUE} iconSrc={SettingsIcon} tooltip="Settings" />;
 }
 
 function SettingsCard() {

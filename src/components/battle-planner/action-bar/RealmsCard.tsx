@@ -6,7 +6,7 @@ import RealmsIcon from '../../../assets/realms-icon.png';
 const VALUE: TabId = 'realms';
 
 function RealmsButton() {
-  return <ActionBarButton value={VALUE} iconSrc={RealmsIcon} />;
+  return <ActionBarButton value={VALUE} iconSrc={RealmsIcon} tooltip="Realms" />;
 }
 
 function RealmsCard() {

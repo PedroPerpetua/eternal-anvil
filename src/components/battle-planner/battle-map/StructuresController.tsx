@@ -4,11 +4,9 @@ import { shallowEqual } from 'react-redux';
 import { useAppSelector } from '../../../store';
 import { realmSelectors } from '../../../store/realmsSlice';
 import { structuresSelectors } from '../../../store/structuresSlice';
-import { STRUCTURES_DATA } from '../../../utils/gameData';
+import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
 import { transformPoint } from '../../../utils/math';
 import MapMarker from '../../common/MapMarker';
-
-const DEFAULT_COLOR = '#ffffff';
 
 type StructureMarkerProps = {
   id: EntityId
@@ -23,7 +21,7 @@ function StructureMarker({ id }: StructureMarkerProps) {
     return {
       icon: structureInfo.icon,
       size: structureInfo.size,
-      color: realm?.color ?? DEFAULT_COLOR,
+      color: realm?.color ?? NEUTRAL_COLOR,
       position: structure.coordinates,
     };
   }, shallowEqual);

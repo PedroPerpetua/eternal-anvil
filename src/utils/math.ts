@@ -61,3 +61,12 @@ export function computeAffineMatrix(fromSystem: Triangle, toSystem: Triangle) {
 export function transformPoint(transformationMatrix: Matrix, fromPoint: Point) {
   return applyToPoint(transformationMatrix, fromPoint) as Point;
 }
+
+/**
+ * Validate a set of coordinates to make sure they're a valid position.
+ * @param coordinates The coordinates to test.
+ * @returns True if the coordinates are valid.
+ */
+export function validCoordinates(coordinates: Point) {
+  return Number.isFinite(coordinates[0]) && Number.isFinite(coordinates[1]);
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Button, MenuItem, Stack, TextField, Typography,
+  Avatar, Button, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
@@ -11,9 +11,9 @@ import { TabId } from './ActionBarContext';
 import AddStructureIcon from '../../../assets/add-structure-icon.png';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { realmSelectors } from '../../../store/realmsSlice';
-import { createStructure } from '../../../store/structuresSlice';
-import { STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
-import { EMPTY_POINT, Point } from '../../../utils/math';
+import { createStructure, structuresSelectors } from '../../../store/structuresSlice';
+import { NEUTRAL_COLOR, STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
+import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
 import CoordinateInput from '../../common/CoordinateInput';
 
 const VALUE: TabId = 'addStructure';
@@ -23,15 +23,24 @@ const DEFAULT_COORDINATES: Point = EMPTY_POINT;
 const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
 
 function AddStructureButton() {
-  return <ActionBarButton value={VALUE} iconSrc={AddStructureIcon} />;
+  return <ActionBarButton value={VALUE} iconSrc={AddStructureIcon} tooltip="Add Structure" />;
 }
 
 function AddStructureCard() {
   const dispatch = useAppDispatch();
   const realms = useAppSelector((state) => realmSelectors.selectAll(state.realms), shallowEqual);
+  const occupiedCoordinates = useAppSelector(
+    (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
+    shallowEqual,
+  );
   const [realm, setRealm] = useState<EntityId | ''>(DEFAULT_REALM);
   const [coordinates, setCoordinates] = useState<Point>(DEFAULT_COORDINATES);
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
+
+  const canCreate = (
+    validCoordinates(coordinates)
+    && !occupiedCoordinates.some((p) => p[0] === coordinates[0] && p[1] === coordinates[1])
+  );
 
   const handleCreate = () => {
     dispatch(createStructure({
@@ -39,9 +48,7 @@ function AddStructureCard() {
       coordinates,
       type: structureType,
     }));
-    setRealm(DEFAULT_REALM);
     setCoordinates(DEFAULT_COORDINATES);
-    setStructureType(DEFAULT_STRUCTURE_TYPE);
   };
 
   return (
@@ -50,19 +57,6 @@ function AddStructureCard() {
         <Typography variant="h6">
           Add Structrure
         </Typography>
-        <TextField
-          select
-          value={realm}
-          onChange={(e) => setRealm(e.target.value ?? null)}
-          label="Realm"
-        >
-          <MenuItem value={DEFAULT_REALM}>Neutral</MenuItem>
-          { realms.map((r) => (
-            <MenuItem key={r.id} value={r.id} sx={{ backgroundColor: r.color }}>
-              { r.name }
-            </MenuItem>
-          )) }
-        </TextField>
         <CoordinateInput value={coordinates} onChange={(v) => setCoordinates(v)} />
         <TextField
           select
@@ -76,7 +70,38 @@ function AddStructureCard() {
             </MenuItem>
           )) }
         </TextField>
-        <Button onClick={handleCreate}>
+        <TextField
+          select
+          value={realm}
+          onChange={(e) => setRealm(e.target.value ?? null)}
+          label="Realm"
+        >
+          <MenuItem value={DEFAULT_REALM}>
+            <ListItemIcon>
+              <Avatar sx={{ backgroundColor: NEUTRAL_COLOR, width: '24px', height: '24px' }}>
+                { /* Fallback so the avatar comes out empty (just color) */ }
+                { ' ' }
+              </Avatar>
+            </ListItemIcon>
+            <ListItemText>
+              Neutral
+            </ListItemText>
+          </MenuItem>
+          { realms.map((r) => (
+            <MenuItem key={r.id} value={r.id}>
+              <ListItemIcon>
+                <Avatar sx={{ backgroundColor: r.color, width: '24px', height: '24px' }}>
+                  { /* Fallback so the avatar comes out empty (just color) */ }
+                  { ' ' }
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText>
+                { r.name }
+              </ListItemText>
+            </MenuItem>
+          )) }
+        </TextField>
+        <Button onClick={handleCreate} size="small" disabled={!canCreate}>
           Create Structure
         </Button>
       </Stack>

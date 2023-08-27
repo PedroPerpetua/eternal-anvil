@@ -2,15 +2,15 @@ import '@mui/material/styles/createPalette';
 
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
-    gameButtonBackground: Palette['primary'];
+    tabButton: Palette['primary'];
   }
   interface PaletteOptions {
-    gameButtonBackground?: PaletteOptions['primary'];
+    tabButton?: PaletteOptions['primary'];
   }
 }
 
 declare module '@mui/material/ButtonGroup' {
   interface ButtonGroupPropsColorOverrides {
-    gameButtonBackground: true;
+    tabButton: true;
   }
 }

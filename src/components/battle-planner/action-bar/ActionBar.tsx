@@ -6,6 +6,7 @@ import AddStructureCard from './AddStructureCard';
 import RealmsCard from './RealmsCard';
 import SettingsCard from './SettingsCard';
 import { useAppSelector } from '../../../store';
+import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
 function ActionBar() {
   const map = useMap();
@@ -22,8 +23,8 @@ function ActionBar() {
             border: 'none !important',
             width: '100%',
           }}
-          onMouseOver={() => { if (!dragging) map.dragging.disable(); }}
-          onMouseOut={() => { if (!dragging) map.dragging.enable(); }}
+          onMouseOver={() => { if (!dragging) disableMapEvents(map); }}
+          onMouseOut={() => { if (!dragging) enableMapEvents(map); }}
         >
           <Stack direction="row" spacing={2}>
             <Box>
@@ -31,7 +32,7 @@ function ActionBar() {
                 disableElevation
                 variant="text"
                 orientation="vertical"
-                color="gameButtonBackground"
+                color="tabButton"
                 size="large"
                 sx={{ border: '1px solid black' }}
               >
