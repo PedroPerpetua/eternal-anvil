@@ -1,25 +1,29 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import edgesReducer from './edgesSlice';
+import edgesReducer from './battleMap/edgesSlice';
+import mapInfoReducer from './battleMap/mapInfoSlice';
+import realmsReducer from './battleMap/realmsSlice';
+import structuresReducer from './battleMap/structuresSlice';
 import { listenerMiddleware } from './listenerMiddleware';
-import mapInfoReducer from './mapInfoSlice';
-import realmsReducer from './realmsSlice';
-import structuresReducer from './structuresSlice';
+
+const battleMapReducers = combineReducers({
+  realms: realmsReducer,
+  structures: structuresReducer,
+  edges: edgesReducer,
+  mapInfo: mapInfoReducer,
+});
 
 const store = configureStore({
   reducer: {
-    realms: realmsReducer,
-    structures: structuresReducer,
-    edges: edgesReducer,
-    mapInfo: mapInfoReducer,
+    battleMap: battleMapReducers,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
     .prepend(listenerMiddleware.middleware),
 });
 
 // Typed hooks
-type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;

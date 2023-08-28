@@ -5,12 +5,12 @@ import { ActionBarContextProvider } from './ActionBarContext';
 import AddStructureCard from './AddStructureCard';
 import RealmsCard from './RealmsCard';
 import SettingsCard from './SettingsCard';
-import { useAppSelector } from '../../../store';
+import useBattleMapSelector from '../../../store/battleMap';
 import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
 function ActionBar() {
   const map = useMap();
-  const dragging = useAppSelector((state) => state.mapInfo.dragging);
+  const dragging = useBattleMapSelector((state) => state.mapInfo.dragging);
 
   return (
     <ActionBarContextProvider>

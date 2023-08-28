@@ -1,10 +1,10 @@
 import { createEntityAdapter, createSlice, EntityId, PayloadAction } from '@reduxjs/toolkit';
 
-import { startListening } from './listenerMiddleware';
 import { deleteRealm } from './realmsSlice';
-import { StructureType } from '../utils/gameData';
-import { Point } from '../utils/math';
-import { generateId } from '../utils/utilities';
+import { StructureType } from '../../utils/gameData';
+import { Point } from '../../utils/math';
+import { generateId } from '../../utils/utilities';
+import { startListening } from '../listenerMiddleware';
 
 type Structure = {
   id: EntityId,

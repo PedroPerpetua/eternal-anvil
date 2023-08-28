@@ -1,6 +1,6 @@
 import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { generateId } from '../utils/utilities';
+import { generateId } from '../../utils/utilities';
 
 type Realm = {
   id: EntityId,

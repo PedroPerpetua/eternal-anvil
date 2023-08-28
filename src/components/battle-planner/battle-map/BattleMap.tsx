@@ -4,13 +4,13 @@ import { MapContainer } from 'react-leaflet';
 import MapDragController from './MapDragController';
 import MouseHoverController from './MouseHoverController';
 import StructuresController from './StructuresController';
-import { useAppSelector } from '../../../store';
+import useBattleMapSelector from '../../../store/battleMap';
 import MapImageLayer from '../../common/MapImageLayer';
 import ActionBar from '../action-bar/ActionBar';
 import MousePositionDisplay from '../mouse-position-display/MousePositionDisplay';
 
 function BattleMap() {
-  const image = useAppSelector((state) => state.mapInfo.image);
+  const image = useBattleMapSelector((state) => state.mapInfo.image);
   return (
     <MapContainer
       crs={CRS.Simple}

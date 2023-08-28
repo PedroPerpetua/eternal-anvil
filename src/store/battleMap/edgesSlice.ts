@@ -1,8 +1,8 @@
 import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { startListening } from './listenerMiddleware';
 import { deleteStructure } from './structuresSlice';
-import { generateId } from '../utils/utilities';
+import { generateId } from '../../utils/utilities';
+import { startListening } from '../listenerMiddleware';
 
 type Edge = {
   id: EntityId,

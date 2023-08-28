@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 
-import { useAppSelector } from '../../../store';
+import useBattleMapSelector from '../../../store/battleMap';
 
 function MousePositionDisplay() {
-  const currentPosition = useAppSelector((state) => state.mapInfo.currentMouseHover);
+  const currentPosition = useBattleMapSelector((state) => state.mapInfo.currentMouseHover);
   if (!Number.isFinite(currentPosition[0]) || !Number.isFinite(currentPosition[1])) return null;
   return (
     <Box className="leaflet-bottom leaflet-right" sx={{ padding: '15px' }}>

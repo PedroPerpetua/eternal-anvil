@@ -9,9 +9,10 @@ import ActionBarButton from './ActionBarButton';
 import ActionBarCard from './ActionBarCard';
 import { TabId } from './ActionBarContext';
 import AddStructureIcon from '../../../assets/add-structure-icon.png';
-import { useAppDispatch, useAppSelector } from '../../../store';
-import { realmSelectors } from '../../../store/realmsSlice';
-import { createStructure, structuresSelectors } from '../../../store/structuresSlice';
+import { useAppDispatch } from '../../../store';
+import useBattleMapSelector from '../../../store/battleMap';
+import { realmSelectors } from '../../../store/battleMap/realmsSlice';
+import { createStructure, structuresSelectors } from '../../../store/battleMap/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
 import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
 import CoordinateInput from '../../common/CoordinateInput';
@@ -28,8 +29,11 @@ function AddStructureButton() {
 
 function AddStructureCard() {
   const dispatch = useAppDispatch();
-  const realms = useAppSelector((state) => realmSelectors.selectAll(state.realms), shallowEqual);
-  const occupiedCoordinates = useAppSelector(
+  const realms = useBattleMapSelector(
+    (state) => realmSelectors.selectAll(state.realms),
+    shallowEqual,
+  );
+  const occupiedCoordinates = useBattleMapSelector(
     (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
     shallowEqual,
   );
@@ -55,7 +59,7 @@ function AddStructureCard() {
     <ActionBarCard value={VALUE}>
       <Stack spacing={1}>
         <Typography variant="h6">
-          Add Structrure
+          Add Structure
         </Typography>
         <CoordinateInput value={coordinates} onChange={(v) => setCoordinates(v)} />
         <TextField
