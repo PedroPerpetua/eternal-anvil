@@ -32,9 +32,13 @@ function ActionBar() {
                 disableElevation
                 variant="text"
                 orientation="vertical"
-                color="tabButton"
                 size="large"
-                sx={{ border: '1px solid black' }}
+                sx={{
+                  border: '1px solid black',
+                  '.MuiButtonGroup-grouped:not(:last-of-type)': {
+                    borderColor: '#023027',
+                  },
+                }}
               >
                 <AddStructureCard.Button />
                 <RealmsCard.Button />

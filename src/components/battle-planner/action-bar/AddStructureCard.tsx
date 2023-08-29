@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Avatar, Button, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
+  Avatar, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
@@ -16,6 +16,7 @@ import { createStructure, structuresSelectors } from '../../../store/battleMap/s
 import { NEUTRAL_COLOR, STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
 import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
 import CoordinateInput from '../../common/CoordinateInput';
+import GameButton from '../../common/styled-components/GameButton';
 
 const VALUE: TabId = 'addStructure';
 
@@ -74,6 +75,10 @@ function AddStructureCard() {
             </MenuItem>
           )) }
         </TextField>
+        { /*
+          TODO: The following select has a bug where the text position is wrong and flickers to the
+          right place.
+         */ }
         <TextField
           select
           value={realm}
@@ -105,9 +110,9 @@ function AddStructureCard() {
             </MenuItem>
           )) }
         </TextField>
-        <Button onClick={handleCreate} size="small" disabled={!canCreate}>
+        <GameButton onClick={handleCreate} size="small" disabled={!canCreate}>
           Create Structure
-        </Button>
+        </GameButton>
       </Stack>
     </ActionBarCard>
   );

@@ -1,27 +1,44 @@
-import { createTheme } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
+import { createTheme, outlinedInputClasses } from '@mui/material';
 
 import theme from '../../../theme';
+import { GAME_GOLD } from '../../common/styled-components/colors';
 
 const actionBarTheme = createTheme(theme, {
-  palette: {
-    primary: {
-      main: blueGrey['500'],
-      light: blueGrey['300'],
-      dark: blueGrey['700'],
-      contrastText: '#ffffff',
-    },
-    tabButton: {
-      main: '#056e55',
-      light: '#3e917d',
-      dark: '#023027',
-    },
-  },
   components: {
     MuiButton: {
       defaultProps: {
         variant: 'contained',
         disableElevation: true,
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& label.Mui-focused': {
+            color: GAME_GOLD.light,
+          },
+          '& label': {
+            color: GAME_GOLD.dark,
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: GAME_GOLD.light,
+        },
+        root: {
+          [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: GAME_GOLD.dark,
+          },
+          [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: GAME_GOLD.dark,
+          },
+          '& .MuiOutlinedInput-input': {
+            color: 'white',
+          },
+        },
       },
     },
   },
