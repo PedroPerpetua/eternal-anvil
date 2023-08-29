@@ -8,8 +8,8 @@ type ActionBarCardProps = PropsWithChildren<{
 }>;
 
 function ActionBarCard({ value, children }: ActionBarCardProps) {
-  const { currentTab } = useActionBarContext();
-  if (currentTab !== value) return null;
+  const { current } = useActionBarContext();
+  if (current !== value) return null;
   return (
     <GildedPaper elevation={0} sx={{ padding: '25px', width: '100%' }}>
       { children }

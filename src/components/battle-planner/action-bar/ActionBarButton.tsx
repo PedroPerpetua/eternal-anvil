@@ -11,15 +11,15 @@ type ActionBarButtonProps = {
 };
 
 function ActionBarButton({ value, iconSrc, tooltip }: ActionBarButtonProps) {
-  const { currentTab, setCurrentTab } = useActionBarContext();
+  const { current, setCurrent } = useActionBarContext();
   const icon = useTintedImage(iconSrc, '#d8bc68');
-  const isSelected = currentTab === value;
+  const isSelected = current === value;
   return (
     <GildedTooltip
       title={tooltip}
       placement="left"
     >
-      <GameButton onClick={() => setCurrentTab(isSelected ? null : value)} selected={isSelected}>
+      <GameButton onClick={() => setCurrent(isSelected ? null : value)} selected={isSelected}>
         <CustomIcon src={icon} />
       </GameButton>
     </GildedTooltip>
