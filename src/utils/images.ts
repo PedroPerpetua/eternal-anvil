@@ -137,7 +137,7 @@ function mix_hexes(...hexes: string[]) {
   return mixture_hex;
 }
 
-export const blendColors = moize(mix_hexes)
+export const blendColors = moize(mix_hexes, { isShallowEqual: true });
 
 
 /* https://codesandbox.io/s/react-image-crop-demo-with-react-hooks-y831o ------------------------ */

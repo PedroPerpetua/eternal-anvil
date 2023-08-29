@@ -6,7 +6,7 @@ import useBattleMapSelector from '../../../store/battleMap';
 import { realmSelectors } from '../../../store/battleMap/realmsSlice';
 import { structuresSelectors } from '../../../store/battleMap/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
-import { transformPoint } from '../../../utils/math';
+import { gameToLeaflet } from '../../../utils/math';
 import MapMarker from '../../common/MapMarker';
 
 type StructureMarkerProps = {
@@ -38,7 +38,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
       iconSize={structureData.size}
       iconColor={structureData.color}
       markerProps={{
-        position: transformPoint(transformationMatrix, structureData.position),
+        position: gameToLeaflet(transformationMatrix, structureData.position),
       }}
     />
   );

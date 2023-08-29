@@ -1,12 +1,10 @@
-import { useMemo } from 'react';
 import { useMapEvent } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
-import { inverse } from 'transformation-matrix';
 
 import { useAppDispatch } from '../../../store';
 import useBattleMapSelector from '../../../store/battleMap';
 import { setCurrentMouseHover } from '../../../store/battleMap/mapInfoSlice';
-import { EMPTY_POINT, transformPoint } from '../../../utils/math';
+import { EMPTY_POINT, leafletToGame } from '../../../utils/math';
 
 function MouseHoverController() {
   const dispatch = useAppDispatch();
@@ -14,10 +12,10 @@ function MouseHoverController() {
     (state) => state.mapInfo.transformationMatrix,
     shallowEqual,
   );
-  const inverseMatrix = useMemo(() => inverse(transformationMatrix), [transformationMatrix]);
   useMapEvent('mousemove', (e) => {
-    const point = transformPoint(inverseMatrix, [e.latlng.lat, e.latlng.lng]);
-    dispatch(setCurrentMouseHover([Math.round(point[0]), Math.round(point[1])]));
+    dispatch(
+      setCurrentMouseHover(leafletToGame(transformationMatrix, [e.latlng.lat, e.latlng.lng])),
+    );
   });
 
   useMapEvent('mouseout', () => dispatch(setCurrentMouseHover(EMPTY_POINT)));

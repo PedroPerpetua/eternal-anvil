@@ -1,4 +1,5 @@
-import { Matrix, applyToPoint, fromTriangles } from 'transformation-matrix';
+import moize from 'moize';
+import { Matrix, applyToPoint, fromTriangles, inverse } from 'transformation-matrix';
 /*
  * For the purpose of "empty numbers" (missing input) we use Infinity to make type checking more
  * fluid.
@@ -52,14 +53,29 @@ export function computeAffineMatrix(fromSystem: Triangle, toSystem: Triangle) {
   return fromTriangles(fromSystem, toSystem);
 }
 
+// Moize expensive math functions for better performance
+const memoizedApplyToPoint = moize(applyToPoint, { isShallowEqual: true });
+const memoizedInverse = moize(inverse, { isShallowEqual: true });
+
 /**
- * Apply an Affine Transformation to a given point.
- * @param transformationMatrix The Affine Transformation Matrix that should be applied.
- * @param fromPoint The point in the original coordinates.
- * @returns The coordinates of the point in the destination coordinate system.
+ * Transform a point from game coordinates to leaflet coordinates.
+ * @param transformationMatrix The Affine Transformation Matrix of the transformation.
+ * @param fromPoint The point in the game coordinates.
+ * @returns The coordinates of the point in leaflet.
  */
-export function transformPoint(transformationMatrix: Matrix, fromPoint: Point) {
-  return applyToPoint(transformationMatrix, fromPoint) as Point;
+export function gameToLeaflet(transformationMatrix: Matrix, fromPoint: Point) {
+  return memoizedApplyToPoint(transformationMatrix, fromPoint) as Point;
+}
+
+/**
+ * Transform a point from leaflet to game coordinates.
+ * @param transformationMatrix The Affine Transformation Matrix of the transformation.
+ * @param fromPoint The point in leaflet.
+ * @returns The coordinates of the point in game coordinates.
+ */
+export function leafletToGame(transformationMatrix: Matrix, fromPoint: Point) {
+  const point = memoizedApplyToPoint(memoizedInverse(transformationMatrix), fromPoint);
+  return [Math.round(point[0]), Math.round(point[1])] as Point;
 }
 
 /**

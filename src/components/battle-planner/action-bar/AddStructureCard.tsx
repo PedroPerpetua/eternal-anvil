@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Avatar, ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
+  ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
@@ -15,6 +15,7 @@ import { realmSelectors } from '../../../store/battleMap/realmsSlice';
 import { createStructure, structuresSelectors } from '../../../store/battleMap/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
 import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
+import ColoredAvatar from '../../common/ColoredAvatar';
 import CoordinateInput from '../../common/CoordinateInput';
 import GameButton from '../../common/styled-components/GameButton';
 
@@ -87,10 +88,7 @@ function AddStructureCard() {
         >
           <MenuItem value={DEFAULT_REALM}>
             <ListItemIcon>
-              <Avatar sx={{ backgroundColor: NEUTRAL_COLOR, width: '24px', height: '24px' }}>
-                { /* Fallback so the avatar comes out empty (just color) */ }
-                { ' ' }
-              </Avatar>
+              <ColoredAvatar color={NEUTRAL_COLOR} size={24} />
             </ListItemIcon>
             <ListItemText>
               Neutral
@@ -99,10 +97,7 @@ function AddStructureCard() {
           { realms.map((r) => (
             <MenuItem key={r.id} value={r.id}>
               <ListItemIcon>
-                <Avatar sx={{ backgroundColor: r.color, width: '24px', height: '24px' }}>
-                  { /* Fallback so the avatar comes out empty (just color) */ }
-                  { ' ' }
-                </Avatar>
+                <ColoredAvatar color={r.color} size={24} />
               </ListItemIcon>
               <ListItemText>
                 { r.name }
