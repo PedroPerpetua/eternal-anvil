@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
@@ -7,7 +7,7 @@ import { shallowEqual } from 'react-redux';
 
 import ActionBarButton from './ActionBarButton';
 import ActionBarCard from './ActionBarCard';
-import { TabId } from './ActionBarContext';
+import { TabId, useActionBarContext } from './ActionBarContext';
 import AddStructureIcon from '../../../assets/add-structure-icon.png';
 import { useAppDispatch } from '../../../store';
 import useBattleMapSelector from '../../../store/battleMap';
@@ -30,6 +30,7 @@ function AddStructureButton() {
 }
 
 function AddStructureCard() {
+  const { payload: requestedRealm } = useActionBarContext();
   const dispatch = useAppDispatch();
   const realms = useBattleMapSelector(
     (state) => realmSelectors.selectAll(state.realms),
@@ -42,6 +43,12 @@ function AddStructureCard() {
   const [realm, setRealm] = useState<EntityId | ''>(DEFAULT_REALM);
   const [coordinates, setCoordinates] = useState<Point>(DEFAULT_COORDINATES);
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
+
+  useEffect(() => {
+    if (requestedRealm === null) return;
+    if (realms.map((r) => r.id).includes(requestedRealm)) setRealm(requestedRealm);
+    else setRealm('');
+  }, [realms, requestedRealm, setRealm]);
 
   const canCreate = (
     validCoordinates(coordinates)
