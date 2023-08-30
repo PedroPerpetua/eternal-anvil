@@ -131,7 +131,7 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
             <CustomIcon src={AddStructureIcon} />
           </GameButton>
           <Button size="small" color="error" onClick={openDelete}>
-            <DeleteIcon stroke="black" stroke-width="1px" />
+            <DeleteIcon stroke="black" strokeWidth="1px" />
           </Button>
         </Stack>
         {

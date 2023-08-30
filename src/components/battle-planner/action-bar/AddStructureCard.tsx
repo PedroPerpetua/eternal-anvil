@@ -25,6 +25,24 @@ const DEFAULT_REALM = 'NEUTRAL';
 const DEFAULT_COORDINATES: Point = EMPTY_POINT;
 const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
 
+type RealmOptionProps = {
+  label: string,
+  color: string,
+};
+
+function RealmOption({ label, color }: RealmOptionProps) {
+  return (
+    <Stack direction="row" alignItems="center">
+      <ListItemIcon>
+        <ColoredAvatar color={color} size={24} />
+      </ListItemIcon>
+      <ListItemText>
+        { label }
+      </ListItemText>
+    </Stack>
+  );
+}
+
 function AddStructureButton() {
   return <ActionBarButton value={VALUE} iconSrc={AddStructureIcon} tooltip="Add Structure" />;
 }
@@ -40,14 +58,14 @@ function AddStructureCard() {
     (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
     shallowEqual,
   );
-  const [realm, setRealm] = useState<EntityId | ''>(DEFAULT_REALM);
+  const [realm, setRealm] = useState<EntityId | typeof DEFAULT_REALM>(DEFAULT_REALM);
   const [coordinates, setCoordinates] = useState<Point>(DEFAULT_COORDINATES);
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
 
   useEffect(() => {
     if (requestedRealm === null) return;
     if (realms.map((r) => r.id).includes(requestedRealm)) setRealm(requestedRealm);
-    else setRealm('');
+    else setRealm(DEFAULT_REALM);
   }, [realms, requestedRealm, setRealm]);
 
   const canCreate = (
@@ -83,10 +101,6 @@ function AddStructureCard() {
             </MenuItem>
           )) }
         </TextField>
-        { /*
-          TODO: The following select has a bug where the text position is wrong and flickers to the
-          right place.
-         */ }
         <TextField
           select
           value={realm}
@@ -94,23 +108,15 @@ function AddStructureCard() {
           label="Realm"
         >
           <MenuItem value={DEFAULT_REALM}>
-            <ListItemIcon>
-              <ColoredAvatar color={NEUTRAL_COLOR} size={24} />
-            </ListItemIcon>
-            <ListItemText>
-              Neutral
-            </ListItemText>
+            <RealmOption label="Neutral" color={NEUTRAL_COLOR} />
           </MenuItem>
-          { realms.map((r) => (
-            <MenuItem key={r.id} value={r.id}>
-              <ListItemIcon>
-                <ColoredAvatar color={r.color} size={24} />
-              </ListItemIcon>
-              <ListItemText>
-                { r.name }
-              </ListItemText>
-            </MenuItem>
-          )) }
+          {
+            realms.map((r) => (
+              <MenuItem key={r.id} value={r.id}>
+                <RealmOption label={r.name} color={r.color} />
+              </MenuItem>
+            ))
+          }
         </TextField>
         <GameButton onClick={handleCreate} size="small" disabled={!canCreate}>
           Create Structure
