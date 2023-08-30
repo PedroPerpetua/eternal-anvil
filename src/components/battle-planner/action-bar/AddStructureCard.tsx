@@ -68,6 +68,10 @@ function AddStructureCard() {
     else setRealm(DEFAULT_REALM);
   }, [realms, requestedRealm, setRealm]);
 
+  useEffect(() => {
+    if (!realms.map((r) => r.id).includes(realm)) setRealm(DEFAULT_REALM);
+  }, [realms, realm]);
+
   const canCreate = (
     validCoordinates(coordinates)
     && !occupiedCoordinates.some((p) => p[0] === coordinates[0] && p[1] === coordinates[1])

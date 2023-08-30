@@ -20,6 +20,7 @@
     "react"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-use-before-define": [
       "error",
       {
@@ -131,7 +132,7 @@
     "react/jsx-props-no-spreading": [
       "error",
       {
-        "exceptions": ["Marker"]
+        "exceptions": ["Marker", "TransitionGroup"]
       }
     ]
   },

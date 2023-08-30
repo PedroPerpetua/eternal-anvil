@@ -1,9 +1,10 @@
 import { memo, useState } from 'react';
+import { TwitterPicker } from '@hello-pangea/color-picker';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import ArrowIcon from '@mui/icons-material/ExpandLessSharp';
 import {
   Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItemButton,
-  ListItemIcon, ListItemText, Paper, Stack, Typography,
+  ListItemIcon, ListItemText, Paper, Stack, TextField, Typography,
 } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { useMap } from 'react-leaflet';
@@ -16,9 +17,9 @@ import AddStructureIcon from '../../../assets/add-structure-icon.png';
 import RealmsIcon from '../../../assets/realms-icon.png';
 import { useAppDispatch } from '../../../store';
 import useBattleMapSelector from '../../../store/battleMap';
-import { deleteRealm, realmSelectors } from '../../../store/battleMap/realmsSlice';
+import { createRealm, deleteRealm, realmSelectors } from '../../../store/battleMap/realmsSlice';
 import { structuresSelectors } from '../../../store/battleMap/structuresSlice';
-import { STRUCTURES_DATA } from '../../../utils/gameData';
+import { DEFAULT_REALM_COLORS, STRUCTURES_DATA } from '../../../utils/gameData';
 import { gameToLeaflet } from '../../../utils/math';
 import ColoredAvatar from '../../common/ColoredAvatar';
 import CustomIcon from '../../common/CustomIcon';
@@ -27,10 +28,73 @@ import createTabbedContext from '../../common/TabbedContext';
 
 const VALUE: TabId = 'realms';
 
+const DEFAULT_REALM_NAME = '';
+const DEFAULT_COLOR = DEFAULT_REALM_COLORS[0];
+
 const {
   useContext: useListContext,
   ContextProvider: ListContextProvider,
-} = createTabbedContext<EntityId>();
+} = createTabbedContext<EntityId | 'CREATE'>();
+
+function RealmCreateListItem() {
+  const dispatch = useAppDispatch();
+  const { current, setCurrent } = useListContext();
+  const isOpen = current === 'CREATE';
+  const [realmName, setRealmName] = useState(DEFAULT_REALM_NAME);
+  const [color, setColor] = useState(DEFAULT_COLOR);
+
+  const handleCreate = () => {
+    dispatch(createRealm({ name: realmName, color }));
+    setRealmName(DEFAULT_REALM_NAME);
+    setColor(DEFAULT_COLOR);
+    setCurrent(null);
+  };
+
+  return (
+    <Paper sx={{ padding: '5px' }}>
+      <Stack
+        onClick={() => setCurrent(isOpen ? null : 'CREATE')}
+        className="clickable"
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography>Create Realm</Typography>
+        </Stack>
+        <ArrowIcon
+          fontSize="small"
+          sx={{
+            rotate: isOpen ? '0' : '-180deg',
+            transition: 'all',
+            transitionDuration: '0.2s',
+          }}
+        />
+      </Stack>
+      <Collapse in={isOpen} unmountOnExit>
+        <Stack spacing={1} marginTop="5px">
+          <TextField
+            label="Realm Name"
+            value={realmName}
+            onChange={(e) => setRealmName(e.target.value)}
+            inputProps={{ style: { color: 'black' } }}
+          />
+          <TwitterPicker
+            color={color}
+            onChangeComplete={(c) => setColor(c.hex)}
+            defaultColor={DEFAULT_COLOR}
+            colors={DEFAULT_REALM_COLORS}
+            triangle="hide"
+            width="100%"
+          />
+          <GameButton disabled={realmName === '' || color === ''} onClick={handleCreate}>
+            Create Realm
+          </GameButton>
+        </Stack>
+      </Collapse>
+    </Paper>
+  );
+}
 
 type RealmDeleteDialogProps = {
   open: boolean,
@@ -186,11 +250,14 @@ function RealmsCard() {
         Realms
       </Typography>
       <ListContextProvider>
-        {
-          realmIds.map((id) => (
-            <RealmListItem key={id} id={id} openDelete={() => setOpenDeleteDialog(true)} />
-          ))
-        }
+        <Stack spacing={1}>
+          {
+            realmIds.map((id) => (
+              <RealmListItem key={id} id={id} openDelete={() => setOpenDeleteDialog(true)} />
+            ))
+          }
+          <RealmCreateListItem />
+        </Stack>
         <RealmDeleteDialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)} />
       </ListContextProvider>
     </ActionBarCard>
