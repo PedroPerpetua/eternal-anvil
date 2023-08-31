@@ -13,15 +13,15 @@ import { useAppDispatch } from '../../../store';
 import useBattleMapSelector from '../../../store/battleMap';
 import { realmSelectors } from '../../../store/battleMap/realmsSlice';
 import { createStructure, structuresSelectors } from '../../../store/battleMap/structuresSlice';
-import { NEUTRAL_COLOR, STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
+import { STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
 import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
 import ColoredAvatar from '../../common/ColoredAvatar';
 import CoordinateInput from '../../common/CoordinateInput';
+import { GAME_GOLD } from '../../common/styled-components/colors';
 import GameButton from '../../common/styled-components/GameButton';
 
 const VALUE: TabId = 'addStructure';
 
-const DEFAULT_REALM = 'NEUTRAL';
 const DEFAULT_COORDINATES: Point = EMPTY_POINT;
 const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
 
@@ -36,9 +36,9 @@ function RealmOption({ label, color }: RealmOptionProps) {
       <ListItemIcon>
         <ColoredAvatar color={color} size={24} />
       </ListItemIcon>
-      <ListItemText>
+      <Typography variant="inherit" noWrap>
         { label }
-      </ListItemText>
+      </Typography>
     </Stack>
   );
 }
@@ -58,28 +58,31 @@ function AddStructureCard() {
     (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
     shallowEqual,
   );
-  const [realm, setRealm] = useState<EntityId | typeof DEFAULT_REALM>(DEFAULT_REALM);
+  const [realm, setRealm] = useState<EntityId>(realms[0]?.id ?? '');
   const [coordinates, setCoordinates] = useState<Point>(DEFAULT_COORDINATES);
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
 
   useEffect(() => {
     if (requestedRealm === null) return;
     if (realms.map((r) => r.id).includes(requestedRealm)) setRealm(requestedRealm);
-    else setRealm(DEFAULT_REALM);
+    else setRealm('');
   }, [realms, requestedRealm, setRealm]);
 
   useEffect(() => {
-    if (!realms.map((r) => r.id).includes(realm)) setRealm(DEFAULT_REALM);
+    // Make sure the selected realm belongs (in case the current selected gets deleted)
+    if (realms.length === 0) setRealm('');
+    else if (!realms.map((r) => r.id).includes(realm)) setRealm(realms[0].id);
   }, [realms, realm]);
 
   const canCreate = (
-    validCoordinates(coordinates)
+    realm !== ''
+    && validCoordinates(coordinates)
     && !occupiedCoordinates.some((p) => p[0] === coordinates[0] && p[1] === coordinates[1])
   );
 
   const handleCreate = () => {
     dispatch(createStructure({
-      realm: realm === DEFAULT_REALM ? null : realm,
+      realm,
       coordinates,
       type: structureType,
     }));
@@ -107,16 +110,37 @@ function AddStructureCard() {
         </TextField>
         <TextField
           select
+          SelectProps={{
+            displayEmpty: true,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore - There's no way to define the generic type with SelectProps
+            renderValue: (value: EntityId | '') => {
+              if (realms.length === 0) {
+                return (
+                  <Typography
+                    sx={{
+                      color: GAME_GOLD.darker,
+                      WebkitTextFillColor: GAME_GOLD.darker, // We need this for the disabled color
+                    }}
+                  >
+                    No realms
+                  </Typography>
+                );
+              }
+              const r = realms.find((v) => v.id === value);
+              if (!r) return null; // Should never happen
+              return <RealmOption label={r.name} color={r.color} />;
+            },
+          }}
           value={realm}
           onChange={(e) => setRealm(e.target.value ?? null)}
           label="Realm"
+          disabled={realms.length === 0}
+          InputLabelProps={{ shrink: true }}
         >
-          <MenuItem value={DEFAULT_REALM}>
-            <RealmOption label="Neutral" color={NEUTRAL_COLOR} />
-          </MenuItem>
           {
             realms.map((r) => (
-              <MenuItem key={r.id} value={r.id}>
+              <MenuItem key={r.id} value={r.id} sx={{ display: 'block', maxWidth: '250px' }}>
                 <RealmOption label={r.name} color={r.color} />
               </MenuItem>
             ))

@@ -1,6 +1,7 @@
 export const GAME_GOLD = {
   light: '#987f3c',
   dark: '#745b29',
+  darker: '#3a2d14',
 };
 
 export const GAME_TEAL = {

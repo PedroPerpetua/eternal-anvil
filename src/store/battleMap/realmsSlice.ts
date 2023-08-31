@@ -1,6 +1,6 @@
 import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { DEFAULT_REALM_COLORS } from '../../utils/gameData';
+import { DEFAULT_REALM_COLORS, NEUTRAL_COLOR } from '../../utils/gameData';
 import { generateId } from '../../utils/utilities';
 
 type Realm = {
@@ -10,10 +10,10 @@ type Realm = {
 };
 
 const realmsAdapter = createEntityAdapter<Realm>();
-const initialState = realmsAdapter.addOne(
-  realmsAdapter.getInitialState(),
+const initialState = realmsAdapter.addMany(realmsAdapter.getInitialState(), [
+  { id: generateId(), name: 'Neutral', color: NEUTRAL_COLOR },
   { id: generateId(), name: 'My Realm', color: DEFAULT_REALM_COLORS[0] },
-);
+]);
 
 const realmsSlice = createSlice({
   name: 'realms',

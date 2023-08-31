@@ -15,6 +15,7 @@ import ActionBarCard from './ActionBarCard';
 import { TabId, useActionBarContext } from './ActionBarContext';
 import AddStructureIcon from '../../../assets/add-structure-icon.png';
 import RealmsIcon from '../../../assets/realms-icon.png';
+import useTintedImage from '../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../store';
 import useBattleMapSelector from '../../../store/battleMap';
 import { createRealm, deleteRealm, realmSelectors } from '../../../store/battleMap/realmsSlice';
@@ -72,7 +73,7 @@ function RealmCreateListItem() {
         />
       </Stack>
       <Collapse in={isOpen} unmountOnExit>
-        <Stack spacing={1} marginTop="5px">
+        <Stack spacing={1} marginTop="10px">
           <TextField
             label="Realm Name"
             value={realmName}
@@ -132,41 +133,69 @@ function RealmDeleteDialog({ open, onClose }: RealmDeleteDialogProps) {
   );
 }
 
+type StructureListProps = {
+  realmId: EntityId | null
+};
+
+const StructureList = memo(({ realmId }: StructureListProps) => {
+  const map = useMap();
+  const structures = useBattleMapSelector(
+    (state) => structuresSelectors.selectAll(state.structures).filter((s) => s.realm === realmId),
+    shallowEqual,
+  );
+  const transformationMatrix = useBattleMapSelector(
+    (state) => state.mapInfo.transformationMatrix,
+    shallowEqual,
+  );
+  if (structures.length === 0) {
+    return (
+      <Typography variant="subtitle2" color="gray" textAlign="center">
+        No structures
+      </Typography>
+    );
+  }
+  return (
+    <List dense disablePadding sx={{ marginTop: '5px' }}>
+      {
+        structures.map((s) => (
+          <ListItemButton
+            key={s.id}
+            onClick={() => map.setView(gameToLeaflet(transformationMatrix, s.coordinates))}
+          >
+            <ListItemIcon>
+              <CustomIcon src={STRUCTURES_DATA[s.type].icon} />
+            </ListItemIcon>
+            <ListItemText>
+              { STRUCTURES_DATA[s.type].name }
+              { ' ' }
+              (
+              { s.coordinates[0] }
+              |
+              { s.coordinates[1] }
+              )
+            </ListItemText>
+          </ListItemButton>
+        ))
+      }
+    </List>
+  );
+});
+
 type RealmListItemProps = {
   id: EntityId,
   openDelete: () => void,
 };
 
 const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
-  const map = useMap();
   const { current, setCurrent } = useListContext();
   const { setCurrent: changeTab } = useActionBarContext();
   const isOpen = current === id;
-  const realmData = useBattleMapSelector(
-    (state) => {
-      const realm = realmSelectors.selectById(state.realms, id);
-      if (!realm) return null;
-      const structures = structuresSelectors
-        .selectAll(state.structures)
-        .filter((struct) => struct.realm === realm.id);
-      return { ...realm, structures };
-    },
-    (data1, data2) => {
-      if (data1 === null && data2 === null) return true;
-      if (data1 === null && data2 !== null) return false;
-      if (data1 !== null && data2 === null) return false;
-      // Here we know they're both not null; type guard
-      if (data1 === null || data2 === null) return false;
-      const { structures: data1Structures, ...otherData1 } = data1;
-      const { structures: data2Structures, ...otherData2 } = data2;
-      return shallowEqual(otherData1, otherData2) && shallowEqual(data1Structures, data2Structures);
-    },
-  );
-  const transformationMatrix = useBattleMapSelector(
-    (state) => state.mapInfo.transformationMatrix,
+  const realm = useBattleMapSelector(
+    (state) => (realmSelectors.selectById(state.realms, id)),
     shallowEqual,
   );
-  if (realmData === null) return null;
+  const tintedAddStructureIcon = useTintedImage(AddStructureIcon, '#d8bc68');
+  if (!realm) return null;
   return (
     <Paper sx={{ padding: '5px' }}>
       <Stack
@@ -177,8 +206,8 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
         alignItems="center"
       >
         <Stack direction="row" alignItems="center" spacing={1}>
-          <ColoredAvatar color={realmData.color} size={24} />
-          <Typography>{ realmData.name }</Typography>
+          <ColoredAvatar color={realm.color} size={24} />
+          <Typography>{ realm.name }</Typography>
         </Stack>
         <ArrowIcon
           fontSize="small"
@@ -191,44 +220,14 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
       </Stack>
       <Collapse in={isOpen} unmountOnExit>
         <Stack direction="row" justifyContent="center" padding="5px" spacing={2}>
-          <GameButton size="small" onClick={() => changeTab('addStructure', id)}>
-            <CustomIcon src={AddStructureIcon} />
+          <GameButton size="small" onClick={() => changeTab('addStructure', realm.id)}>
+            <CustomIcon src={tintedAddStructureIcon} />
           </GameButton>
           <Button size="small" color="error" onClick={openDelete}>
             <DeleteIcon stroke="black" strokeWidth="1px" />
           </Button>
         </Stack>
-        {
-          realmData.structures.length === 0
-            ? (
-              <Typography variant="subtitle2" color="gray" textAlign="center">
-                No structures
-              </Typography>
-            )
-            : (
-              <List dense disablePadding sx={{ marginTop: '5px' }}>
-                { realmData.structures.map((s) => (
-                  <ListItemButton
-                    key={s.id}
-                    onClick={() => map.setView(gameToLeaflet(transformationMatrix, s.coordinates))}
-                  >
-                    <ListItemIcon>
-                      <CustomIcon src={STRUCTURES_DATA[s.type].icon} />
-                    </ListItemIcon>
-                    <ListItemText>
-                      { STRUCTURES_DATA[s.type].name }
-                      { ' ' }
-                      (
-                      { s.coordinates[0] }
-                      |
-                      { s.coordinates[1] }
-                      )
-                    </ListItemText>
-                  </ListItemButton>
-                )) }
-              </List>
-            )
-        }
+        <StructureList realmId={realm.id} />
       </Collapse>
     </Paper>
   );

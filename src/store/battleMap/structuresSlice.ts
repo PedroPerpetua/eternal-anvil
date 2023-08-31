@@ -8,7 +8,7 @@ import { startListening } from '../listenerMiddleware';
 
 type Structure = {
   id: EntityId,
-  realm: EntityId | null,
+  realm: EntityId,
   type: StructureType,
   coordinates: Point
 };

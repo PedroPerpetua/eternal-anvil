@@ -20,6 +20,9 @@ const actionBarTheme = createTheme(theme, {
           '& label': {
             color: GAME_GOLD.dark,
           },
+          '& label.Mui-disabled': {
+            color: GAME_GOLD.darker,
+          },
         },
       },
     },
@@ -37,6 +40,9 @@ const actionBarTheme = createTheme(theme, {
           },
           '& .MuiOutlinedInput-input': {
             color: 'white',
+          },
+          [`&.Mui-disabled .${outlinedInputClasses.notchedOutline}`]: {
+            borderColor: GAME_GOLD.darker,
           },
         },
       },

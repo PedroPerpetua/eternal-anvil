@@ -11,7 +11,8 @@ function ActionBarCard({ value, children }: ActionBarCardProps) {
   const { current } = useActionBarContext();
   if (current !== value) return null;
   return (
-    <GildedPaper elevation={0} sx={{ padding: '25px', width: '100%' }}>
+    // Apply minWidth=0 so it doesn't expand past the rest of the flexbox
+    <GildedPaper elevation={0} sx={{ padding: '25px', flex: 1, minWidth: 0 }}>
       { children }
     </GildedPaper>
   );
