@@ -25,7 +25,7 @@ function SingleCoordinateInput({ value, onChange, label }: SingleCoordinateInput
       label={label}
       type="number"
       inputProps={{
-        style: { height: '0px' }, // This makes them font-sized
+        style: { padding: '2px', textAlign: 'center' },
         className: 'disable-number-spin',
       }}
       InputLabelProps={{ shrink: true }}

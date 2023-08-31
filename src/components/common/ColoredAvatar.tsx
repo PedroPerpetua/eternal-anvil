@@ -1,14 +1,19 @@
-import { Avatar } from '@mui/material';
+import { Avatar, AvatarProps } from '@mui/material';
 
 type ColoredAvatarProps = {
-  color: string,
-  size: number
+  color?: string,
+  size?: number,
+  avatarProps?: AvatarProps,
 };
 
-function ColoredAvatar({ color, size }: ColoredAvatarProps) {
-  const sizeStr = `${size}px`;
+function ColoredAvatar({ color, size, avatarProps = {} }: ColoredAvatarProps) {
+  const sizeStr = size ? `${size}px` : undefined;
   return (
-    <Avatar sx={{ backgroundColor: color, width: sizeStr, height: sizeStr }}>
+    <Avatar
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...avatarProps}
+      sx={{ backgroundColor: color, width: sizeStr, height: sizeStr, ...avatarProps.sx }}
+    >
       { /* Fallback so the avatar comes out empty (just color) */ }
       { ' ' }
     </Avatar>
