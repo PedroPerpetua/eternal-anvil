@@ -31,7 +31,6 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
     shallowEqual,
   );
   if (!structureData) return null;
-
   return (
     <MapMarker
       icon={structureData.icon}

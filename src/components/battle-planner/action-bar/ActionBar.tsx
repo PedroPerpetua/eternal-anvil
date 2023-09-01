@@ -4,8 +4,8 @@ import { useMap } from 'react-leaflet';
 import { ActionBarContextProvider } from './ActionBarContext';
 import actionBarTheme from './actionBarTheme';
 import AddStructureCard from './AddStructureCard';
+import MapCard from './MapCard';
 import RealmsCard from './RealmsCard';
-import SettingsCard from './SettingsCard';
 import useBattleMapSelector from '../../../store/battleMap';
 import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
@@ -44,12 +44,12 @@ function ActionBar() {
                 >
                   <AddStructureCard.Button />
                   <RealmsCard.Button />
-                  <SettingsCard.Button />
+                  <MapCard.Button />
                 </ButtonGroup>
               </Box>
               <AddStructureCard />
               <RealmsCard />
-              <SettingsCard />
+              <MapCard />
             </Stack>
           </Box>
         </Box>
