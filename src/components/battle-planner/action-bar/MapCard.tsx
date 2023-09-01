@@ -1,3 +1,5 @@
+import { Stack, Typography } from '@mui/material';
+
 import ActionBarButton from './ActionBarButton';
 import ActionBarCard from './ActionBarCard';
 import { TabId } from './ActionBarContext';
@@ -12,7 +14,11 @@ function MapButton() {
 function MapCard() {
   return (
     <ActionBarCard value={VALUE}>
-      Map
+      <Stack spacing={1}>
+        <Typography variant="h6">
+          Map Settings
+        </Typography>
+      </Stack>
     </ActionBarCard>
   );
 }

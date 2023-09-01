@@ -1,24 +1,24 @@
 import { useEffect, useState } from 'react';
 import {
-  ListItemIcon, ListItemText, MenuItem, Stack, TextField, Typography,
+  ListItemIcon, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
-import ActionBarButton from './ActionBarButton';
-import ActionBarCard from './ActionBarCard';
-import { TabId, useActionBarContext } from './ActionBarContext';
-import AddStructureIcon from '../../../assets/add-structure-icon.png';
-import { useAppDispatch } from '../../../store';
-import useBattleMapSelector from '../../../store/battleMap';
-import { realmSelectors } from '../../../store/battleMap/realmsSlice';
-import { createStructure, structuresSelectors } from '../../../store/battleMap/structuresSlice';
-import { STRUCTURES_DATA, StructureType } from '../../../utils/gameData';
-import { EMPTY_POINT, Point, validCoordinates } from '../../../utils/math';
-import ColoredAvatar from '../../common/ColoredAvatar';
-import CoordinateInput from '../../common/CoordinateInput';
-import { GAME_GOLD } from '../../common/styled-components/colors';
-import GameButton from '../../common/styled-components/GameButton';
+import AddStructureIcon from '../../../../assets/add-structure-icon.png';
+import { useAppDispatch } from '../../../../store';
+import useBattleMapSelector from '../../../../store/battleMap';
+import { realmSelectors } from '../../../../store/battleMap/realmsSlice';
+import { createStructure, structuresSelectors } from '../../../../store/battleMap/structuresSlice';
+import { STRUCTURES_DATA, StructureType } from '../../../../utils/gameData';
+import { EMPTY_POINT, Point, validCoordinates } from '../../../../utils/math';
+import ColoredAvatar from '../../../common/ColoredAvatar';
+import CoordinateInput from '../../../common/CoordinateInput';
+import { GAME_GOLD } from '../../../common/styled-components/colors';
+import GameButton from '../../../common/styled-components/GameButton';
+import ActionBarButton from '../ActionBarButton';
+import ActionBarCard from '../ActionBarCard';
+import { TabId, useActionBarContext } from '../ActionBarContext';
 
 const VALUE: TabId = 'addStructure';
 

@@ -3,9 +3,9 @@ import { useMap } from 'react-leaflet';
 
 import { ActionBarContextProvider } from './ActionBarContext';
 import actionBarTheme from './actionBarTheme';
-import AddStructureCard from './AddStructureCard';
+import AddStructureCard from './add-structure-card/AddStructureCard';
 import MapCard from './MapCard';
-import RealmsCard from './RealmsCard';
+import RealmsCard from './realms-card/RealmsCard';
 import useBattleMapSelector from '../../../store/battleMap';
 import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
