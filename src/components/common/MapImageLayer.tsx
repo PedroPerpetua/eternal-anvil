@@ -3,21 +3,24 @@ import { ImageOverlay, useMap } from 'react-leaflet';
 
 import { readImageFromURL } from '../../utils/utilities';
 
-type MapImageLayerProps = {
-  image: string | null
-};
-
 type MapInfo = {
   src: string,
   width: number,
   height: number
 };
 
+type MapImageLayerProps = {
+  image: string | null
+};
+
 function MapImageLayer({ image }: MapImageLayerProps) {
   const map = useMap();
   const [mapInfo, setMapInfo] = useState<MapInfo | null>(null);
   useEffect(() => {
-    if (image === null) return;
+    if (image === null) {
+      setMapInfo(null);
+      return;
+    }
     const effect = async () => {
       const { width, height } = await readImageFromURL(image);
       setMapInfo({ src: image, width, height });
@@ -29,7 +32,7 @@ function MapImageLayer({ image }: MapImageLayerProps) {
   if (mapInfo === null) return null;
 
   return (
-    <ImageOverlay url={mapInfo.src} bounds={[[0, 0], [mapInfo.width, mapInfo.height]]} />
+    <ImageOverlay url={mapInfo.src} bounds={[[0, 0], [mapInfo.height, mapInfo.width]]} />
   );
 }
 
