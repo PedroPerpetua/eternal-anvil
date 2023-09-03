@@ -6,7 +6,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { useMap } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
-import useBattleMapSelector from '../../../../store/battleMap';
+import { useBattleMapSelector } from '../../../../store/battleMap';
 import { structuresSelectors } from '../../../../store/battleMap/structuresSlice';
 import { STRUCTURES_DATA } from '../../../../utils/gameData';
 import { gameToLeaflet } from '../../../../utils/math';

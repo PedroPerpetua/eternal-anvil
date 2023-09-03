@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
-import useBattleMapSelector from '../../../store/battleMap';
+import { useBattleMapSelector } from '../../../store/battleMap';
 import { realmSelectors } from '../../../store/battleMap/realmsSlice';
 import { structuresSelectors } from '../../../store/battleMap/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';

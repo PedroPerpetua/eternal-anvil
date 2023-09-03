@@ -2,7 +2,7 @@ import { useMapEvent } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import { useAppDispatch } from '../../../store';
-import useBattleMapSelector from '../../../store/battleMap';
+import { useBattleMapSelector } from '../../../store/battleMap';
 import { setCurrentMouseHover } from '../../../store/battleMap/mapInfoSlice';
 import { EMPTY_POINT, leafletToGame } from '../../../utils/math';
 

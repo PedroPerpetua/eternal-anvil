@@ -108,10 +108,8 @@ export async function mapToCanvas(map: Map) {
     // TODO: this isn't placing the image in the right place
     // @ts-ignore
     if (layer._leaflet_id in imageOverlays) return;
-    console.log(layer);
     // @ts-ignore
     const pixelPoint = layer._image._leaflet_pos;
-    console.log(pixelPoint);
     // @ts-ignore
     const img = await readImageFromURL(layer._url);
     // @ts-ignore

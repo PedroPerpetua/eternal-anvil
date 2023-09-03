@@ -4,7 +4,7 @@ import { MapContainer } from 'react-leaflet';
 import MapDragController from './MapDragController';
 import MouseHoverController from './MouseHoverController';
 import StructuresController from './StructuresController';
-import useBattleMapSelector from '../../../store/battleMap';
+import { useBattleMapSelector } from '../../../store/battleMap';
 import MapImageLayer from '../../common/MapImageLayer';
 import ActionBar from '../action-bar/ActionBar';
 import MousePositionDisplay from '../mouse-position-display/MousePositionDisplay';

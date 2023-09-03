@@ -1,18 +1,8 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import edgesReducer from './battleMap/edgesSlice';
-import mapInfoReducer from './battleMap/mapInfoSlice';
-import realmsReducer from './battleMap/realmsSlice';
-import structuresReducer from './battleMap/structuresSlice';
+import battleMapReducers from './battleMap';
 import { listenerMiddleware } from './listenerMiddleware';
-
-const battleMapReducers = combineReducers({
-  realms: realmsReducer,
-  structures: structuresReducer,
-  edges: edgesReducer,
-  mapInfo: mapInfoReducer,
-});
 
 const store = configureStore({
   reducer: {

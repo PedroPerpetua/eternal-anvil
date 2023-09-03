@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
 import { saveAs } from 'file-saver';
 import { useMap } from 'react-leaflet';

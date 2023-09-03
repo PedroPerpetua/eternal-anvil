@@ -7,7 +7,7 @@ import DeleteDialog from './DeleteDialog';
 import RealmListItem from './RealmListItem';
 import { RealmsCardListContextProvider } from './RealmsCardListContext';
 import RealmsIcon from '../../../../assets/realms-icon.png';
-import useBattleMapSelector from '../../../../store/battleMap';
+import { useBattleMapSelector } from '../../../../store/battleMap';
 import { realmSelectors } from '../../../../store/battleMap/realmsSlice';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';

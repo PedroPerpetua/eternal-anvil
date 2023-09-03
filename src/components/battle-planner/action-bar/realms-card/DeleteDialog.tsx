@@ -4,7 +4,7 @@ import {
 
 import { useRealmsCardListContext } from './RealmsCardListContext';
 import { useAppDispatch } from '../../../../store';
-import useBattleMapSelector from '../../../../store/battleMap';
+import { useBattleMapSelector } from '../../../../store/battleMap';
 import { deleteRealm, realmSelectors } from '../../../../store/battleMap/realmsSlice';
 
 type DeleteDialogProps = {

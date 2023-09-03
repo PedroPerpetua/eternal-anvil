@@ -7,7 +7,7 @@ import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import { useAppDispatch } from '../../../../store';
-import useBattleMapSelector from '../../../../store/battleMap';
+import { useBattleMapSelector } from '../../../../store/battleMap';
 import { realmSelectors } from '../../../../store/battleMap/realmsSlice';
 import { createStructure, structuresSelectors } from '../../../../store/battleMap/structuresSlice';
 import { STRUCTURES_DATA, StructureType } from '../../../../utils/gameData';

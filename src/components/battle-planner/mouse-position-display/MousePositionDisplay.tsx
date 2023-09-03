@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 
-import useBattleMapSelector from '../../../store/battleMap';
+import { useBattleMapSelector } from '../../../store/battleMap';
 
 function MousePositionDisplay() {
   const currentPosition = useBattleMapSelector((state) => state.mapInfo.currentMouseHover);

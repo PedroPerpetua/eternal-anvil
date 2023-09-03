@@ -14,7 +14,7 @@ import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
 import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
-import useBattleMapSelector from '../../../../store/battleMap';
+import { useBattleMapSelector } from '../../../../store/battleMap';
 import { realmSelectors, updateRealm } from '../../../../store/battleMap/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
 import ColoredAvatar from '../../../common/ColoredAvatar';
