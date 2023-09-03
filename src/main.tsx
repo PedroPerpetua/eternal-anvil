@@ -1,5 +1,6 @@
 import React from 'react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import 'canvas-toBlob/canvas-toBlob.js';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 

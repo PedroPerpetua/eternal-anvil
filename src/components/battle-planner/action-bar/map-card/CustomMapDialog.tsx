@@ -126,7 +126,8 @@ function CustomMapDialog({ open, handleClose }: CustomMapDialogProps) {
               <CoordinateInput value={testPoint} onChange={(p) => setTestPoint(p)} />
             </Grid>
             { markers.map((m, i) => (
-              <Grid item xs={4}>
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid item xs={4} key={i}>
                 <CoordinateInput
                   value={m.gamePosition}
                   onChange={(p) => {

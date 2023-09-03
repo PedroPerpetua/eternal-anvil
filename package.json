@@ -17,6 +17,8 @@
     "@mui/icons-material": "5.14.3",
     "@mui/material": "5.14.5",
     "@reduxjs/toolkit": "1.9.5",
+    "canvas-toBlob": "1.0.0",
+    "file-saver": "2.0.5",
     "image-js": "0.35.4",
     "leaflet": "1.9.4",
     "moize": "6.1.6",
@@ -29,6 +31,7 @@
     "transformation-matrix": "2.15.0"
   },
   "devDependencies": {
+    "@types/file-saver": "2.0.5",
     "@types/leaflet": "1.9.3",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
