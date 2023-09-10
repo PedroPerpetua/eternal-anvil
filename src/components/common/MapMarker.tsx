@@ -1,5 +1,5 @@
-import { useMemo, PropsWithChildren } from 'react';
-import { Icon } from 'leaflet';
+import { useMemo, PropsWithChildren, forwardRef } from 'react';
+import { Icon, Marker as LeafletMarker } from 'leaflet';
 import { Marker, MarkerProps } from 'react-leaflet';
 
 import useTintedImage from '../../hooks/useTintedImage';
@@ -11,9 +11,11 @@ type MapMarkerProps = PropsWithChildren<{
   markerProps: Omit<MarkerProps, 'icon'>
 }>;
 
-function MapMarker({ icon, iconSize, iconColor, markerProps, children }: MapMarkerProps) {
+const MapMarker = forwardRef<LeafletMarker, MapMarkerProps>((
+  { icon, iconSize, iconColor, markerProps, children },
+  ref,
+) => {
   const image = useTintedImage(icon, iconColor);
-
   const markerIcon = useMemo(
     () => new Icon({
       iconUrl: image,
@@ -23,8 +25,10 @@ function MapMarker({ icon, iconSize, iconColor, markerProps, children }: MapMark
     [image, JSON.stringify(iconSize)],
   );
   return (
-    <Marker {...markerProps} icon={markerIcon}>{ children }</Marker>
+    <Marker {...markerProps} icon={markerIcon} ref={ref}>
+      { children }
+    </Marker>
   );
-}
+});
 
 export default MapMarker;

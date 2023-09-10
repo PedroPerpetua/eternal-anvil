@@ -16,9 +16,8 @@ function BattleMap() {
       crs={CRS.Simple}
       center={[0, 0]}
       zoom={1}
-      zoomSnap={0.1}
       zoomControl={false}
-      maxBoundsViscosity={1}
+      doubleClickZoom={false} // TODO: not working?
       style={{ width: '100%', height: '100%', backgroundColor: '#9e8357' }}
     >
       <MapDragController />

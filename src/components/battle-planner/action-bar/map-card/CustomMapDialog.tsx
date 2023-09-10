@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import DeleteIcon from '@mui/icons-material/DeleteForever';
 import { Button, Dialog, Grid, ThemeProvider } from '@mui/material';
 import { CRS, Marker as LeafletMarker } from 'leaflet';
 import { MapContainer, Marker, Popup } from 'react-leaflet';
@@ -13,6 +12,7 @@ import {
 import { readFileAsURL } from '../../../../utils/utilities';
 import CoordinateInput from '../../../common/CoordinateInput';
 import MapImageLayer from '../../../common/MapImageLayer';
+import DeleteIcon from '../../../common/styled-components/DeleteIcon';
 
 type MarkerData = {
   gamePosition: Point,
@@ -116,7 +116,7 @@ function CustomMapDialog({ open, handleClose }: CustomMapDialogProps) {
                 disabled={image === null}
                 onClick={() => setImage(null)}
               >
-                <DeleteIcon stroke="black" strokeWidth="1px" />
+                <DeleteIcon />
               </Button>
             </Grid>
             <Grid item xs={6}>
