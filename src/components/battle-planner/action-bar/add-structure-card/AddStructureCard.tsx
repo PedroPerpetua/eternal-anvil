@@ -7,9 +7,9 @@ import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import { useAppDispatch } from '../../../../store';
-import { useBattleMapSelector } from '../../../../store/battleMap';
-import { realmSelectors } from '../../../../store/battleMap/realmsSlice';
-import { createStructure, structuresSelectors } from '../../../../store/battleMap/structuresSlice';
+import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
+import { realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
+import { createStructure, structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
 import { STRUCTURES_DATA, StructureType } from '../../../../utils/gameData';
 import { EMPTY_POINT, Point, validCoordinates } from '../../../../utils/math';
 import ColoredAvatar from '../../../common/ColoredAvatar';

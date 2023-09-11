@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Matrix } from 'transformation-matrix';
 
-import { EMPTY_POINT, Point, computeAffineMatrix } from '../../utils/math';
+import { EMPTY_POINT, Point, computeAffineMatrix } from '../../../utils/math';
 
 type MapInfo = {
   image: string | null,

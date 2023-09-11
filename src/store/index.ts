@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-import battleMapReducers from './battleMap';
+import battlePlannerReducers from './battle-planner';
 import { listenerMiddleware } from './listenerMiddleware';
 
 const store = configureStore({
   reducer: {
-    battleMap: battleMapReducers,
+    battlePlanner: battlePlannerReducers,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
     .prepend(listenerMiddleware.middleware),

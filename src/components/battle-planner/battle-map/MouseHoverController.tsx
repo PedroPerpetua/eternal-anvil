@@ -2,8 +2,8 @@ import { useMapEvent } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import { useAppDispatch } from '../../../store';
-import { useBattleMapSelector } from '../../../store/battleMap';
-import { setCurrentMouseHover } from '../../../store/battleMap/mapInfoSlice';
+import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
+import { setCurrentMouseHover } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 import { EMPTY_POINT, leafletToGame } from '../../../utils/math';
 
 function MouseHoverController() {

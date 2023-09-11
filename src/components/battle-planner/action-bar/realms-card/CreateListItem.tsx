@@ -7,7 +7,7 @@ import {
 
 import { useRealmsCardListContext } from './RealmsCardListContext';
 import { useAppDispatch } from '../../../../store';
-import { createRealm } from '../../../../store/battleMap/realmsSlice';
+import { createRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
 import GameButton from '../../../common/styled-components/GameButton';
 

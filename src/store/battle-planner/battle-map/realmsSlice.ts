@@ -1,7 +1,7 @@
 import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
-import { DEFAULT_REALM_COLORS, NEUTRAL_COLOR } from '../../utils/gameData';
-import { generateId } from '../../utils/utilities';
+import { DEFAULT_REALM_COLORS, NEUTRAL_COLOR } from '../../../utils/gameData';
+import { generateId } from '../../../utils/utilities';
 
 type Realm = {
   id: EntityId,

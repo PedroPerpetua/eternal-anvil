@@ -1,8 +1,6 @@
 // Circular display based on https://stackoverflow.com/questions/12813573/position-icons-into-circle
 
-import {
-  PropsWithChildren, CSSProperties, ReactElement, Children, createElement,
-} from 'react';
+import { PropsWithChildren, CSSProperties, ReactElement, Children } from 'react';
 import { Box, Popover, SxProps } from '@mui/material';
 
 type CircularMenuProps = PropsWithChildren<{

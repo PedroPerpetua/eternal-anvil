@@ -6,7 +6,7 @@ import actionBarTheme from './actionBarTheme';
 import AddStructureCard from './add-structure-card/AddStructureCard';
 import MapCard from './map-card/MapCard';
 import RealmsCard from './realms-card/RealmsCard';
-import { useBattleMapSelector } from '../../../store/battleMap';
+import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
 import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
 function ActionBar() {

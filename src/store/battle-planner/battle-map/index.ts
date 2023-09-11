@@ -16,16 +16,17 @@ const battleMapReducers = combineReducers({
 export default battleMapReducers;
 
 type BattleMapState = ReturnType<typeof battleMapReducers>;
+type PartialBaseState = { battlePlanner: { battleMap: BattleMapState } };
 
 /**
- * Selector to be used specifically with the battleMap slice.
+ * Selector to be used specifically with the battlePlanner.battleMap slice.
  */
 export function useBattleMapSelector<TSelected>(
   selector: (state: BattleMapState) => TSelected,
   equalityFn?: EqualityFn<TSelected>,
 ) {
   return <TSelected>useSelector(
-    (state: { battleMap: BattleMapState }) => selector(state.battleMap),
+    (state: PartialBaseState) => selector(state.battlePlanner.battleMap),
     equalityFn,
   );
 }

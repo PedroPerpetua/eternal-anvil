@@ -4,8 +4,8 @@ import {
 
 import { useRealmsCardListContext } from './RealmsCardListContext';
 import { useAppDispatch } from '../../../../store';
-import { useBattleMapSelector } from '../../../../store/battleMap';
-import { deleteRealm, realmSelectors } from '../../../../store/battleMap/realmsSlice';
+import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
+import { deleteRealm, realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
 
 type DeleteDialogProps = {
   open: boolean,

@@ -4,7 +4,7 @@ import { CRS, Marker as LeafletMarker } from 'leaflet';
 import { MapContainer, Marker, Popup } from 'react-leaflet';
 
 import { useAppDispatch } from '../../../../store';
-import { setMapInfo } from '../../../../store/battleMap/mapInfoSlice';
+import { setMapInfo } from '../../../../store/battle-planner/battle-map/mapInfoSlice';
 import theme from '../../../../theme';
 import {
   EMPTY_POINT, Point, Triangle, computeAffineMatrix, gameToLeaflet, validCoordinates,

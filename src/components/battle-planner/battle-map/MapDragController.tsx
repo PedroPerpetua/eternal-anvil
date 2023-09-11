@@ -1,7 +1,7 @@
 import { useMapEvent } from 'react-leaflet';
 
 import { useAppDispatch } from '../../../store';
-import { setDragging } from '../../../store/battleMap/mapInfoSlice';
+import { setDragging } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 
 function MapDragController() {
   const dispatch = useAppDispatch();

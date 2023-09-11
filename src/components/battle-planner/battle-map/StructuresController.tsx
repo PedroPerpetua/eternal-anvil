@@ -8,9 +8,9 @@ import { useMap } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import { useAppDispatch } from '../../../store';
-import { useBattleMapSelector } from '../../../store/battleMap';
-import { realmSelectors } from '../../../store/battleMap/realmsSlice';
-import { deleteStructure, structuresSelectors } from '../../../store/battleMap/structuresSlice';
+import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
+import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
+import { deleteStructure, structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
 import { gameToLeaflet } from '../../../utils/math';
 import CircularMenu from '../../common/CircularMenu';
