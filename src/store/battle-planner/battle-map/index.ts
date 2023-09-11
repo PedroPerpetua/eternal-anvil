@@ -1,10 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import { EqualityFn, useSelector } from 'react-redux';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
 import edgesReducer from './edgesSlice';
 import mapInfoReducer from './mapInfoSlice';
 import realmsReducer from './realmsSlice';
 import structuresReducer from './structuresSlice';
+import type { RootState } from '../..';
 
 const battleMapReducers = combineReducers({
   realms: realmsReducer,
@@ -15,18 +16,13 @@ const battleMapReducers = combineReducers({
 
 export default battleMapReducers;
 
-type BattleMapState = ReturnType<typeof battleMapReducers>;
-type PartialBaseState = { battlePlanner: { battleMap: BattleMapState } };
-
+type BattleMapUseSelectorHook = TypedUseSelectorHook<RootState['battlePlanner']['battleMap']>;
 /**
- * Selector to be used specifically with the battlePlanner.battleMap slice.
+ * Selector to be used specifically with the battlePlanner.actionBar slice.
  */
-export function useBattleMapSelector<TSelected>(
-  selector: (state: BattleMapState) => TSelected,
-  equalityFn?: EqualityFn<TSelected>,
-) {
-  return <TSelected>useSelector(
-    (state: PartialBaseState) => selector(state.battlePlanner.battleMap),
-    equalityFn,
-  );
-}
+export const useBattleMapSelector: BattleMapUseSelectorHook = (selector, options) => useSelector(
+  (state: RootState) => selector(state.battlePlanner.battleMap),
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  options,
+);
