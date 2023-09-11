@@ -7,12 +7,14 @@ import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import { useAppDispatch } from '../../../../store';
+import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
+import { selectRealm, setCoordinates } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { createStructure, structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
 import { STRUCTURES_DATA, StructureType } from '../../../../utils/gameData';
-import { EMPTY_POINT, Point, validCoordinates } from '../../../../utils/math';
+import { EMPTY_POINT, validCoordinates } from '../../../../utils/math';
 import ColoredAvatar from '../../../common/ColoredAvatar';
 import CoordinateInput from '../../../common/CoordinateInput';
 import { GAME_GOLD } from '../../../common/styled-components/colors';
@@ -22,7 +24,6 @@ import ActionBarCard from '../ActionBarCard';
 
 const VALUE: ActionBarTabId = 'addStructure';
 
-const DEFAULT_COORDINATES: Point = EMPTY_POINT;
 const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
 
 type RealmOptionProps = {
@@ -57,29 +58,35 @@ function AddStructureCard() {
     (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
     shallowEqual,
   );
-  const [realm, setRealm] = useState<EntityId>(realms[0]?.id ?? '');
-  const [coordinates, setCoordinates] = useState<Point>(DEFAULT_COORDINATES);
+  const coordinates = useActionBarSelector(
+    (state) => state.addStructureTab.coordinates,
+    shallowEqual,
+  );
+  const selectedRealm = useActionBarSelector(
+    (state) => state.addStructureTab.selectedRealm,
+    shallowEqual,
+  );
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
 
   useEffect(() => {
     // Make sure the selected realm exists (in case the current selected gets deleted)
-    if (realms.length === 0) setRealm('');
-    else if (!realms.map((r) => r.id).includes(realm)) setRealm(realms[0].id);
-  }, [realms, realm]);
+    if (realms.length === 0) dispatch(selectRealm(''));
+    else if (!realms.map((r) => r.id).includes(selectedRealm)) dispatch(selectRealm(realms[0].id));
+  }, [realms, selectedRealm, dispatch]);
 
   const canCreate = (
-    realm !== ''
+    selectedRealm !== ''
     && validCoordinates(coordinates)
     && !occupiedCoordinates.some((p) => p[0] === coordinates[0] && p[1] === coordinates[1])
   );
 
   const handleCreate = () => {
     dispatch(createStructure({
-      realm,
+      realm: selectedRealm,
       coordinates,
       type: structureType,
     }));
-    setCoordinates(DEFAULT_COORDINATES);
+    dispatch(setCoordinates(EMPTY_POINT));
   };
 
   return (
@@ -88,7 +95,7 @@ function AddStructureCard() {
         <Typography variant="h6">
           Add Structure
         </Typography>
-        <CoordinateInput value={coordinates} onChange={(v) => setCoordinates(v)} />
+        <CoordinateInput value={coordinates} onChange={(v) => dispatch(setCoordinates(v))} />
         <TextField
           select
           value={structureType}
@@ -125,8 +132,8 @@ function AddStructureCard() {
               return <RealmOption label={r.name} color={r.color} />;
             },
           }}
-          value={realm}
-          onChange={(e) => setRealm(e.target.value ?? null)}
+          value={selectedRealm}
+          onChange={(e) => dispatch(selectRealm(e.target.value ?? ''))}
           label="Realm"
           disabled={realms.length === 0}
           InputLabelProps={{ shrink: true }}

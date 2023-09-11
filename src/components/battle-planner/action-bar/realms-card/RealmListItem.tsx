@@ -14,6 +14,7 @@ import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
 import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
+import { selectRealm } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import { changeTab } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors, updateRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
@@ -135,8 +136,10 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
         <Stack direction="row" justifyContent="center" padding="5px" spacing={2}>
           <GameButton
             size="small"
-          // TODO: dispatch changing to the realm.id
-            onClick={() => dispatch(changeTab('addStructure'))}
+            onClick={() => {
+              dispatch(selectRealm(realm.id));
+              dispatch(changeTab('addStructure'));
+            }}
           >
             <CustomIcon src={tintedAddStructureIcon} />
           </GameButton>

@@ -1,11 +1,13 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
+import addStructureTabReducer from './addStructureTabSlice';
 import currentTabReducer from './currentTabSlice';
 import type { RootState } from '../..';
 
 const actionBarReducers = combineReducers({
   currentTab: currentTabReducer,
+  addStructureTab: addStructureTabReducer,
 });
 
 export default actionBarReducers;
