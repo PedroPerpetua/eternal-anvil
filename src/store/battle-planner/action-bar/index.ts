@@ -1,7 +1,11 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { EqualityFn, useSelector } from 'react-redux';
 
-const actionBarReducers = combineReducers({});
+import currentTabReducer from './currentTabSlice';
+
+const actionBarReducers = combineReducers({
+  currentTab: currentTabReducer,
+});
 
 export default actionBarReducers;
 

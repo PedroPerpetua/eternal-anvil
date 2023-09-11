@@ -14,6 +14,7 @@ import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
 import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
+import { changeTab } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors, updateRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
@@ -21,7 +22,6 @@ import ColoredAvatar from '../../../common/ColoredAvatar';
 import CustomIcon from '../../../common/CustomIcon';
 import GameButton from '../../../common/styled-components/GameButton';
 import TypographyTextField from '../../../common/TypographyTextField';
-import { useActionBarContext } from '../ActionBarContext';
 
 type RealmListItemProps = {
   id: EntityId,
@@ -31,7 +31,6 @@ type RealmListItemProps = {
 const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
   const dispatch = useAppDispatch();
   const { current, setCurrent } = useRealmsCardListContext();
-  const { setCurrent: changeTab } = useActionBarContext();
   const isOpen = current === id;
   const realm = useBattleMapSelector(
     (state) => (realmSelectors.selectById(state.realms, id)),
@@ -134,7 +133,11 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
       </Stack>
       <Collapse in={isOpen} unmountOnExit>
         <Stack direction="row" justifyContent="center" padding="5px" spacing={2}>
-          <GameButton size="small" onClick={() => changeTab('addStructure', realm.id)}>
+          <GameButton
+            size="small"
+          // TODO: dispatch changing to the realm.id
+            onClick={() => dispatch(changeTab('addStructure'))}
+          >
             <CustomIcon src={tintedAddStructureIcon} />
           </GameButton>
           <Button size="small" color="error" onClick={openDelete}>

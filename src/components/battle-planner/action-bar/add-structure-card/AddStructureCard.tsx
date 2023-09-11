@@ -7,6 +7,7 @@ import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import { useAppDispatch } from '../../../../store';
+import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { createStructure, structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
@@ -18,9 +19,8 @@ import { GAME_GOLD } from '../../../common/styled-components/colors';
 import GameButton from '../../../common/styled-components/GameButton';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
-import { TabId, useActionBarContext } from '../ActionBarContext';
 
-const VALUE: TabId = 'addStructure';
+const VALUE: ActionBarTabId = 'addStructure';
 
 const DEFAULT_COORDINATES: Point = EMPTY_POINT;
 const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
@@ -48,7 +48,6 @@ function AddStructureButton() {
 }
 
 function AddStructureCard() {
-  const { payload: requestedRealm } = useActionBarContext();
   const dispatch = useAppDispatch();
   const realms = useBattleMapSelector(
     (state) => realmSelectors.selectAll(state.realms),
@@ -63,13 +62,7 @@ function AddStructureCard() {
   const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
 
   useEffect(() => {
-    if (requestedRealm === null) return;
-    if (realms.map((r) => r.id).includes(requestedRealm)) setRealm(requestedRealm);
-    else setRealm('');
-  }, [realms, requestedRealm, setRealm]);
-
-  useEffect(() => {
-    // Make sure the selected realm belongs (in case the current selected gets deleted)
+    // Make sure the selected realm exists (in case the current selected gets deleted)
     if (realms.length === 0) setRealm('');
     else if (!realms.map((r) => r.id).includes(realm)) setRealm(realms[0].id);
   }, [realms, realm]);

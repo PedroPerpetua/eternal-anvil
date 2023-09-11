@@ -5,12 +5,12 @@ import { useMap } from 'react-leaflet';
 
 import CustomMapDialog from './CustomMapDialog';
 import MapIcon from '../../../../assets/map-icon.png';
+import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { mapToCanvas } from '../../../../utils/leaflet';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
-import { TabId } from '../ActionBarContext';
 
-const VALUE: TabId = 'map';
+const VALUE: ActionBarTabId = 'map';
 
 function MapButton() {
   return <ActionBarButton value={VALUE} iconSrc={MapIcon} tooltip="Map" />;

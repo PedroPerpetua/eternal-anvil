@@ -7,13 +7,13 @@ import DeleteDialog from './DeleteDialog';
 import RealmListItem from './RealmListItem';
 import { RealmsCardListContextProvider } from './RealmsCardListContext';
 import RealmsIcon from '../../../../assets/realms-icon.png';
+import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
-import { TabId } from '../ActionBarContext';
 
-const VALUE: TabId = 'realms';
+const VALUE: ActionBarTabId = 'realms';
 
 function RealmsButton() {
   return <ActionBarButton value={VALUE} iconSrc={RealmsIcon} tooltip="Realms" />;
