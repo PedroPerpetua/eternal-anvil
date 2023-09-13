@@ -8,7 +8,9 @@ import { useMap } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import { useAppDispatch } from '../../../store';
+import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
+import { selectStructureForEdge } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
 import { deleteStructure, structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
@@ -40,6 +42,9 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
     shallowEqual,
   );
 
+  // Handle selection
+  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+
   // Handle the menu
   const map = useMap();
   const markerRef = useRef<LeafletMarker>(null);
@@ -56,6 +61,12 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
   useEffect(() => {
     if (mapDragging) handleCloseMenu();
   }, [mapDragging, handleCloseMenu]);
+
+  // Handle events
+  const handleClick = () => {
+    if (toolMode === 'select') dispatch(selectStructureForEdge(id));
+    else handleOpenMenu();
+  };
 
   if (!structureData) return null;
   return (
@@ -74,7 +85,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
           markerProps={{
             position: gameToLeaflet(transformationMatrix, structureData.position),
             eventHandlers: {
-              click: handleOpenMenu,
+              click: handleClick,
             },
           }}
           ref={markerRef}

@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-export type ActionBarTabId = 'addStructure' | 'realms' | 'map' | null;
+export type ActionBarTabId = 'addStructure' | 'realms' | 'edges' | 'map' | null;
 
 const currentTabSlice = createSlice({
   name: 'currentTab',

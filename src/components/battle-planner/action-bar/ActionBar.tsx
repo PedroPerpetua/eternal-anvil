@@ -3,6 +3,7 @@ import { useMap } from 'react-leaflet';
 
 import actionBarTheme from './actionBarTheme';
 import AddStructureCard from './add-structure-card/AddStructureCard';
+import EdgesCard from './edges-card/EdgesCard';
 import MapCard from './map-card/MapCard';
 import RealmsCard from './realms-card/RealmsCard';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
@@ -42,11 +43,13 @@ function ActionBar() {
               >
                 <AddStructureCard.Button />
                 <RealmsCard.Button />
+                <EdgesCard.Button />
                 <MapCard.Button />
               </ButtonGroup>
             </Box>
             <AddStructureCard />
             <RealmsCard />
+            <EdgesCard />
             <MapCard />
           </Stack>
         </Box>

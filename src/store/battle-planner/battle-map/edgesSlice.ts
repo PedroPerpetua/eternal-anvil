@@ -13,8 +13,7 @@ type Edge = {
 const edgesAdapter = createEntityAdapter<Edge>();
 export const edgesSelectors = edgesAdapter.getSelectors();
 
-const extraInitialState: { selectionActive: boolean, currentlySelected: EntityId | null } = {
-  selectionActive: false,
+const extraInitialState: { currentlySelected: EntityId | null } = {
   currentlySelected: null,
 };
 
@@ -22,21 +21,21 @@ const edgesSlice = createSlice({
   name: 'edges',
   initialState: edgesAdapter.getInitialState(extraInitialState),
   reducers: {
-    toggleSelection: (state) => {
-      state.selectionActive = !state.selectionActive;
-      if (!state.selectionActive) state.currentlySelected = null;
-    },
     selectStructureForEdge: (state, action: PayloadAction<EntityId>) => {
-      if (!state.selectionActive) return;
       if (state.currentlySelected === null) state.currentlySelected = action.payload;
       else {
-        edgesAdapter.addOne(state, {
+        const newEdge: Edge = {
           id: generateId(),
           structure1: state.currentlySelected,
           structure2: action.payload,
-        });
+        };
+        // See if an edge already exists for both of those
+        if (edgesSelectors.selectAll(state).some((edge) => (
+          (edge.structure1 === newEdge.structure1 && edge.structure2 === newEdge.structure2)
+          || (edge.structure1 === newEdge.structure2 && edge.structure2 === newEdge.structure1)
+        ))) return;
+        edgesAdapter.addOne(state, newEdge);
         state.currentlySelected = null;
-        state.selectionActive = false;
       }
     },
     deleteEdge: edgesAdapter.removeOne,
@@ -49,7 +48,7 @@ const edgesSlice = createSlice({
   },
 });
 
-export const { toggleSelection, selectStructureForEdge, deleteEdge } = edgesSlice.actions;
+export const { selectStructureForEdge, deleteEdge } = edgesSlice.actions;
 
 // Bind the cascadeStructureDelete - when we delete a structures, all the edges that include it
 // should be removed

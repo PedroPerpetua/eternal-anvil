@@ -1,6 +1,7 @@
 import { CRS } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 
+import EdgesController from './EdgesController';
 import MapDragController from './MapDragController';
 import MouseHoverController from './MouseHoverController';
 import StructuresController from './StructuresController';
@@ -24,6 +25,7 @@ function BattleMap() {
       <MouseHoverController />
       <MapImageLayer image={image} />
       <StructuresController />
+      <EdgesController />
       <ActionBar />
       <MousePositionDisplay />
     </MapContainer>
