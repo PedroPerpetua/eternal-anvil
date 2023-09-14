@@ -3,6 +3,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { Polyline } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
+import useMapZoom from '../../../hooks/useMapZoom';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
 import { edgesSelectors } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
@@ -15,6 +16,7 @@ type EdgeProps = {
 };
 
 const Edge = memo(({ id }: EdgeProps) => {
+  const zoom = useMapZoom();
   const transformationMatrix = useBattleMapSelector(
     (state) => state.mapInfo.transformationMatrix,
     shallowEqual,
@@ -42,7 +44,7 @@ const Edge = memo(({ id }: EdgeProps) => {
     <Polyline
       pathOptions={{
         color: edgeData.color,
-        weight: 5,
+        weight: 5 * (zoom + 1),
       }}
       positions={
           [
