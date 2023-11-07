@@ -10,7 +10,7 @@ import { shallowEqual } from 'react-redux';
 import { useAppDispatch } from '../../../store';
 import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
-import { selectStructureForEdge } from '../../../store/battle-planner/battle-map/edgesSlice';
+import { selectStructure } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
 import { deleteStructure, structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
 import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
@@ -30,11 +30,17 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
     if (!structure) return null;
     const realm = realmSelectors.selectById(state.realms, structure.realm ?? '');
     const structureInfo = STRUCTURES_DATA[structure.type];
+
+    const highlighted = (
+      state.edges.currentlySelected === id
+      || (shallowEqual(structure.coordinates, state.mapInfo.currentMouseHover)
+      ));
     return {
       icon: structureInfo.icon,
       size: structureInfo.size,
       color: realm?.color ?? NEUTRAL_COLOR,
       position: structure.coordinates,
+      highlighted,
     };
   }, shallowEqual);
   const transformationMatrix = useBattleMapSelector(
@@ -64,7 +70,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
 
   // Handle events
   const handleClick = () => {
-    if (toolMode === 'select') dispatch(selectStructureForEdge(id));
+    if (toolMode === 'select') dispatch(selectStructure(id));
     else handleOpenMenu();
   };
 
@@ -82,6 +88,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
           icon={structureData.icon}
           iconSize={structureData.size}
           iconColor={structureData.color}
+          highlighted={structureData.highlighted || openMenu}
           markerProps={{
             position: gameToLeaflet(transformationMatrix, structureData.position),
             eventHandlers: {

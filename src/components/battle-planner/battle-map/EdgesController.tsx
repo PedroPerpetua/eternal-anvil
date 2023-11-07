@@ -4,8 +4,10 @@ import { Polyline } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import useMapZoom from '../../../hooks/useMapZoom';
+import { useAppDispatch } from '../../../store';
+import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
-import { edgesSelectors } from '../../../store/battle-planner/battle-map/edgesSlice';
+import { deleteEdge, edgesSelectors } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
 import { structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
 import { blendColors } from '../../../utils/images';
@@ -16,6 +18,8 @@ type EdgeProps = {
 };
 
 const Edge = memo(({ id }: EdgeProps) => {
+  const dispatch = useAppDispatch();
+  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
   const zoom = useMapZoom();
   const transformationMatrix = useBattleMapSelector(
     (state) => state.mapInfo.transformationMatrix,
@@ -45,6 +49,9 @@ const Edge = memo(({ id }: EdgeProps) => {
       pathOptions={{
         color: edgeData.color,
         weight: 5 * (zoom + 1),
+      }}
+      eventHandlers={{
+        click: () => (toolMode === 'delete' ? dispatch(deleteEdge(id)) : undefined),
       }}
       positions={
           [

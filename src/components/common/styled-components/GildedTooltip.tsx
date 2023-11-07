@@ -15,6 +15,7 @@ const GildedTooltip = styled(({ className, ...props }: TooltipProps) => (
   outlineColor: GAME_GOLD.dark,
   borderInline: '1px solid',
   borderInlineColor: GAME_GOLD.dark,
+  textAlign: 'center',
 });
 
 export default GildedTooltip;

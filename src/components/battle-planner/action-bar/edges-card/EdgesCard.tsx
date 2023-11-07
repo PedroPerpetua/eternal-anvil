@@ -1,18 +1,22 @@
 import { PropsWithChildren } from 'react';
-import { ButtonGroup, Stack, Typography } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {
+  Badge, ButtonGroup, IconButton, Stack, Typography,
+} from '@mui/material';
+import { shallowEqual } from 'react-redux';
 
-import AddEdgeIcon from '../../../../assets/add-edge-icon.png';
+import EDGE_TOOLS from './EdgeTools';
 import EdgeIcon from '../../../../assets/edge-icon.png';
-import ViewIcon from '../../../../assets/view-icon.png';
 import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
 import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
 import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { EdgeToolMode, changeMode } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
+import { deselectStructure } from '../../../../store/battle-planner/battle-map/edgesSlice';
 import { structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
+import { STRUCTURES_DATA } from '../../../../utils/gameData';
 import CustomIcon from '../../../common/CustomIcon';
-import DeleteIcon from '../../../common/styled-components/DeleteIcon';
 import GameButton from '../../../common/styled-components/GameButton';
 import GildedTooltip from '../../../common/styled-components/GildedTooltip';
 import ActionBarButton from '../ActionBarButton';
@@ -21,7 +25,30 @@ import ActionBarCard from '../ActionBarCard';
 const VALUE: ActionBarTabId = 'edges';
 
 function EdgesButton() {
-  return <ActionBarButton value={VALUE} iconSrc={EdgeIcon} tooltip="Edges" />;
+  const icon = useTintedImage(EdgeIcon, '#d8bc68');
+  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  return (
+    <ActionBarButton
+      value={VALUE}
+      tooltip={(
+        <>
+          Edges
+          <br />
+          (
+          { EDGE_TOOLS[toolMode].label }
+          )
+        </>
+      )}
+    >
+      <Badge
+        badgeContent={EDGE_TOOLS[toolMode].icon}
+        overlap="circular"
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <CustomIcon src={icon} />
+      </Badge>
+    </ActionBarButton>
+  );
 }
 
 type EdgeToolButtonProps = PropsWithChildren<{
@@ -34,7 +61,13 @@ function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
   const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
   return (
     <GildedTooltip title={tooltip}>
-      <GameButton selected={toolMode === mode} onClick={() => dispatch(changeMode(mode))}>
+      <GameButton
+        selected={toolMode === mode}
+        onClick={() => {
+          dispatch(changeMode(mode));
+          dispatch(deselectStructure());
+        }}
+      >
         { children }
       </GameButton>
     </GildedTooltip>
@@ -42,11 +75,13 @@ function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
 }
 
 function EdgesCard() {
-  const addEdgeIcon = useTintedImage(AddEdgeIcon, '#d8bc68');
-  const viewIcon = useTintedImage(ViewIcon, '#d8bc68');
+  const dispatch = useAppDispatch();
   const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
   const selectedStructure = useBattleMapSelector((state) => state.edges.currentlySelected);
-  const structure = useBattleMapSelector((state) => structuresSelectors.selectById(state.structures, selectedStructure ?? '') ?? null);
+  const structure = useBattleMapSelector(
+    (state) => structuresSelectors.selectById(state.structures, selectedStructure ?? '') ?? null,
+    shallowEqual,
+  );
   return (
     <ActionBarCard value={VALUE}>
       <Stack spacing={1}>
@@ -60,26 +95,50 @@ function EdgesCard() {
             '.MuiButtonGroup-grouped:not(:last-of-type)': {
               borderColor: '#023027',
             },
-            aspectRatio: 3.5,
           }}
           fullWidth
         >
-          <EdgeToolButton mode="view" tooltip="View mode">
-            <CustomIcon src={viewIcon} size="large" />
-          </EdgeToolButton>
-          <EdgeToolButton mode="select" tooltip="Select mode">
-            <CustomIcon src={addEdgeIcon} size="large" />
-          </EdgeToolButton>
-          <EdgeToolButton mode="delete" tooltip="Delete mode">
-            <DeleteIcon color="error" />
-          </EdgeToolButton>
+          {
+            (Object.keys(EDGE_TOOLS) as EdgeToolMode[]).map((edgeToolMode) => (
+              <EdgeToolButton
+                key={edgeToolMode}
+                mode={edgeToolMode}
+                tooltip={EDGE_TOOLS[edgeToolMode].label}
+              >
+                { EDGE_TOOLS[edgeToolMode].icon }
+              </EdgeToolButton>
+            ))
+          }
         </ButtonGroup>
         {
           toolMode === 'select'
-          && (structure
-            ? structure.id // TODO CHANGE ME
-            : <Typography textAlign="center">No structure selected</Typography>
-          )
+            ? (
+              <Typography textAlign="center">
+                {
+                structure
+                  ? (
+                    <>
+                      { STRUCTURES_DATA[structure.type].name }
+                      { ' ' }
+                      (
+                      { ' ' }
+                      { structure.coordinates[0] }
+                      { ' ' }
+                      |
+                      { ' ' }
+                      { structure.coordinates[1] }
+                      { ' ' }
+                      )
+                      <IconButton size="small" onClick={() => dispatch(deselectStructure())}>
+                        <CancelIcon color="error" fontSize="inherit" />
+                      </IconButton>
+                    </>
+                  )
+                  : 'No structure selected'
+                }
+              </Typography>
+            )
+            : <Typography textAlign="center">{ EDGE_TOOLS[toolMode].label }</Typography>
         }
       </Stack>
     </ActionBarCard>

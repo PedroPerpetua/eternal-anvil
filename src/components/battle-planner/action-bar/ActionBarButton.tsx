@@ -1,21 +1,19 @@
-import useTintedImage from '../../../hooks/useTintedImage';
+import { PropsWithChildren, ReactNode } from 'react';
+
 import { useAppDispatch } from '../../../store';
 import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
 import { ActionBarTabId, changeTab } from '../../../store/battle-planner/action-bar/currentTabSlice';
-import CustomIcon from '../../common/CustomIcon';
 import GameButton from '../../common/styled-components/GameButton';
 import GildedTooltip from '../../common/styled-components/GildedTooltip';
 
-type ActionBarButtonProps = {
+type ActionBarButtonProps = PropsWithChildren<{
   value: ActionBarTabId,
-  iconSrc: string,
-  tooltip: string,
-};
+  tooltip: string | ReactNode,
+}>;
 
-function ActionBarButton({ value, iconSrc, tooltip }: ActionBarButtonProps) {
+function ActionBarButton({ value, tooltip, children }: ActionBarButtonProps) {
   const dispatch = useAppDispatch();
   const current = useActionBarSelector((state) => state.currentTab);
-  const icon = useTintedImage(iconSrc, '#d8bc68');
   const isSelected = current === value;
   return (
     <GildedTooltip
@@ -26,7 +24,7 @@ function ActionBarButton({ value, iconSrc, tooltip }: ActionBarButtonProps) {
         onClick={() => dispatch(changeTab(isSelected ? null : value))}
         selected={isSelected}
       >
-        <CustomIcon src={icon} />
+        { children }
       </GameButton>
     </GildedTooltip>
   );

@@ -9,23 +9,52 @@ type MapMarkerProps = PropsWithChildren<{
   icon: string,
   iconSize: [number, number]
   iconColor: string,
+  highlighted?: boolean
   markerProps: Omit<MarkerProps, 'icon'>
 }>;
 
 const MapMarker = forwardRef<LeafletMarker, MapMarkerProps>((
-  { icon, iconSize, iconColor, markerProps, children },
+  { icon, iconSize, iconColor, highlighted = false, markerProps, children },
   ref,
 ) => {
   const zoom = useMapZoom();
   const image = useTintedImage(icon, iconColor);
-  const markerIcon = useMemo(
-    () => new Icon({
+  const markerIcon = useMemo(() => {
+    const size: [number, number] = [iconSize[0] * (zoom + 1), iconSize[1] * (zoom + 1)];
+    const shadowRatio = 0.75;
+    return new Icon({
       iconUrl: image,
-      iconSize: [iconSize[0] * (zoom + 1), iconSize[1] * (zoom + 1)],
-    }),
+      iconSize: size,
+      // Add a shadow so we can use it for the highlight.
+      shadowUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+      shadowSize: [size[0] * shadowRatio, size[1] * shadowRatio],
+      shadowAnchor: [size[0] * (shadowRatio / 2), size[1] * (shadowRatio / 2)],
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [image, JSON.stringify(iconSize), zoom],
-  );
+  }, [image, JSON.stringify(iconSize), zoom]);
+
+  // Handle highlight
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line no-underscore-dangle
+  if (ref && ref.current && ref.current._shadow) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line no-underscore-dangle
+    const shadow: HTMLImageElement = ref.current._shadow;
+    if (highlighted) {
+      shadow.style.boxShadow = '0 0 10px 10px Cornsilk';
+      shadow.style.borderRadius = '50%';
+      shadow.style.backgroundColor = 'Cornsilk';
+      shadow.style.opacity = '0.5';
+    } else {
+      shadow.style.removeProperty('border-radius');
+      shadow.style.removeProperty('box-shadow');
+      shadow.style.removeProperty('background-color');
+      shadow.style.removeProperty('opacity');
+    }
+  }
+
   return (
     <Marker {...markerProps} icon={markerIcon} ref={ref}>
       { children }

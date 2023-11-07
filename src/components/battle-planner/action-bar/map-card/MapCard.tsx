@@ -5,15 +5,22 @@ import { useMap } from 'react-leaflet';
 
 import CustomMapDialog from './CustomMapDialog';
 import MapIcon from '../../../../assets/map-icon.png';
+import useTintedImage from '../../../../hooks/useTintedImage';
 import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { mapToCanvas } from '../../../../utils/leaflet';
+import CustomIcon from '../../../common/CustomIcon';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
 
 const VALUE: ActionBarTabId = 'map';
 
 function MapButton() {
-  return <ActionBarButton value={VALUE} iconSrc={MapIcon} tooltip="Map" />;
+  const icon = useTintedImage(MapIcon, '#d8bc68');
+  return (
+    <ActionBarButton value={VALUE} tooltip="Map">
+      <CustomIcon src={icon} />
+    </ActionBarButton>
+  );
 }
 
 function MapCard() {

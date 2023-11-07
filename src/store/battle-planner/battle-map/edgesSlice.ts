@@ -21,22 +21,27 @@ const edgesSlice = createSlice({
   name: 'edges',
   initialState: edgesAdapter.getInitialState(extraInitialState),
   reducers: {
-    selectStructureForEdge: (state, action: PayloadAction<EntityId>) => {
-      if (state.currentlySelected === null) state.currentlySelected = action.payload;
-      else {
-        const newEdge: Edge = {
-          id: generateId(),
-          structure1: state.currentlySelected,
-          structure2: action.payload,
-        };
-        // See if an edge already exists for both of those
-        if (edgesSelectors.selectAll(state).some((edge) => (
-          (edge.structure1 === newEdge.structure1 && edge.structure2 === newEdge.structure2)
-          || (edge.structure1 === newEdge.structure2 && edge.structure2 === newEdge.structure1)
-        ))) return;
-        edgesAdapter.addOne(state, newEdge);
-        state.currentlySelected = null;
+    selectStructure: (state, action: PayloadAction<EntityId>) => {
+      if (state.currentlySelected === null) {
+        state.currentlySelected = action.payload;
+        return;
       }
+      if (state.currentlySelected === action.payload) return;
+      const newEdge: Edge = {
+        id: generateId(),
+        structure1: state.currentlySelected,
+        structure2: action.payload,
+      };
+      // See if an edge already exists for both of those
+      if (edgesSelectors.selectAll(state).some((edge) => (
+        (edge.structure1 === newEdge.structure1 && edge.structure2 === newEdge.structure2)
+        || (edge.structure1 === newEdge.structure2 && edge.structure2 === newEdge.structure1)
+      ))) return;
+      edgesAdapter.addOne(state, newEdge);
+      state.currentlySelected = null;
+    },
+    deselectStructure: (state) => {
+      state.currentlySelected = null;
     },
     deleteEdge: edgesAdapter.removeOne,
     cascadeStructureDelete: (state, action: PayloadAction<EntityId>) => {
@@ -48,7 +53,7 @@ const edgesSlice = createSlice({
   },
 });
 
-export const { selectStructureForEdge, deleteEdge } = edgesSlice.actions;
+export const { selectStructure, deselectStructure, deleteEdge } = edgesSlice.actions;
 
 // Bind the cascadeStructureDelete - when we delete a structures, all the edges that include it
 // should be removed

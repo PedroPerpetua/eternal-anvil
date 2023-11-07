@@ -12,6 +12,7 @@ function MouseHoverController() {
     (state) => state.mapInfo.transformationMatrix,
     shallowEqual,
   );
+
   useMapEvent('mousemove', (e) => {
     dispatch(
       setCurrentMouseHover(leafletToGame(transformationMatrix, [e.latlng.lat, e.latlng.lng])),
