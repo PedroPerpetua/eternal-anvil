@@ -24,7 +24,7 @@ function MapImageLayer({ image }: MapImageLayerProps) {
     const effect = async () => {
       const { width, height } = await readImageFromURL(image);
       setMapInfo({ src: image, width, height });
-      map.setView([height / 2, width / 2]);
+      map.setView([0, 0]);
     };
     effect();
   }, [image, map]);
@@ -32,7 +32,10 @@ function MapImageLayer({ image }: MapImageLayerProps) {
   if (mapInfo === null) return null;
 
   return (
-    <ImageOverlay url={mapInfo.src} bounds={[[0, 0], [mapInfo.height, mapInfo.width]]} />
+    <ImageOverlay
+      url={mapInfo.src}
+      bounds={[[-mapInfo.height / 2, -mapInfo.width / 2], [mapInfo.height / 2, mapInfo.width / 2]]}
+    />
   );
 }
 
