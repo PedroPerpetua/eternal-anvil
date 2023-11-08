@@ -108,6 +108,7 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
           </Popover>
           <TypographyTextField
             value={realm.name}
+            valueIfEmpty="Realm"
             onChange={(newName) => dispatch(updateRealm({ id, changes: { name: newName } }))}
             editable={isOpen}
             textFieldProps={{
