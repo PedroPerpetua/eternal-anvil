@@ -26,5 +26,4 @@ const addStructureTabSlice = createSlice({
 });
 
 export const { setCoordinates, selectRealm } = addStructureTabSlice.actions;
-
 export default addStructureTabSlice.reducer;

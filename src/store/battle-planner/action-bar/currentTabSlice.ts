@@ -11,5 +11,4 @@ const currentTabSlice = createSlice({
 });
 
 export const { changeTab } = currentTabSlice.actions;
-
 export default currentTabSlice.reducer;

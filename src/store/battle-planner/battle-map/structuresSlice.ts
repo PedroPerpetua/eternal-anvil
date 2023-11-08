@@ -36,6 +36,7 @@ const structuresSlice = createSlice({
 });
 
 export const { createStructure, updateStructure, deleteStructure } = structuresSlice.actions;
+export default structuresSlice.reducer;
 
 // Bind the cascadeRealmDelete - when we delete a realm, all of it's structures should be deleted
 startListening({
@@ -44,5 +45,3 @@ startListening({
     listenerApi.dispatch(structuresSlice.actions.cascadeRealmDelete(action.payload));
   },
 });
-
-export default structuresSlice.reducer;

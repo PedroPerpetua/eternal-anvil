@@ -19,5 +19,4 @@ const edgesTabSlice = createSlice({
 });
 
 export const { changeMode } = edgesTabSlice.actions;
-
 export default edgesTabSlice.reducer;

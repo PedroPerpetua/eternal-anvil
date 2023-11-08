@@ -12,7 +12,6 @@ type Edge = {
 
 const edgesAdapter = createEntityAdapter<Edge>();
 export const edgesSelectors = edgesAdapter.getSelectors();
-
 const extraInitialState: { currentlySelected: EntityId | null } = {
   currentlySelected: null,
 };
@@ -54,6 +53,7 @@ const edgesSlice = createSlice({
 });
 
 export const { selectStructure, deselectStructure, deleteEdge } = edgesSlice.actions;
+export default edgesSlice.reducer;
 
 // Bind the cascadeStructureDelete - when we delete a structures, all the edges that include it
 // should be removed
@@ -63,5 +63,3 @@ startListening({
     listenerApi.dispatch(edgesSlice.actions.cascadeStructureDelete(action.payload));
   },
 });
-
-export default edgesSlice.reducer;

@@ -3,13 +3,6 @@ import { Matrix } from 'transformation-matrix';
 
 import { EMPTY_POINT, Point, computeAffineMatrix } from '../../../utils/math';
 
-type MapInfo = {
-  image: string | null,
-  transformationMatrix: Matrix,
-  dragging: boolean,
-  currentMouseHover: Point,
-};
-
 // By default, apply a rotation that "mimics" the game (close enough)
 const rotationSin = Math.sin(Math.PI / 4);
 const scale = 35;
@@ -17,6 +10,13 @@ const initialMatrix = computeAffineMatrix(
   [[0, 0], [0, 1], [1, 1]],
   [[0, 0], [scale * rotationSin, scale * rotationSin], [0, scale * 2 * rotationSin]],
 );
+
+type MapInfo = {
+  image: string | null,
+  transformationMatrix: Matrix,
+  dragging: boolean,
+  currentMouseHover: Point,
+};
 
 const initialState: MapInfo = {
   image: null,
@@ -43,5 +43,4 @@ const mapInfoSlice = createSlice({
 });
 
 export const { setMapInfo, setDragging, setCurrentMouseHover } = mapInfoSlice.actions;
-
 export default mapInfoSlice.reducer;

@@ -10,6 +10,7 @@ type Realm = {
 };
 
 const realmsAdapter = createEntityAdapter<Realm>();
+export const realmSelectors = realmsAdapter.getSelectors();
 const initialState = realmsAdapter.addMany(realmsAdapter.getInitialState(), [
   { id: generateId(), name: 'Neutral', color: NEUTRAL_COLOR },
   { id: generateId(), name: 'My Realm', color: DEFAULT_REALM_COLORS[0] },
@@ -29,5 +30,4 @@ const realmsSlice = createSlice({
 });
 
 export const { createRealm, updateRealm, deleteRealm } = realmsSlice.actions;
-export const realmSelectors = realmsAdapter.getSelectors();
 export default realmsSlice.reducer;
