@@ -12,7 +12,6 @@ import { useRealmsCardListContext } from './RealmsCardListContext';
 import StructureList from './StructureList';
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
-import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
 import { selectRealm } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import { changeTab } from '../../../../store/battle-planner/action-bar/currentTabSlice';
@@ -38,7 +37,6 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
     shallowEqual,
   );
   const [colorChangeAnchor, setColorChangeAnchor] = useState<HTMLDivElement | null>(null);
-  const tintedAddStructureIcon = useTintedImage(AddStructureIcon, '#d8bc68');
   if (!realm) return null;
   return (
     <Paper sx={{ padding: '5px' }}>
@@ -142,7 +140,7 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
               dispatch(changeTab('addStructure'));
             }}
           >
-            <CustomIcon src={tintedAddStructureIcon} />
+            <CustomIcon src={AddStructureIcon} tintColor="#d8bc68" />
           </GameButton>
           <Button size="small" color="error" onClick={openDelete}>
             <DeleteIcon stroke="black" strokeWidth="1px" />

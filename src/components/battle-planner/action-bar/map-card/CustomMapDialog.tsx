@@ -7,7 +7,6 @@ import { CRS, Marker as LeafletMarker } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 
 import TargetIcon from '../../../../assets/target.png';
-import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
 import { setMapInfo } from '../../../../store/battle-planner/battle-map/mapInfoSlice';
 import theme from '../../../../theme';
@@ -61,11 +60,10 @@ type CoordinateInputRowProps = {
 };
 
 function CoordinateInputRow({ label, targetColor, value, onChange }: CoordinateInputRowProps) {
-  const targetIcon = useTintedImage(TargetIcon, targetColor);
   return (
     <>
       <Grid item xs={1}>
-        <CustomIcon src={targetIcon} />
+        <CustomIcon src={TargetIcon} tintColor={targetColor} />
       </Grid>
       <Grid item xs={4}>
         <Typography>{ label }</Typography>

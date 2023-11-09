@@ -1,13 +1,17 @@
 import { Icon, SxProps, Theme } from '@mui/material';
 
+import useTintedImage from '../../hooks/useTintedImage';
+
 type CustomIconProps = {
   src: string,
+  tintColor?: string,
   size?: 'huge' | 'large' | 'medium' | 'small' | number,
   className?: string,
   sx?: SxProps<Theme>
 };
 
-function CustomIcon({ src, size = 'medium', className = '', sx = {} }: CustomIconProps) {
+function CustomIcon({ src, tintColor, size = 'medium', className = '', sx = {} }: CustomIconProps) {
+  const image = useTintedImage(src, tintColor);
   let imgSize;
   if (typeof size === 'number') imgSize = size;
   else {
@@ -36,7 +40,7 @@ function CustomIcon({ src, size = 'medium', className = '', sx = {} }: CustomIco
       sx={{ fontSize: imgSize, ...sx }}
       className={['center-content', className].join(' ')}
     >
-      <img src={src} width={imgSize} height={imgSize} alt="" draggable={false} />
+      <img src={image} width={imgSize} height={imgSize} alt="" draggable={false} />
     </Icon>
   );
 }

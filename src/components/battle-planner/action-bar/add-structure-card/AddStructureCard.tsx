@@ -6,7 +6,6 @@ import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
-import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
 import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
 import { selectRealm, setCoordinates } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
@@ -47,10 +46,9 @@ function RealmOption({ label, color }: RealmOptionProps) {
 }
 
 function AddStructureButton() {
-  const icon = useTintedImage(AddStructureIcon, '#d8bc68');
   return (
     <ActionBarButton value={VALUE} tooltip="Add Structure">
-      <CustomIcon src={icon} />
+      <CustomIcon src={AddStructureIcon} tintColor="#d8bc68" />
     </ActionBarButton>
   );
 }

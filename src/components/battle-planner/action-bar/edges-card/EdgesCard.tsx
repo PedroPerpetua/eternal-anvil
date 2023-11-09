@@ -7,7 +7,6 @@ import { shallowEqual } from 'react-redux';
 
 import EDGE_TOOLS from './EdgeTools';
 import EdgeIcon from '../../../../assets/edge-icon.png';
-import useTintedImage from '../../../../hooks/useTintedImage';
 import { useAppDispatch } from '../../../../store';
 import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
 import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
@@ -25,7 +24,6 @@ import ActionBarCard from '../ActionBarCard';
 const VALUE: ActionBarTabId = 'edges';
 
 function EdgesButton() {
-  const icon = useTintedImage(EdgeIcon, '#d8bc68');
   const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
   return (
     <ActionBarButton
@@ -45,7 +43,7 @@ function EdgesButton() {
         overlap="circular"
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <CustomIcon src={icon} />
+        <CustomIcon src={EdgeIcon} tintColor="#d8bc68" />
       </Badge>
     </ActionBarButton>
   );

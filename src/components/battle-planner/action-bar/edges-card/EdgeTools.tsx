@@ -2,19 +2,16 @@ import { ReactNode } from 'react';
 
 import AddEdgeIcon from '../../../../assets/add-edge-icon.png';
 import ViewIcon from '../../../../assets/view-icon.png';
-import useTintedImage from '../../../../hooks/useTintedImage';
 import { EdgeToolMode } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
 import CustomIcon from '../../../common/CustomIcon';
 import DeleteIcon from '../../../common/styled-components/DeleteIcon';
 
 function ViewIconComponent() {
-  const icon = useTintedImage(ViewIcon, '#d8bc68');
-  return <CustomIcon src={icon} size="large" />;
+  return <CustomIcon src={ViewIcon} tintColor="#d8bc68" size="large" />;
 }
 
 function SelectIconComponent() {
-  const icon = useTintedImage(AddEdgeIcon, '#d8bc68');
-  return <CustomIcon src={icon} />;
+  return <CustomIcon src={AddEdgeIcon} tintColor="#d8bc68" />;
 }
 
 function DeleteIconComponent() {
