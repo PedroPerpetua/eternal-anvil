@@ -23,7 +23,7 @@ export function hexToRGB(colorHex: string) {
  * @param color The color to tint the image with, in hex.
  * @returns a DataURL for the tinted image.
  */
-export async function tintImage(imageURL: string, color: string) {
+async function _tintImage(imageURL: string, color: string) {
   const originalImage = await Image.load(imageURL);
   // Create an overlay that's just the solid color
   const [red, green, blue] = hexToRGB(color);
@@ -47,6 +47,8 @@ export async function tintImage(imageURL: string, color: string) {
   const stack = new Stack([colorOverlay, originalImage]);
   return stack.getMinImage().toDataURL();
 }
+
+export const tintImage = moize(_tintImage);
 
 /* https://stackoverflow.com/a/13532993/13525157 ------------------------------------------------ */
 /**

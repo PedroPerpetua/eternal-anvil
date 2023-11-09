@@ -6,8 +6,8 @@ function useTintedImage(image: string, color?: string) {
   const [resultingImage, setResultingImage] = useState(image);
 
   useEffect(() => {
-    if (!color) return;
-    tintImage(image, color).then((imageUrl) => setResultingImage(imageUrl));
+    if (color === undefined) setResultingImage(image);
+    else tintImage(image, color).then((imageUrl) => setResultingImage(imageUrl));
   }, [image, color]);
 
   return resultingImage;
