@@ -10,7 +10,7 @@ import { shallowEqual } from 'react-redux';
 import CalculatorTab from './CalculatorTab';
 import { useAppDispatch } from '../../store';
 import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
-import { calculatorTabsSelectors, calculatorsSelectors, createTab } from '../../store/distance-calculator/calculatorsSlice';
+import { calculatorsSelectors, createTab } from '../../store/distance-calculator/calculatorsSlice';
 
 type DraggableCalculatorProps = {
   id: EntityId
@@ -28,13 +28,9 @@ function DraggableCalculator({ id }: DraggableCalculatorProps) {
   const dispatch = useAppDispatch();
   const calculatorData = useDistanceCalculatorSelector((state) => {
     if (!state.show) return null;
-    const position = calculatorsSelectors.selectById(state.calculators, id)?.position;
-    if (!position) return null;
-    const tabs = calculatorTabsSelectors.selectAll(state.tabs)
-      .filter((t) => t.calculatorId === id)
-      .map((t) => t.id);
-    if (tabs.length === 0) return null;
-    return { position, tabs };
+    const calculator = calculatorsSelectors.selectById(state.calculators, id);
+    if (!calculator) return null;
+    return { position: calculator.position, tabs: calculator.tabs };
   }, (a, b) => {
     if (a === null && b == null) return true;
     if (a === null || b == null) return false;

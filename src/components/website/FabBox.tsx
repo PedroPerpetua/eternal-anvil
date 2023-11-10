@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 
 type FabBoxProps = PropsWithChildren<object>;
 

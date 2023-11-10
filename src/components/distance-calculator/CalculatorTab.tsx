@@ -8,7 +8,7 @@ import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch } from '../../store';
 import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
 import {
-  calculatorTabsSelectors, calculatorsSelectors, deleteTab, switchTab, updateTab,
+  calculatorTabsSelectors, deleteTab, switchTab, tabCalculatorSelector, updateTab,
 } from '../../store/distance-calculator/calculatorsSlice';
 import { PENALTIES } from '../../utils/gameData';
 import { calcDistance, calcTravelTime } from '../../utils/math';
@@ -28,14 +28,14 @@ function CalculatorTabButton({ tabId }: CalculatorTabProps) {
   const active = useDistanceCalculatorSelector((state) => {
     const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
     if (!tab) return false;
-    const calculator = calculatorsSelectors.selectById(state.calculators, tab.calculatorId);
+    const calculator = tabCalculatorSelector(state.calculators, tab.id);
     if (!calculator) return false;
     return calculator.currentTab === tabId;
   });
   const calculatorId = useDistanceCalculatorSelector((state) => {
     const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
     if (!tab) return null;
-    return calculatorsSelectors.selectById(state.calculators, tab.calculatorId)?.id ?? null;
+    return tabCalculatorSelector(state.calculators, tab.id)?.id ?? null;
   }, shallowEqual);
   const tabName = useDistanceCalculatorSelector((state) => {
     const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
@@ -92,9 +92,9 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
   const active = useDistanceCalculatorSelector((state) => {
     const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
     if (!tab) return false;
-    const calculator = calculatorsSelectors.selectById(state.calculators, tab.calculatorId);
+    const calculator = tabCalculatorSelector(state.calculators, tab.id);
     if (!calculator) return false;
-    return calculator.currentTab === tabId;
+    return calculator.currentTab === tab.id;
   });
   const tab = useDistanceCalculatorSelector(
     (state) => calculatorTabsSelectors.selectById(state.tabs, tabId) ?? null,

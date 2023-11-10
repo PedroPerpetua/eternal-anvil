@@ -1,4 +1,6 @@
-import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import {
+  EntityId, EntityState, PayloadAction, createEntityAdapter, createSlice,
+} from '@reduxjs/toolkit';
 
 import { EMPTY_POINT, Point } from '../../utils/math';
 import { generateId } from '../../utils/utilities';
@@ -8,6 +10,7 @@ type Calculator = {
   id: EntityId,
   position: Point,
   currentTab: EntityId | null,
+  tabs: EntityId[],
 };
 
 function generateCalculator(): Calculator {
@@ -15,16 +18,20 @@ function generateCalculator(): Calculator {
     id: generateId(),
     position: [0, 0], // TODO
     currentTab: null,
+    tabs: [],
   };
 }
 
 const calculatorsAdapter = createEntityAdapter<Calculator>();
 export const calculatorsSelectors = calculatorsAdapter.getSelectors();
+export const tabCalculatorSelector = (
+  state: EntityState<Calculator>,
+  tabId: EntityId,
+) => calculatorsSelectors.selectAll(state).find((c) => c.tabs.includes(tabId));
 
 // Handle calculator tabs
 type Tab = {
   id: EntityId,
-  calculatorId: EntityId,
   name: string | null,
   startingPoint: Point,
   endingPoint: Point,
@@ -32,11 +39,10 @@ type Tab = {
   speed: number,
 };
 
-function generateTab(calculatorId: EntityId): Tab {
+function generateTab(): Tab {
   return {
     id: generateId(),
     name: null,
-    calculatorId,
     startingPoint: EMPTY_POINT,
     endingPoint: EMPTY_POINT,
     penalty: 0,
@@ -59,9 +65,10 @@ const calculatorsSlice = createSlice({
       if (calculatorsSelectors.selectTotal(state.calculators) === 0 && action.payload === true) {
         // Create a calculator
         const calculator = generateCalculator();
-        // Create a tab for the calculator
-        const tab = generateTab(calculator.id);
-        // Set that as the current tab
+        // Create a tab
+        const tab = generateTab();
+        // Add the tab and set as current
+        calculator.tabs.push(tab.id);
         calculator.currentTab = tab.id;
         // Add them to the state
         calculatorsAdapter.addOne(state.calculators, calculator);
@@ -84,11 +91,14 @@ const calculatorsSlice = createSlice({
       );
     },
     createTab: (state, action: PayloadAction<EntityId>) => {
-      const tab = generateTab(action.payload);
+      const calculator = calculatorsSelectors.selectById(state.calculators, action.payload);
+      if (!calculator) return;
+      const tab = generateTab();
       tabsAdapter.addOne(state.tabs, tab);
+      // Add the tab and set as current
       calculatorsAdapter.updateOne(
         state.calculators,
-        { id: action.payload, changes: { currentTab: tab.id } },
+        { id: calculator.id, changes: { currentTab: tab.id, tabs: [...calculator.tabs, tab.id] } },
       );
     },
     switchTab: (state, action: PayloadAction<{ calculatorId: EntityId, tabId: EntityId }>) => {
@@ -99,7 +109,7 @@ const calculatorsSlice = createSlice({
       );
     },
     moveTab: (state, action: PayloadAction<{ tabId: EntityId, calculatorId: EntityId | null }>) => {
-      let { calculatorId } = action.payload;
+      const { calculatorId } = action.payload;
       const { tabId } = action.payload;
       const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
       if (!tab) return;
@@ -107,20 +117,28 @@ const calculatorsSlice = createSlice({
         // Create a new calculator for it
         const calculator = generateCalculator();
         calculator.currentTab = tabId;
+        calculator.tabs = [tabId];
         calculatorsAdapter.addOne(state.calculators, calculator);
-        calculatorId = calculator.id;
       }
-      const previousCalculator = calculatorsSelectors.selectById(
-        state.calculators,
-        tab.calculatorId,
-      );
-      tabsAdapter.updateOne(state.tabs, { id: tabId, changes: { calculatorId } });
-      // If the previous calculator is left empty, delete it
+
+      const previousCalculator = tabCalculatorSelector(state.calculators, tab.id);
       if (!previousCalculator) return;
-      const tabsLeft = calculatorTabsSelectors.selectAll(state.tabs)
-        .filter((t) => t.calculatorId === previousCalculator.id);
-      if (tabsLeft.length === 0) {
-        calculatorsAdapter.removeOne(state.calculators, previousCalculator.id);
+      calculatorsAdapter.updateOne(
+        state.calculators,
+        {
+          id: previousCalculator.id,
+          changes: { tabs: previousCalculator.tabs.filter((tId) => tId !== tab.id) },
+        },
+      );
+      // If the previous calculator is left empty, delete it
+      // "refresh from db"
+      const refreshedCalculator = calculatorsSelectors.selectById(
+        state.calculators,
+        previousCalculator.id,
+      );
+      if (!refreshedCalculator) return;
+      if (refreshedCalculator.tabs.length === 0) {
+        calculatorsAdapter.removeOne(state.calculators, refreshedCalculator.id);
       }
     },
     updateTab: (
@@ -133,23 +151,31 @@ const calculatorsSlice = createSlice({
     deleteTab: (state, action: PayloadAction<EntityId>) => {
       const tab = calculatorTabsSelectors.selectById(state.tabs, action.payload);
       if (!tab) return;
-      const calculator = calculatorsSelectors.selectById(state.calculators, tab.calculatorId);
       tabsAdapter.removeOne(state.tabs, action.payload);
+      const calculator = tabCalculatorSelector(state.calculators, tab.id);
       if (!calculator) return;
+      calculatorsAdapter.updateOne(
+        state.calculators,
+        {
+          id: calculator.id,
+          changes: { tabs: calculator.tabs.filter((tId) => tId !== tab.id) },
+        },
+      );
       // If the calculator was left empty, delete it
-      const remainingTabs = calculatorTabsSelectors.selectAll(state.tabs);
-      const calculatorTabs = remainingTabs.filter((t) => t.calculatorId === calculator.id);
-      if (calculatorTabs.length === 0) {
-        calculatorsAdapter.removeOne(state.calculators, calculator.id);
+      // "refresh from db"
+      const refreshedCalculator = calculatorsSelectors.selectById(state.calculators, calculator.id);
+      if (!refreshedCalculator) return;
+      if (refreshedCalculator.tabs.length === 0) {
+        calculatorsAdapter.removeOne(state.calculators, refreshedCalculator.id);
         // If there are no calculators left, set closed
-        if (remainingTabs.length === 0) {
+        if (calculatorsSelectors.selectTotal(state.calculators) === 0) {
           state.show = false;
         }
-      } else if (calculator.currentTab === action.payload) {
+      } else if (refreshedCalculator.currentTab === tab.id) {
         // We deleted the current tab, let's swap!
         calculatorsAdapter.updateOne(
           state.calculators,
-          { id: calculator.id, changes: { currentTab: calculatorTabs.at(-1)?.id } },
+          { id: refreshedCalculator.id, changes: { currentTab: refreshedCalculator.tabs.at(-1) } },
         );
       }
     },
