@@ -8,9 +8,8 @@ import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch } from '../../store';
 import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
 import {
-  deleteTab, setEndingPoint, setName, setPenalty, setSpeed, setStartingPoint, switchTab,
-  tabsSelectors,
-} from '../../store/distance-calculator/tabsSlice';
+  calculatorTabsSelectors, calculatorsSelectors, deleteTab, switchTab, updateTab,
+} from '../../store/distance-calculator/calculatorsSlice';
 import { PENALTIES } from '../../utils/gameData';
 import { calcDistance, calcTravelTime } from '../../utils/math';
 import { formatSeconds } from '../../utils/utilities';
@@ -25,34 +24,43 @@ type CalculatorTabProps = {
 
 function CalculatorTabButton({ tabId }: CalculatorTabProps) {
   const dispatch = useAppDispatch();
-  const active = useDistanceCalculatorSelector((state) => state.currentTab === tabId);
+
+  const active = useDistanceCalculatorSelector((state) => {
+    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
+    if (!tab) return false;
+    const calculator = calculatorsSelectors.selectById(state.calculators, tab.calculatorId);
+    if (!calculator) return false;
+    return calculator.currentTab === tabId;
+  });
+  const calculatorId = useDistanceCalculatorSelector((state) => {
+    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
+    if (!tab) return null;
+    return calculatorsSelectors.selectById(state.calculators, tab.calculatorId)?.id ?? null;
+  }, shallowEqual);
   const tabName = useDistanceCalculatorSelector((state) => {
-    const tab = tabsSelectors.selectById(state, tabId);
+    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
     if (!tab) return null;
     return tab.name ?? '';
   });
 
-  if (tabName === null) return null;
+  if (tabName === null || calculatorId === null) return null;
   return (
     <Box
       className="clickable center-content"
-      onClick={() => dispatch(switchTab(tabId))}
+      onClick={() => dispatch(switchTab({ calculatorId, tabId }))}
       sx={{
         padding: '2px 10px',
         borderRight: '1px solid black',
         borderBottom: active ? undefined : '1px solid black',
-        ':first-of-type': {
-          borderTopLeftRadius: '5px',
-        },
       }}
     >
       <Stack direction="row" alignItems="center" spacing={1}>
         <TypographyTextField
           value={tabName}
           valueIfEmpty="Calculator"
-          onChange={(name) => dispatch(setName({ id: tabId, newName: name }))}
+          onChange={(name) => dispatch(updateTab({ tabId, update: { name } }))}
           doubleClickOnly
-          textFieldProps={{ inputProps: { style: { padding: '2px' } } }}
+          textFieldProps={{ inputProps: { style: { padding: '2px', minWidth: '100px' } } }}
           typographyProps={{ noWrap: true, width: active ? undefined : '100px', minWidth: '100px' }}
         />
         <IconButton
@@ -81,9 +89,15 @@ function CalculatorTabButton({ tabId }: CalculatorTabProps) {
 
 function CalculatorTab({ tabId }: CalculatorTabProps) {
   const dispatch = useAppDispatch();
-  const active = useDistanceCalculatorSelector((state) => state.currentTab === tabId);
+  const active = useDistanceCalculatorSelector((state) => {
+    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId);
+    if (!tab) return false;
+    const calculator = calculatorsSelectors.selectById(state.calculators, tab.calculatorId);
+    if (!calculator) return false;
+    return calculator.currentTab === tabId;
+  });
   const tab = useDistanceCalculatorSelector(
-    (state) => tabsSelectors.selectById(state, tabId),
+    (state) => calculatorTabsSelectors.selectById(state.tabs, tabId) ?? null,
     shallowEqual,
   );
   if (!tab || !active) return null;
@@ -98,21 +112,23 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
           <Typography>Starting point</Typography>
           <CoordinateInput
             value={tab.startingPoint}
-            onChange={(p) => dispatch(setStartingPoint(p))}
+            onChange={(p) => dispatch(updateTab({ tabId, update: { startingPoint: p } }))}
           />
         </Stack>
         <Stack alignItems="center" spacing={1}>
           <Typography>Ending point</Typography>
           <CoordinateInput
             value={tab.endingPoint}
-            onChange={(p) => dispatch(setEndingPoint(p))}
+            onChange={(p) => dispatch(updateTab({ tabId, update: { endingPoint: p } }))}
           />
         </Stack>
         <TextField
           select
           label="Mission Penalty"
           value={tab.penalty}
-          onChange={(e) => dispatch(setPenalty(Number(e.target.value)))}
+          onChange={(e) => dispatch(
+            updateTab({ tabId, update: { penalty: Number(e.target.value) } }),
+          )}
           SelectProps={{
             renderValue: (v) => {
               const penalty = Object.values(PENALTIES).find((p) => p.value === v);
@@ -153,7 +169,7 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
         </TextField>
         <SimpleNumberField
           value={tab.speed}
-          onChange={(v) => dispatch(setSpeed(v))}
+          onChange={(v) => dispatch(updateTab({ tabId, update: { speed: v } }))}
           minValue={0}
           maxValue={150}
           textFieldProps={{

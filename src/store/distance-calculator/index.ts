@@ -1,9 +1,9 @@
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 
-import tabsSliceReducer from './tabsSlice';
+import calculatorsSliceReducer from './calculatorsSlice';
 import type { RootState } from '..';
 
-const distanceCalculatorReducers = tabsSliceReducer;
+const distanceCalculatorReducers = calculatorsSliceReducer;
 
 export default distanceCalculatorReducers;
 
