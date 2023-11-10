@@ -51,7 +51,7 @@ function CalculatorTabButton({ tabId }: CalculatorTabProps) {
       sx={{
         padding: '2px 10px',
         borderRight: '1px solid black',
-        borderBottom: active ? undefined : '1px solid black',
+        borderBottom: `1px solid ${active ? 'transparent' : 'black'}`,
       }}
     >
       <Stack direction="row" alignItems="center" spacing={1}>

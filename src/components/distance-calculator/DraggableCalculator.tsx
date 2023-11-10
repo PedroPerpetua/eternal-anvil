@@ -65,7 +65,7 @@ function DraggableCalculator({ id }: DraggableCalculatorProps) {
           border: '1px solid black',
         }}
       >
-        <Stack direction="row">
+        <Stack direction="row" sx={{ marginBottom: '-10px' }}>
           <Box
             ref={setActivatorNodeRef}
             // eslint-disable-next-line react/jsx-props-no-spreading
@@ -73,13 +73,30 @@ function DraggableCalculator({ id }: DraggableCalculatorProps) {
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...listeners}
             className="center-content clickable"
-            sx={{ borderBottom: '1px solid black', borderRight: '1px solid black' }}
+            sx={{
+              borderBottom: '1px solid black',
+              borderRight: '1px solid black',
+              marginBottom: '10px',
+            }}
           >
             <DragIndicatorIcon />
           </Box>
           <Stack
             direction="row"
-            sx={{ flex: 1, overflowX: 'auto', scrollBehavior: 'smooth' }}
+            sx={{
+              flex: 1,
+              overflowX: 'scroll',
+              scrollBehavior: 'smooth',
+              '&::-webkit-scrollbar': {
+                height: '10px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#d8bc68',
+                border: '2px solid transparent',
+                backgroundClip: 'content-box',
+                borderRadius: '5px',
+              },
+            }}
             ref={horizontalScrollerRef}
           >
             {
