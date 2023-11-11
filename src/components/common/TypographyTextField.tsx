@@ -58,6 +58,16 @@ function TypographyTextField({
           if (valueIfEmpty && value === '') onChange(valueIfEmpty);
           if (textFieldProps.onBlur) textFieldProps.onBlur(e);
         }}
+        inputRef={(input: HTMLInputElement) => {
+          if (input) input.select();
+          if (textFieldProps.inputRef) {
+            if (typeof textFieldProps.inputRef === 'function') textFieldProps.inputRef(input);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            // eslint-disable-next-line no-param-reassign
+            else textFieldProps.inputRef.current = input;
+          }
+        }}
       />
     );
   }

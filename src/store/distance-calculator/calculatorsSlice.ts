@@ -15,7 +15,7 @@ type Calculator = {
 
 function generateCalculator(): Calculator {
   return {
-    id: generateId(),
+    id: `calculator-${generateId()}`,
     position: [0, 0], // TODO
     currentTab: null,
     tabs: [],
@@ -41,7 +41,7 @@ type Tab = {
 
 function generateTab(): Tab {
   return {
-    id: generateId(),
+    id: `tab-${generateId()}`,
     name: null,
     startingPoint: EMPTY_POINT,
     endingPoint: EMPTY_POINT,
@@ -59,6 +59,7 @@ const calculatorsSlice = createSlice({
     calculators: calculatorsAdapter.getInitialState(),
     tabs: tabsAdapter.getInitialState(),
     show: false,
+    draggingTab: (null as EntityId | null),
   },
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -108,6 +109,9 @@ const calculatorsSlice = createSlice({
         { id: calculatorId, changes: { currentTab: tabId } },
       );
     },
+    setDraggingTab: (state, action: PayloadAction<EntityId | null>) => {
+      state.draggingTab = action.payload;
+    },
     moveTab: (state, action: PayloadAction<{ tabId: EntityId, calculatorId: EntityId | null }>) => {
       const { calculatorId } = action.payload;
       const { tabId } = action.payload;
@@ -139,6 +143,12 @@ const calculatorsSlice = createSlice({
       if (!refreshedCalculator) return;
       if (refreshedCalculator.tabs.length === 0) {
         calculatorsAdapter.removeOne(state.calculators, refreshedCalculator.id);
+      } else if (refreshedCalculator.currentTab === tab.id) {
+        // If it was the active tab at the previous calculator, change it
+        calculatorsAdapter.updateOne(
+          state.calculators,
+          { id: refreshedCalculator.id, changes: { currentTab: refreshedCalculator.tabs.at(-1) } },
+        );
       }
     },
     updateTab: (
@@ -187,6 +197,7 @@ export const {
   moveCalculator,
   createTab,
   switchTab,
+  setDraggingTab,
   moveTab,
   updateTab,
   deleteTab,
