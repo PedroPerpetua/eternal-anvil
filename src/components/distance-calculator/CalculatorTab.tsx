@@ -75,7 +75,7 @@ function CalculatorTabButton({ tabId, asOverlay = false }: CalculatorTabProps) {
           valueIfEmpty="Calculator"
           onChange={(name) => dispatch(updateTab({ tabId, update: { name } }))}
           doubleClickOnly
-          textFieldProps={{ inputProps: { style: { padding: '2px', minWidth: '100px' } } }}
+          textFieldProps={{ inputProps: { style: { padding: '2px' } } }}
           typographyProps={{ noWrap: true, width: active ? undefined : '100px', minWidth: '100px' }}
         />
         <IconButton
