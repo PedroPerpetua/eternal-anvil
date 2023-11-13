@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
-import { DragOverlay, useDraggable } from '@dnd-kit/core';
+import { useCallback, memo } from 'react';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { CSS } from '@dnd-kit/utilities';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Box, Button, Portal, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
-import CalculatorTab from './CalculatorTab';
+import CalculatorTab, { DraggableCalculatorTabButton } from './CalculatorTab';
 import { useAppDispatch } from '../../store';
 import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
 import { calculatorsSelectors, createTab } from '../../store/distance-calculator/calculatorsSlice';
@@ -17,7 +17,7 @@ type CalculatorProps = {
   id: EntityId
 };
 
-function Calculator({ id }: CalculatorProps) {
+const Calculator = memo(({ id }: CalculatorProps) => {
   const {
     attributes,
     listeners,
@@ -25,6 +25,7 @@ function Calculator({ id }: CalculatorProps) {
     setNodeRef,
     setActivatorNodeRef,
   } = useDraggable({ id });
+  const { setNodeRef: setDroppableNodeRef } = useDroppable({ id });
 
   const dispatch = useAppDispatch();
   const calculatorData = useDistanceCalculatorSelector((state) => {
@@ -45,13 +46,11 @@ function Calculator({ id }: CalculatorProps) {
       && shallowEqual(a.currentTab, b.currentTab)
     );
   });
-  const draggingTab = useDistanceCalculatorSelector((state) => state.draggingTab);
 
   const horizontalScrollerRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      // eslint-disable-next-line no-param-reassign
       node.scrollTo({ left: node.scrollLeft + e.deltaY, behavior: 'smooth' });
     };
     node.addEventListener('wheel', onWheel, { passive: false });
@@ -59,79 +58,70 @@ function Calculator({ id }: CalculatorProps) {
 
   if (!calculatorData) return null;
   return (
-    <Portal>
-      <Box
-        ref={setNodeRef}
-        sx={{
-          position: 'absolute',
-          top: calculatorData.position[1],
-          left: calculatorData.position[0],
-          transform: CSS.Translate.toString(transform),
-          zIndex: 1000,
-          backgroundColor: 'white',
-          borderRadius: '5px',
-          padding: 0,
-          width: '300px',
-          border: '1px solid black',
-        }}
-      >
+    <Box
+      ref={setNodeRef}
+      sx={{
+        position: 'absolute',
+        top: calculatorData.position[1],
+        left: calculatorData.position[0],
+        transform: CSS.Translate.toString(transform),
+        backgroundColor: 'white',
+        borderRadius: '5px',
+        padding: 0,
+        width: '300px',
+        border: '1px solid black',
+        zIndex: 1001, // over leaflet
+      }}
+    >
+      <Stack direction="row" sx={{ marginBottom: '-10px' }} ref={setDroppableNodeRef}>
         <SortableContext items={calculatorData.tabs}>
-          <Stack direction="row" sx={{ marginBottom: '-10px' }}>
-            <Box
-              ref={setActivatorNodeRef}
+          <Box
+            ref={setActivatorNodeRef}
             // eslint-disable-next-line react/jsx-props-no-spreading
-              {...attributes}
+            {...attributes}
             // eslint-disable-next-line react/jsx-props-no-spreading
-              {...listeners}
-              className="center-content clickable"
-              sx={{
-                borderBottom: '1px solid black',
-                borderRight: '1px solid black',
-                marginBottom: '10px',
-              }}
-            >
-              <DragIndicatorIcon />
-            </Box>
-            <Stack
-              direction="row"
-              sx={{
-                flex: 1,
-                overflowX: 'scroll',
-                scrollBehavior: 'smooth',
-                '&::-webkit-scrollbar': {
-                  height: '10px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#d8bc68',
-                  border: '2px solid transparent',
-                  backgroundClip: 'content-box',
-                  borderRadius: '5px',
-                },
-              }}
-              ref={horizontalScrollerRef}
-            >
-              {
+            {...listeners}
+            className="center-content clickable"
+            sx={{
+              borderBottom: '1px solid black',
+              borderRight: '1px solid black',
+              marginBottom: '10px',
+            }}
+          >
+            <DragIndicatorIcon />
+          </Box>
+          <Stack
+            direction="row"
+            sx={{
+              flex: 1,
+              overflowX: 'scroll',
+              scrollBehavior: 'smooth',
+              '&::-webkit-scrollbar': {
+                height: '10px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#d8bc68',
+                border: '2px solid transparent',
+                backgroundClip: 'content-box',
+                borderRadius: '5px',
+              },
+            }}
+            ref={horizontalScrollerRef}
+          >
+            {
               calculatorData.tabs.map((tabId) => (
-                <CalculatorTab.Button key={tabId} tabId={tabId} asOverlay={draggingTab === tabId} />
+                <DraggableCalculatorTabButton key={tabId} tabId={tabId} />
               ))
             }
-              <Box sx={{ borderBottom: '1px solid black', flex: 1, minWidth: '100px' }}>
-                <Button onClick={() => dispatch(createTab(id))}>New Tab</Button>
-              </Box>
-            </Stack>
+            <Box sx={{ borderBottom: '1px solid black', flex: 1, minWidth: '100px' }}>
+              <Button onClick={() => dispatch(createTab(id))}>New Tab</Button>
+            </Box>
           </Stack>
         </SortableContext>
-        {
-          draggingTab && (
-            <DragOverlay>
-              <CalculatorTab.Button tabId={draggingTab} />
-            </DragOverlay>
-          )
-        }
-        { calculatorData.currentTab && <CalculatorTab tabId={calculatorData.currentTab} /> }
-      </Box>
-    </Portal>
+      </Stack>
+      { calculatorData.currentTab && <CalculatorTab tabId={calculatorData.currentTab} /> }
+    </Box>
   );
-}
+});
 
 export default Calculator;
