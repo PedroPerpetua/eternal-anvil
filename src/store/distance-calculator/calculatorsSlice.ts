@@ -242,6 +242,7 @@ const calculatorsSlice = createSlice({
       tabsAdapter.removeOne(state.tabs, tabId);
       const calculator = tabCalculatorSelector(state.calculators, tabId)!;
       removeTabFromCalculator(state.calculators, calculator.id, tabId);
+      if (calculatorsSelectors.selectTotal(state.calculators) === 0) state.show = false;
     },
   },
 });
