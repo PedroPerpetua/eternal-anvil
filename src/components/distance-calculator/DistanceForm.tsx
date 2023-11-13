@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
@@ -16,7 +17,7 @@ type DistanceFormProps = {
   tabId: EntityId
 };
 
-function DistanceForm({ tabId }: DistanceFormProps) {
+const DistanceForm = memo(({ tabId }: DistanceFormProps) => {
   const dispatch = useAppDispatch();
   const tab = useDistanceCalculatorSelector(
     (state) => calculatorTabsSelectors.selectById(state.tabs, tabId)!,
@@ -110,6 +111,6 @@ function DistanceForm({ tabId }: DistanceFormProps) {
       </Stack>
     </Stack>
   );
-}
+});
 
 export default DistanceForm;
