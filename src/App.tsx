@@ -1,19 +1,16 @@
-import { RecoilRoot } from 'recoil';
-
-import BattlePlanner from './components/battle-map/battle-planner/BattlePlanner';
-import CustomMapDialog from './components/battle-map/custom-map-dialog/CustomMapDialog';
-import MatchupPlannerWidget from './components/matchup-planner/matchup-planner-widget/MatchupPlannerWidget';
-import TravelWidget
-  from './components/travel-simulator/travel-simulator-widget/TravelSimulatorWidget';
+import BattleMap from './components/battle-planner/battle-map/BattleMap';
+import DistanceCalculator from './components/distance-calculator/DistanceCalculator';
+import FabBox from './components/website/FabBox';
+import WebsiteLayout from './components/website/WebsiteLayout';
 
 function App() {
   return (
-    <RecoilRoot>
-      <BattlePlanner />
-      <CustomMapDialog />
-      <TravelWidget />
-      <MatchupPlannerWidget />
-    </RecoilRoot>
+    <WebsiteLayout>
+      <BattleMap />
+      <FabBox>
+        <DistanceCalculator />
+      </FabBox>
+    </WebsiteLayout>
   );
 }
 

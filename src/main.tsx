@@ -1,18 +1,28 @@
 import React from 'react';
-import 'leaflet/dist/leaflet.css';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import 'canvas-toBlob/canvas-toBlob.js';
 import ReactDOM from 'react-dom/client';
-import 'react-image-crop/src/ReactCrop.scss';
+import { Provider } from 'react-redux';
 
 import App from './App';
+import store from './store';
+import theme from './theme';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import './index.scss';
+import 'leaflet/dist/leaflet.css';
+import 'react-image-crop/dist/ReactCrop.css';
+import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ThemeProvider>
   </React.StrictMode>,
 );

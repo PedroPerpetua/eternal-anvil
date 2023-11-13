@@ -8,10 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
-*.local
-.pnp.*
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

@@ -1,10 +1,19 @@
-import { Matrix, applyToPoint, fromTriangles } from 'transformation-matrix';
+import moize from 'moize';
+import { Matrix, applyToPoint, fromTriangles, inverse } from 'transformation-matrix';
+/*
+ * For the purpose of "empty numbers" (missing input) we use Infinity to make type checking more
+ * fluid.
+*/
+export type Point = [number, number];
 
-import { Point, Triangle } from './types';
+export const EMPTY_POINT: Point = [Infinity, Infinity];
 
-export function halfway(point1: Point, point2: Point) {
-  return [(point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2] as Point;
-}
+/**
+ * A collection of points. Note: may actually be more than three points; this is primarily used for
+ * affine transformations, and the transform-matrix lib uses only the first three points of an
+ * array.
+ */
+export type Triangle = [Point, Point, Point];
 
 /**
  * Calculate the distance between two points, with an optional extra distance to be added to the
@@ -44,12 +53,36 @@ export function computeAffineMatrix(fromSystem: Triangle, toSystem: Triangle) {
   return fromTriangles(fromSystem, toSystem);
 }
 
+// Moize expensive math functions for better performance
+const memoizedApplyToPoint = moize(applyToPoint, { isShallowEqual: true });
+const memoizedInverse = moize(inverse, { isShallowEqual: true });
+
 /**
- * Apply an Affine Transformation to a given point.
- * @param transformationMatrix The Affine Transformation Matrix that should be applied.
- * @param fromPoint The point in the original coordinates.
- * @returns The coordinates of the point in the destination coordinate system.
+ * Transform a point from game coordinates to leaflet coordinates.
+ * @param transformationMatrix The Affine Transformation Matrix of the transformation.
+ * @param fromPoint The point in the game coordinates.
+ * @returns The coordinates of the point in leaflet.
  */
-export function transformPoint(transformationMatrix: Matrix, fromPoint: Point) {
-  return applyToPoint(transformationMatrix, fromPoint) as Point;
+export function gameToLeaflet(transformationMatrix: Matrix, fromPoint: Point) {
+  return memoizedApplyToPoint(transformationMatrix, fromPoint) as Point;
+}
+
+/**
+ * Transform a point from leaflet to game coordinates.
+ * @param transformationMatrix The Affine Transformation Matrix of the transformation.
+ * @param fromPoint The point in leaflet.
+ * @returns The coordinates of the point in game coordinates.
+ */
+export function leafletToGame(transformationMatrix: Matrix, fromPoint: Point) {
+  const point = memoizedApplyToPoint(memoizedInverse(transformationMatrix), fromPoint);
+  return [Math.round(point[0]), Math.round(point[1])] as Point;
+}
+
+/**
+ * Validate a set of coordinates to make sure they're a valid position.
+ * @param coordinates The coordinates to test.
+ * @returns True if the coordinates are valid.
+ */
+export function validCoordinates(coordinates: Point) {
+  return Number.isFinite(coordinates[0]) && Number.isFinite(coordinates[1]);
 }

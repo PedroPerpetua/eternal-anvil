@@ -20,6 +20,7 @@
     "react"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-use-before-define": [
       "error",
       {
@@ -68,7 +69,12 @@
           },
           {
             "group": "index",
-            "pattern": "./**/*.scss",
+            "pattern": "**/*.css",
+            "position": "after"
+          },
+          {
+            "group": "index",
+            "pattern": "./**/*.css",
             "position": "after"
           }
         ],
@@ -122,7 +128,13 @@
     ],
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
-    "react/style-prop-object": "off"
+    "react/style-prop-object": "off",
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "exceptions": ["Marker", "TransitionGroup"]
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
