@@ -4,11 +4,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import battlePlannerReducers from './battle-planner';
 import distanceCalculatorReducers from './distance-calculator';
 import { listenerMiddleware } from './listenerMiddleware';
+import matchupSimulatorReducers from './matchup-simulator';
 
 const store = configureStore({
   reducer: {
     battlePlanner: battlePlannerReducers,
     distanceCalculator: distanceCalculatorReducers,
+    matchupSimulator: matchupSimulatorReducers,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
     .prepend(listenerMiddleware.middleware),

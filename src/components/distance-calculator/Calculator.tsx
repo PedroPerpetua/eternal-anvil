@@ -12,6 +12,7 @@ import CalculatorTab, { DraggableCalculatorTabButton } from './CalculatorTab';
 import { useAppDispatch } from '../../store';
 import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
 import { calculatorsSelectors, createTab } from '../../store/distance-calculator/calculatorsSlice';
+import useHorizontalScrollerRef from '../common/useHorizontalScrollerRef';
 
 type CalculatorProps = {
   id: EntityId
@@ -47,14 +48,7 @@ const Calculator = memo(({ id }: CalculatorProps) => {
     );
   });
 
-  const horizontalScrollerRef = useCallback((node: HTMLDivElement | null) => {
-    if (!node) return;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      node.scrollTo({ left: node.scrollLeft + e.deltaY, behavior: 'smooth' });
-    };
-    node.addEventListener('wheel', onWheel, { passive: false });
-  }, []);
+  const horizontalScrollerRef = useHorizontalScrollerRef();
 
   if (!calculatorData) return null;
   return (

@@ -39,6 +39,8 @@ function SimpleNumberField({
         className: 'disable-number-spin',
         ...textFieldProps.inputProps,
       }}
+      autoComplete="off"
+      autoCorrect="off"
     />
   );
 }
