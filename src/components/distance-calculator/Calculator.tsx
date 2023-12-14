@@ -1,4 +1,4 @@
-import { useCallback, memo } from 'react';
+import { memo } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 // eslint-disable-next-line import/no-extraneous-dependencies

@@ -38,6 +38,10 @@ type Warlord = {
 const warlordsAdapter = createEntityAdapter<Warlord>();
 export const warlordsSelectors = warlordsAdapter.getSelectors();
 
+// For the cropper
+export type CropConfig = 'TOWER_x1' | 'TOWER_x2' | 'WALKING_x1' | 'WALKING_x2' | 'WALKING_x3';
+type CropperOpenFor = null | 'attack' | 'defense';
+
 const warlordsSlice = createSlice({
   name: 'warlords',
   initialState: {
@@ -47,6 +51,13 @@ const warlordsSlice = createSlice({
     draggingTab: (null as EntityId | null),
     warlords: warlordsAdapter.getInitialState(),
     show: false,
+    cropper: {
+      openFor: null as CropperOpenFor,
+      currentImage: null as null | string,
+      cropMode: 'TOWER_x1' as CropConfig,
+      croppedWls: [] as string[],
+      lock: false,
+    },
   },
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -99,24 +110,21 @@ const warlordsSlice = createSlice({
       state.orderedTabs = arrayMove(state.orderedTabs, oldIndex, newIndex);
       state.currentTab = tabId;
     },
-    addDefenseWarlords: (
-      state,
-      action: PayloadAction<{ tabId: EntityId, images: string[], lock?: boolean }>,
-    ) => {
-      const { tabId, images, lock } = action.payload;
-      const tab = warlordTabsSelectors.selectById(state.tabs, tabId)!;
-      const addedWarlords = warlordsAdapter.addMany(
-        state.warlords,
-        images.map((image) => ({ id: generateId(), image })),
-      );
-      tabsAdapter.updateOne(state.tabs, { id: tabId,
-        changes: {
-          defenseBenchWLs: [
-            ...tab.defenseBenchWLs,
-            ...addedWarlords.ids,
-          ],
-          lockedOrder: lock ? [...tab.lockedOrder, ...addedWarlords.ids] : undefined,
-        } });
+    openCropper: (state, action: PayloadAction<CropperOpenFor>) => {
+      if (action.payload !== null) {
+        // Opening; reset it all
+        state.cropper.currentImage = null;
+        state.cropper.cropMode = 'TOWER_x1';
+        state.cropper.croppedWls = [];
+        state.cropper.lock = false;
+      }
+      state.cropper.openFor = action.payload;
+    },
+    cutCropper: (state, action: PayloadAction<string[]>) => {
+      state.cropper.croppedWls = [...state.cropper.croppedWls, ...action.payload];
+    },
+    setCropperImage: (state, action: PayloadAction<string | null>) => {
+      state.cropper.currentImage = action.payload;
     },
   },
 });
@@ -129,6 +137,8 @@ export const {
   moveTabStart,
   moveTabEnd,
   updateTabName,
-  addDefenseWarlords,
+  openCropper,
+  cutCropper,
+  setCropperImage,
 } = warlordsSlice.actions;
 export default warlordsSlice.reducer;

@@ -2,13 +2,17 @@ import { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { CSS } from '@dnd-kit/utilities';
-import { Box, IconButton, Stack } from '@mui/material';
+import { Box, Button, IconButton, Stack } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
+import { shallowEqual } from 'react-redux';
 
+import WarlordCropper from './WarlordCropper';
 import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch } from '../../store';
 import { useMatchupSimulatorSelector } from '../../store/matchup-simulator';
-import { deleteTab, switchTab, updateTabName, warlordTabsSelectors } from '../../store/matchup-simulator/warlordsSlice';
+import {
+  deleteTab, openCropper, switchTab, updateTabName, warlordTabsSelectors,
+} from '../../store/matchup-simulator/warlordsSlice';
 import CustomIcon from '../common/CustomIcon';
 import TypographyTextField from '../common/TypographyTextField';
 
@@ -100,7 +104,19 @@ export const DraggableMatchupSimulatorTabButton = memo(({ tabId }: MatchupSimula
 });
 
 function MatchupSimulatorTab({ tabId }: MatchupSimulatorTabProps) {
-  return tabId;
+  const dispatch = useAppDispatch();
+  const tabData = useMatchupSimulatorSelector(
+    (state) => warlordTabsSelectors.selectById(state.tabs, tabId)!,
+    shallowEqual,
+  );
+
+  return (
+    <>
+      { tabData.id }
+      <Button onClick={() => dispatch(openCropper('attack'))}>open</Button>
+      <WarlordCropper />
+    </>
+  );
 }
 
 export default MatchupSimulatorTab;

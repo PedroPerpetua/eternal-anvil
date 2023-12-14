@@ -28,3 +28,9 @@ body {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+
+
+/* https://github.com/ValentinH/react-easy-crop/issues/502 */
+.reactEasyCrop_Container {
+  overflow: visible !important;
+}

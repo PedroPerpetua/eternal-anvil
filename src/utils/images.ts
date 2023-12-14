@@ -1,8 +1,9 @@
 /* eslint-disable */
 // @ts-nocheck
 import moize from 'moize';
-import { PixelCrop } from 'react-image-crop';
+import { Area } from 'react-easy-crop';
 import Image, { ImageKind, Stack } from 'image-js';
+import { readImageFromURL } from './utilities';
 
 /**
  * Convert a hex color value into RGB values.
@@ -142,57 +143,94 @@ function mix_hexes(...hexes: string[]) {
 export const blendColors = moize(mix_hexes, { isShallowEqual: true });
 
 
-/* https://codesandbox.io/s/react-image-crop-demo-with-react-hooks-y831o ------------------------ */
-
+/* https://codesandbox.io/s/q8q1mnr01w ---------------------------------------------------------- */
 /**
- * Render a preview of the crop of a canvas into an image element.
- * @param image A reference to an HTMLImageElement to display the preview in.
- * @param canvas A reference to an HTMLCanvasElement from where to take the preview.
- * @param crop A PixelCrop detailing the area to preview.
+ * This function was adapted from the one in the ReadMe of
+ * https://github.com/DominicTobias/react-image-crop
  */
-export function canvasPreview(
-  image: HTMLImageElement,
-  canvas: HTMLCanvasElement,
-  crop: PixelCrop,
+export async function cropImage(
+  imageSrc: string,
+  pixelCrop: Area,
+  rotation: number = 0,
+  flip: { horizontal: boolean, vertical: boolean } = { horizontal: false, vertical: false }
 ) {
-  const ctx = canvas.getContext('2d');
 
-  if (!ctx) {
-    throw new Error('No 2d context');
+  function getRadianAngle(degreeValue: number) {
+    return (degreeValue * Math.PI) / 180
   }
 
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
-  // devicePixelRatio slightly increases sharpness on retina devices
-  // at the expense of slightly slower render times and needing to
-  // size the image back down if you want to download/upload and be
-  // true to the images natural size.
-  const pixelRatio = window.devicePixelRatio;
-  // const pixelRatio = 1
+  /**
+   * Returns the new bounding area of a rotated rectangle.
+   */
+  function rotateSize(width: number, height: number, rotation: number) {
+    const rotRad = getRadianAngle(rotation)
+    return {
+      width:
+        Math.abs(Math.cos(rotRad) * width) + Math.abs(Math.sin(rotRad) * height),
+      height:
+        Math.abs(Math.sin(rotRad) * width) + Math.abs(Math.cos(rotRad) * height),
+    }
+  }
 
-  canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
-  canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
 
-  ctx.scale(pixelRatio, pixelRatio);
-  ctx.imageSmoothingQuality = 'high';
+  const image = await readImageFromURL(imageSrc)
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
 
-  const cropX = crop.x * scaleX;
-  const cropY = crop.y * scaleY;
+  if (!ctx) {
+    return null
+  }
 
-  ctx.save();
-  // Move the crop origin to the canvas origin (0,0)
-  ctx.translate(-cropX, -cropY);
-  // Draw it
-  ctx.drawImage(
-    image,
+  const rotRad = getRadianAngle(rotation)
+
+  // calculate bounding box of the rotated image
+  const { width: bBoxWidth, height: bBoxHeight } = rotateSize(
+    image.width,
+    image.height,
+    rotation
+  )
+
+  // set canvas size to match the bounding box
+  canvas.width = bBoxWidth
+  canvas.height = bBoxHeight
+
+  // translate canvas context to a central location to allow rotating and flipping around the center
+  ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
+  ctx.rotate(rotRad)
+  ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
+  ctx.translate(-image.width / 2, -image.height / 2)
+
+  // draw rotated image
+  ctx.drawImage(image, 0, 0)
+
+  const croppedCanvas = document.createElement('canvas')
+  const croppedCtx = croppedCanvas.getContext('2d')
+  if (!croppedCtx) return null;
+
+  // Set the size of the cropped canvas
+  croppedCanvas.width = pixelCrop.width
+  croppedCanvas.height = pixelCrop.height
+
+  // Draw the cropped image onto the new canvas
+  croppedCtx.drawImage(
+    canvas,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
     0,
     0,
-    image.naturalWidth,
-    image.naturalHeight,
-    0,
-    0,
-    image.naturalWidth,
-    image.naturalHeight,
-  );
-  ctx.restore();
+    pixelCrop.width,
+    pixelCrop.height
+  )
+
+  // As Base64 string
+  // return croppedCanvas.toDataURL('image/jpeg');
+
+  // As a blob
+  return new Promise<string>((resolve, reject) => {
+    croppedCanvas.toBlob((file) => {
+      resolve(URL.createObjectURL(file))
+    }, 'image/jpeg')
+  })
 }

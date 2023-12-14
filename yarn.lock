@@ -1740,7 +1740,7 @@ __metadata:
     react: "npm:18.2.0"
     react-color: "npm:2.19.3"
     react-dom: "npm:18.2.0"
-    react-image-crop: "npm:10.1.8"
+    react-easy-crop: "npm:5.0.2"
     react-leaflet: "npm:4.2.1"
     react-redux: "npm:8.1.3"
     transformation-matrix: "npm:2.15.0"
@@ -4873,6 +4873,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-wheel@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "normalize-wheel@npm:1.0.1"
+  checksum: 5daf4c97e39f36658a5263a6499bbc148676ae2bd85f12c8d03c46ffe7bc3c68d44564c00413d88d0457ac0d94450559bb1c24c2ce7ae0c107031f82d093ac06
+  languageName: node
+  linkType: hard
+
 "npm-run-path@npm:^4.0.1":
   version: 4.0.1
   resolution: "npm-run-path@npm:4.0.1"
@@ -5238,12 +5245,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-image-crop@npm:10.1.8":
-  version: 10.1.8
-  resolution: "react-image-crop@npm:10.1.8"
+"react-easy-crop@npm:5.0.2":
+  version: 5.0.2
+  resolution: "react-easy-crop@npm:5.0.2"
+  dependencies:
+    normalize-wheel: "npm:^1.0.1"
+    tslib: "npm:2.0.1"
   peerDependencies:
-    react: ">=16.13.1"
-  checksum: 7d5da917b95951490041f8e7567d7e7d4cd4ce24a24626edc4893fd3d5d6c4c72572ddbb994fcee78dec6e6f608f6a65d4c9675e484e5f868671ce33856e182e
+    react: ">=16.4.0"
+    react-dom: ">=16.4.0"
+  checksum: cd875cd426b4c3dedf9ec32fea8737692a518327cba6e282a599b80e2adf5d59a5d317172e00ed231a0515d61d156d053e9f833cab8859f63d32d766551751c3
   languageName: node
   linkType: hard
 
@@ -6141,6 +6152,13 @@ __metadata:
     minimist: "npm:^1.2.6"
     strip-bom: "npm:^3.0.0"
   checksum: fdc92bb7b18b31c0e76f8ec4f98d07236b09590fd6578e587ad024792c8b2235d65125a8fd007fa47a84400f84ceccbf33f24e5198d953249e7204f4cef3517c
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.0.1":
+  version: 2.0.1
+  resolution: "tslib@npm:2.0.1"
+  checksum: 5f370da8ac0e9c7f2440a3fd8013682c042a8eeace93849a44a8d4252770e4830fce3201b0bc5a6045c7e28b80eaebe3a3b48e656aa7b4f9681b9a9d7263cfaf
   languageName: node
   linkType: hard
 
