@@ -1,7 +1,6 @@
 /* eslint-disable */
 // @ts-nocheck
 import moize from 'moize';
-import { PixelCrop } from 'react-image-crop';
 import Image, { ImageKind, Stack } from 'image-js';
 
 /**
@@ -140,59 +139,3 @@ function mix_hexes(...hexes: string[]) {
 }
 
 export const blendColors = moize(mix_hexes, { isShallowEqual: true });
-
-
-/* https://codesandbox.io/s/react-image-crop-demo-with-react-hooks-y831o ------------------------ */
-
-/**
- * Render a preview of the crop of a canvas into an image element.
- * @param image A reference to an HTMLImageElement to display the preview in.
- * @param canvas A reference to an HTMLCanvasElement from where to take the preview.
- * @param crop A PixelCrop detailing the area to preview.
- */
-export function canvasPreview(
-  image: HTMLImageElement,
-  canvas: HTMLCanvasElement,
-  crop: PixelCrop,
-) {
-  const ctx = canvas.getContext('2d');
-
-  if (!ctx) {
-    throw new Error('No 2d context');
-  }
-
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
-  // devicePixelRatio slightly increases sharpness on retina devices
-  // at the expense of slightly slower render times and needing to
-  // size the image back down if you want to download/upload and be
-  // true to the images natural size.
-  const pixelRatio = window.devicePixelRatio;
-  // const pixelRatio = 1
-
-  canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
-  canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
-
-  ctx.scale(pixelRatio, pixelRatio);
-  ctx.imageSmoothingQuality = 'high';
-
-  const cropX = crop.x * scaleX;
-  const cropY = crop.y * scaleY;
-
-  ctx.save();
-  // Move the crop origin to the canvas origin (0,0)
-  ctx.translate(-cropX, -cropY);
-  // Draw it
-  ctx.drawImage(
-    image,
-    0,
-    0,
-    image.naturalWidth,
-    image.naturalHeight,
-    0,
-    0,
-    image.naturalWidth,
-    image.naturalHeight,
-  );
-  ctx.restore();
-}
