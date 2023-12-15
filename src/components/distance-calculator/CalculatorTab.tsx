@@ -97,9 +97,7 @@ export const DraggableCalculatorTabButton = memo(({ tabId }: CalculatorTabProps)
   return (
     <Box
       ref={setNodeRef}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...attributes}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...listeners}
       sx={{
         borderRight: '1px solid black',

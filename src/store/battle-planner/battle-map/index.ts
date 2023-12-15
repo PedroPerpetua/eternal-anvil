@@ -22,7 +22,6 @@ type BattleMapUseSelectorHook = TypedUseSelectorHook<RootState['battlePlanner'][
  */
 export const useBattleMapSelector: BattleMapUseSelectorHook = (selector, options) => useSelector(
   (state: RootState) => selector(state.battlePlanner.battleMap),
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   options,
 );

@@ -6,16 +6,12 @@ import { readImageFromURL } from './utilities';
 // https://gis.stackexchange.com/questions/54454/disable-leaflet-interaction-temporary
 
 export function disableMapEvents(map: Map) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  // eslint-disable-next-line  no-underscore-dangle
   map._handlers.forEach((h) => h.disable());
 }
 
 export function enableMapEvents(map: Map) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  // eslint-disable-next-line  no-underscore-dangle
   map._handlers.forEach((h) => h.enable());
 }
 
@@ -27,7 +23,6 @@ type CanvasImageData = {
   y: number,
 };
 
-/* eslint-disable @typescript-eslint/ban-ts-comment, no-underscore-dangle */
 export async function mapToCanvas(map: Map) {
   // Set up a canvas
   const dimensions = map.getSize();
@@ -134,4 +129,3 @@ export async function mapToCanvas(map: Map) {
   Object.values((imageOverlays)).forEach((data) => canvasCtx?.drawImage(data.img, data.x, data.y));
   return canvas;
 }
-/* eslint-enable @typescript-eslint/ban-ts-comment, no-underscore-dangle */

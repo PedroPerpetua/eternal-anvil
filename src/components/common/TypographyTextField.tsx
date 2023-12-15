@@ -33,7 +33,6 @@ function TypographyTextField({
   if (editableState) {
     return (
       <TextField
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...textFieldProps}
         value={value}
         onChange={(e) => {
@@ -63,7 +62,6 @@ function TypographyTextField({
 
   return (
     <Typography
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...typographyProps}
       onClick={(e) => {
         if (editable && !doubleClickOnly) setEditableState(true);

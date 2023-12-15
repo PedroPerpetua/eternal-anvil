@@ -3,7 +3,6 @@ import { Tooltip, TooltipProps, styled } from '@mui/material';
 import { GAME_GOLD } from './colors';
 
 const GildedTooltip = styled(({ className, ...props }: TooltipProps) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
   <Tooltip {...props} classes={{ tooltip: className }} />
 ))({
   color: 'white',

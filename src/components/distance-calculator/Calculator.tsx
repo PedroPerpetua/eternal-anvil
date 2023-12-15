@@ -77,9 +77,7 @@ const Calculator = memo(({ id }: CalculatorProps) => {
         <SortableContext items={calculatorData.tabs}>
           <Box
             ref={setActivatorNodeRef}
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...attributes}
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...listeners}
             className="center-content clickable"
             sx={{

@@ -117,7 +117,6 @@ function AddStructureCard() {
           select
           SelectProps={{
             displayEmpty: true,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore - There's no way to define the generic type with SelectProps
             renderValue: (value: EntityId | '') => {
               if (realms.length === 0) {
@@ -125,7 +124,8 @@ function AddStructureCard() {
                   <Typography
                     sx={{
                       color: GAME_GOLD.darker,
-                      WebkitTextFillColor: GAME_GOLD.darker, // We need this for the disabled color
+                      // We need this for the disabled color
+                      WebkitTextFillColor: GAME_GOLD.darker,
                     }}
                   >
                     No realms

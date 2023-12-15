@@ -34,13 +34,9 @@ const MapMarker = forwardRef<LeafletMarker, MapMarkerProps>((
   }, [image, JSON.stringify(iconSize), zoom]);
 
   // Handle highlight
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  // eslint-disable-next-line no-underscore-dangle
+  // @ts-ignore - Private method
   if (ref && ref.current && ref.current._shadow) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line no-underscore-dangle
+    // @ts-ignore - Private method
     const shadow: HTMLImageElement = ref.current._shadow;
     if (highlighted) {
       shadow.style.boxShadow = '0 0 10px 10px Cornsilk';

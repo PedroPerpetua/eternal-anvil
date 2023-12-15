@@ -79,9 +79,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
     <CircularMenu
       open={openMenu}
       onClose={handleCloseMenu}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      // eslint-disable-next-line no-underscore-dangle
+      // @ts-ignore - Private method
       anchorEl={markerRef.current?._icon}
       menuButton={(
         <MapMarker

@@ -10,7 +10,6 @@ function ColoredAvatar({ color, size, avatarProps = {} }: ColoredAvatarProps) {
   const sizeStr = size ? `${size}px` : undefined;
   return (
     <Avatar
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...avatarProps}
       sx={{ backgroundColor: color, width: sizeStr, height: sizeStr, ...avatarProps.sx }}
     >

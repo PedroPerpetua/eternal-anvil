@@ -12,7 +12,6 @@ type DistanceCalculatorUseSelectorHook = TypedUseSelectorHook<RootState['distanc
 export const useDistanceCalculatorSelector: DistanceCalculatorUseSelectorHook = (
   (selector, options) => useSelector(
     (state: RootState) => selector(state.distanceCalculator),
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     options,
   )

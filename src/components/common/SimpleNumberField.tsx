@@ -27,7 +27,6 @@ function SimpleNumberField({
 
   return (
     <TextField
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...textFieldProps}
       type="number"
       value={Number.isFinite(value) ? value : ''}

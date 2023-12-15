@@ -20,7 +20,6 @@ type ActionBarUseSelectorHook = TypedUseSelectorHook<RootState['battlePlanner'][
  */
 export const useActionBarSelector: ActionBarUseSelectorHook = (selector, options) => useSelector(
   (state: RootState) => selector(state.battlePlanner.actionBar),
-  // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
   // @ts-ignore
   options,
 );

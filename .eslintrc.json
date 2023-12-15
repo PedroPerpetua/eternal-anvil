@@ -20,17 +20,13 @@
     "react"
   ],
   "rules": {
+    "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-use-before-define": [
-      "error",
-      {
-        "variables": false
-      }
-    ],
     "import/extensions": [
       "error",
       {
         "json": "always",
+        "png": "always",
         "svg": "always",
         "ts": "never",
         "tsx": "never"
@@ -93,6 +89,7 @@
         ]
       }
     ],
+    "no-underscore-dangle": "off",
     "object-curly-newline": [
       "error",
       {
@@ -126,15 +123,10 @@
         ]
       }
     ],
+    "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
-    "react/style-prop-object": "off",
-    "react/jsx-props-no-spreading": [
-      "error",
-      {
-        "exceptions": ["Marker", "TransitionGroup"]
-      }
-    ]
+    "react/style-prop-object": "off"
   },
   "settings": {
     "import/resolver": {

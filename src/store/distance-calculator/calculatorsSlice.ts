@@ -36,6 +36,12 @@ function generateCalculator(): Calculator {
 }
 
 const calculatorsAdapter = createEntityAdapter<Calculator>();
+export const calculatorsSelectors = calculatorsAdapter.getSelectors();
+export const tabCalculatorSelector = (
+  state: EntityState<Calculator, EntityId>,
+  tabId: EntityId,
+) => calculatorsSelectors.selectAll(state).find((c) => c.tabs.includes(tabId));
+
 // Auxiliary methods for handling other regular calculatorsAdapter operations
 const removeTabFromCalculator = (
   state: EntityState<Calculator, EntityId>,
@@ -59,11 +65,6 @@ const removeTabFromCalculator = (
     );
   }
 };
-export const calculatorsSelectors = calculatorsAdapter.getSelectors();
-export const tabCalculatorSelector = (
-  state: EntityState<Calculator, EntityId>,
-  tabId: EntityId,
-) => calculatorsSelectors.selectAll(state).find((c) => c.tabs.includes(tabId));
 
 // Handle calculator tabs
 type Tab = {
