@@ -8,13 +8,14 @@ import {
 import { EntityId } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
-import { useRealmsCardListContext } from './RealmsCardListContext';
 import StructureList from './StructureList';
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
 import { useAppDispatch } from '../../../../store';
+import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
 import { selectRealm } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import { changeTab } from '../../../../store/battle-planner/action-bar/currentTabSlice';
+import { setExpandedRealm, setOpenDelete } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors, updateRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
@@ -25,13 +26,11 @@ import TypographyTextField from '../../../common/TypographyTextField';
 
 type RealmListItemProps = {
   id: EntityId,
-  openDelete: () => void,
 };
 
-const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
+const RealmListItem = memo(({ id }: RealmListItemProps) => {
   const dispatch = useAppDispatch();
-  const { current, setCurrent } = useRealmsCardListContext();
-  const isOpen = current === id;
+  const isOpen = useActionBarSelector((state) => state.realmsTab.expandedRealm === id);
   const realm = useBattleMapSelector(
     (state) => (realmSelectors.selectById(state.realms, id)),
     shallowEqual,
@@ -41,7 +40,7 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
   return (
     <Paper sx={{ padding: '5px' }}>
       <Stack
-        onClick={() => setCurrent(isOpen ? null : id)}
+        onClick={() => dispatch(setExpandedRealm(isOpen ? null : id))}
         className="clickable"
         direction="row"
         justifyContent="space-between"
@@ -142,7 +141,7 @@ const RealmListItem = memo(({ id, openDelete }: RealmListItemProps) => {
           >
             <CustomIcon src={AddStructureIcon} tintColor="#d8bc68" />
           </GameButton>
-          <Button size="small" color="error" onClick={openDelete}>
+          <Button size="small" color="error" onClick={() => dispatch(setOpenDelete(true))}>
             <DeleteIcon stroke="black" strokeWidth="1px" />
           </Button>
         </Stack>

@@ -4,11 +4,13 @@ import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import addStructureTabReducer from './addStructureTabSlice';
 import currentTabReducer from './currentTabSlice';
 import edgesTabReducer from './edgesTabSlice';
+import realmsTabSlice from './realmsTabSlice';
 import type { RootState } from '../..';
 
 const actionBarReducers = combineReducers({
   currentTab: currentTabReducer,
   addStructureTab: addStructureTabReducer,
+  realmsTab: realmsTabSlice,
   edgesTab: edgesTabReducer,
 });
 

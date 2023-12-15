@@ -5,8 +5,9 @@ import {
   Collapse, Paper, Stack, TextField, Typography,
 } from '@mui/material';
 
-import { useRealmsCardListContext } from './RealmsCardListContext';
 import { useAppDispatch } from '../../../../store';
+import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
+import { setExpandedRealm } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
 import { createRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
 import GameButton from '../../../common/styled-components/GameButton';
@@ -16,8 +17,7 @@ const DEFAULT_COLOR = DEFAULT_REALM_COLORS[0];
 
 function CreateListItem() {
   const dispatch = useAppDispatch();
-  const { current, setCurrent } = useRealmsCardListContext();
-  const isOpen = current === 'CREATE';
+  const isOpen = useActionBarSelector((state) => state.realmsTab.expandedRealm === 'CREATE');
   const [realmName, setRealmName] = useState(DEFAULT_REALM_NAME);
   const [color, setColor] = useState(DEFAULT_COLOR);
 
@@ -25,13 +25,13 @@ function CreateListItem() {
     dispatch(createRealm({ name: realmName, color }));
     setRealmName(DEFAULT_REALM_NAME);
     setColor(DEFAULT_COLOR);
-    setCurrent(null);
+    dispatch(setExpandedRealm(null));
   };
 
   return (
     <Paper sx={{ padding: '5px' }}>
       <Stack
-        onClick={() => setCurrent(isOpen ? null : 'CREATE')}
+        onClick={() => dispatch(setExpandedRealm(isOpen ? null : 'CREATE'))}
         className="clickable"
         direction="row"
         justifyContent="space-between"
