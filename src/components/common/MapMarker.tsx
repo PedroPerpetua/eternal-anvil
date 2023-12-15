@@ -30,8 +30,7 @@ const MapMarker = forwardRef<LeafletMarker, MapMarkerProps>((
       shadowSize: [size[0] * shadowRatio, size[1] * shadowRatio],
       shadowAnchor: [size[0] * (shadowRatio / 2), size[1] * (shadowRatio / 2)],
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image, JSON.stringify(iconSize), zoom]);
+  }, [image, iconSize, zoom]);
 
   // Handle highlight
   // @ts-ignore - Private method

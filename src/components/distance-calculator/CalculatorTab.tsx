@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { CSS } from '@dnd-kit/utilities';
 import { Box, IconButton, Stack } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';

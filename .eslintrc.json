@@ -129,6 +129,9 @@
     "react/style-prop-object": "off"
   },
   "settings": {
+    "import/core-modules": [
+      "@dnd-kit/utilities"
+    ],
     "import/resolver": {
       "node": {
         "extensions": [
