@@ -3,15 +3,11 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Box, IconButton, Stack } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
 
 import DistanceForm from './DistanceForm';
 import XIcon from '../../assets/x-icon.png';
-import { useAppDispatch } from '../../store';
-import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
-import {
-  calculatorTabsSelectors, deleteTab, switchTab, tabCalculatorSelector, updateTab,
-} from '../../store/distance-calculator/calculatorsSlice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { calculatorsSelectors, calculatorsActions, DEFAULT_TAB_NAME } from '../../store/distance-calculator/calculatorsSlice';
 import CustomIcon from '../common/CustomIcon';
 import TypographyTextField from '../common/TypographyTextField';
 
@@ -21,24 +17,12 @@ type CalculatorTabProps = {
 
 export const CalculatorTabButton = memo(({ tabId }: CalculatorTabProps) => {
   const dispatch = useAppDispatch();
-  const active = useDistanceCalculatorSelector((state) => {
-    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId)!;
-    const calculator = tabCalculatorSelector(state.calculators, tab.id)!;
-    return calculator.currentTab === tabId;
-  });
-  const calculatorId = useDistanceCalculatorSelector((state) => {
-    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId)!;
-    return tabCalculatorSelector(state.calculators, tab.id)!.id;
-  }, shallowEqual);
-  const tabName = useDistanceCalculatorSelector((state) => {
-    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId)!;
-    return tab.name ?? '';
-  });
-
+  const active = useAppSelector((state) => calculatorsSelectors.tabIsActive(state, tabId));
+  const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   return (
     <Box
       className="clickable center-content"
-      onClick={() => dispatch(switchTab({ calculatorId, tabId }))}
+      onClick={() => dispatch(calculatorsActions.switchTab({ tabId }))}
       sx={{
         padding: '2px 10px',
         backgroundColor: 'white',
@@ -47,9 +31,9 @@ export const CalculatorTabButton = memo(({ tabId }: CalculatorTabProps) => {
     >
       <Stack direction="row" alignItems="center" spacing={1}>
         <TypographyTextField
-          value={tabName}
-          valueIfEmpty="Calculator"
-          onChange={(name) => dispatch(updateTab({ tabId, update: { name } }))}
+          value={tab.name}
+          valueIfEmpty={DEFAULT_TAB_NAME}
+          onChange={(name) => dispatch(calculatorsActions.updateTab({ tabId, update: { name } }))}
           doubleClickOnly
           textFieldProps={{ inputProps: { style: { padding: '2px', minWidth: '100px' } } }}
           typographyProps={{ noWrap: true, width: active ? undefined : '100px', minWidth: '100px' }}
@@ -57,7 +41,7 @@ export const CalculatorTabButton = memo(({ tabId }: CalculatorTabProps) => {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            dispatch(deleteTab(tabId));
+            dispatch(calculatorsActions.deleteTab({ tabId }));
           }}
           color="error"
           sx={{
@@ -86,12 +70,9 @@ export const DraggableCalculatorTabButton = memo(({ tabId }: CalculatorTabProps)
     transform,
     transition,
   } = useSortable({ id: tabId });
-  const active = useDistanceCalculatorSelector((state) => {
-    const tab = calculatorTabsSelectors.selectById(state.tabs, tabId)!;
-    const calculator = tabCalculatorSelector(state.calculators, tab.id)!;
-    return calculator.currentTab === tabId;
-  });
-  const dragging = useDistanceCalculatorSelector((state) => (state.draggingTab === tabId));
+  const active = useAppSelector((state) => calculatorsSelectors.tabIsActive(state, tabId));
+  const draggingTab = useAppSelector(calculatorsSelectors.draggingTab);
+  const dragging = draggingTab === tabId;
 
   return (
     <Box

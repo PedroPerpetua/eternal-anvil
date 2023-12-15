@@ -34,11 +34,13 @@ export function calcDistance(coord1: Point, coord2: Point, extraDistance = 0) {
 
 /**
  * Calculates the time required to travel a certain distance over a certain speed (in seconds).
+ * If the distance or speed are not finite, returns Infinity.
  * @param distance The distance to be traveled.
  * @param speed The speed in units / hour.
  * @returns The travel time it would take, in seconds.
  */
 export function calcTravelTime(distance: number, speed: number) {
+  if (!Number.isFinite(distance) || (!Number.isFinite(speed))) return Infinity;
   return (distance * 3600) / speed;
 }
 /**

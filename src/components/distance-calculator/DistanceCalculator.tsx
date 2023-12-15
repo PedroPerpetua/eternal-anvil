@@ -5,28 +5,20 @@ import {
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import CalculatorIcon from '@mui/icons-material/Calculate';
 import { Fab } from '@mui/material';
-import { shallowEqual } from 'react-redux';
 
 import Calculator from './Calculator';
 import { CalculatorTabButton } from './CalculatorTab';
 import OutsideDroppablePortal from './OutsideDroppablePortal';
 import useCollisionDetectionStrategy from './useCollisionDetectionStrategy';
-import { useAppDispatch } from '../../store';
-import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
-import {
-  calculatorsSelectors, moveCalculator, moveTabStart, moveTabOver, moveTabEnd, setShow,
-  isCalculator, isCalculatorTab,
-} from '../../store/distance-calculator/calculatorsSlice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { calculatorsSelectors, calculatorsActions, isCalculator, isCalculatorTab } from '../../store/distance-calculator/calculatorsSlice';
 import { Point } from '../../utils/math';
 
 function DistanceCalculator() {
   const dispatch = useAppDispatch();
-  const calculatorIds = useDistanceCalculatorSelector(
-    (state) => calculatorsSelectors.selectIds(state.calculators),
-    shallowEqual,
-  );
-  const draggingTab = useDistanceCalculatorSelector((state) => state.draggingTab);
-  const show = useDistanceCalculatorSelector((state) => state.show);
+  const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
+  const draggingTab = useAppSelector(calculatorsSelectors.draggingTab);
+  const show = useAppSelector(calculatorsSelectors.show);
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -38,14 +30,14 @@ function DistanceCalculator() {
 
   const handleDragStart = (e: DragStartEvent) => {
     const activeId = e.active.id.toString();
-    if (isCalculatorTab(activeId)) dispatch(moveTabStart({ tabId: activeId }));
+    if (isCalculatorTab(activeId)) dispatch(calculatorsActions.moveTabStart({ tabId: activeId }));
   };
 
   const handleDragOver = (e: DragOverEvent) => {
     const activeId = e.active.id.toString();
     if (isCalculator(activeId)) return;
     if (isCalculatorTab(activeId)) {
-      dispatch(moveTabOver({ tabId: activeId, overId: e.over?.id ?? null }));
+      dispatch(calculatorsActions.moveTabOver({ tabId: activeId, overId: e.over?.id ?? null }));
     }
   };
 
@@ -53,9 +45,11 @@ function DistanceCalculator() {
     const activeId = e.active.id.toString();
     const delta = [e.delta.x, e.delta.y] as Point;
     if (isCalculator(activeId)) {
-      dispatch(moveCalculator({ calculatorId: activeId, delta }));
+      dispatch(calculatorsActions.moveCalculator({ calculatorId: activeId, delta }));
     } else if (isCalculatorTab(activeId)) {
-      dispatch(moveTabEnd({ tabId: activeId, overId: e.over?.id.toString() ?? null, delta }));
+      dispatch(calculatorsActions.moveTabEnd(
+        { tabId: activeId, overId: e.over?.id.toString() ?? null, delta },
+      ));
     }
   };
 
@@ -71,13 +65,13 @@ function DistanceCalculator() {
         modifiers={[restrictToWindowEdges]}
       >
         <OutsideDroppablePortal>
-          { calculatorIds.map((id) => (<Calculator key={id} id={id} />)) }
+          { calculatorIds.map((id) => (<Calculator key={id} calculatorId={id} />)) }
           <DragOverlay zIndex={1002}>
             { draggingTab && (<CalculatorTabButton tabId={draggingTab} />) }
           </DragOverlay>
         </OutsideDroppablePortal>
       </DndContext>
-      <Fab color="primary" onClick={() => dispatch(setShow(!show))}>
+      <Fab color="primary" onClick={() => dispatch(calculatorsActions.setShow(!show))}>
         <CalculatorIcon />
       </Fab>
     </>

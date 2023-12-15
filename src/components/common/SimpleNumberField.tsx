@@ -1,4 +1,5 @@
-import { TextField, TextFieldProps } from '@mui/material';
+import { TextField } from '@mui/material';
+import type { TextFieldProps } from '@mui/material';
 
 type SimpleNumberFieldProps = {
   value: number,
@@ -18,6 +19,7 @@ function SimpleNumberField({
   const handleChange = (newValue: string) => {
     if (newValue === '') {
       onChange(Infinity);
+      return;
     }
     const num = Number.parseInt(newValue, 10);
     if (minValue && num < minValue) return;

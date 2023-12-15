@@ -1,9 +1,10 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import {
-  EntityId, EntityState, PayloadAction, createEntityAdapter, createSlice,
-} from '@reduxjs/toolkit';
+import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import type { EntityId, EntityState, PayloadAction } from '@reduxjs/toolkit';
 
-import { EMPTY_POINT, Point } from '../../utils/math';
+import type { RootState } from '..';
+import { EMPTY_POINT } from '../../utils/math';
+import type { Point } from '../../utils/math';
 import { generateId } from '../../utils/utilities';
 
 // DnD Kit Id for the "outside space"
@@ -36,11 +37,7 @@ function generateCalculator(): Calculator {
 }
 
 const calculatorsAdapter = createEntityAdapter<Calculator>();
-export const calculatorsSelectors = calculatorsAdapter.getSelectors();
-export const tabCalculatorSelector = (
-  state: EntityState<Calculator, EntityId>,
-  tabId: EntityId,
-) => calculatorsSelectors.selectAll(state).find((c) => c.tabs.includes(tabId));
+const calculatorEntitySelectors = calculatorsAdapter.getSelectors();
 
 // Auxiliary methods for handling other regular calculatorsAdapter operations
 const removeTabFromCalculator = (
@@ -48,14 +45,14 @@ const removeTabFromCalculator = (
   calculatorId: EntityId,
   tabId: EntityId,
 ) => {
-  const calculator = calculatorsSelectors.selectById(state, calculatorId);
+  const calculator = calculatorEntitySelectors.selectById(state, calculatorId);
   if (!calculator) return;
   calculatorsAdapter.updateOne(
     state,
     { id: calculator.id, changes: { tabs: calculator.tabs.filter((tId) => tId !== tabId) } },
   );
   // "Refresh from db"
-  const refreshed = calculatorsSelectors.selectById(state, calculator.id)!;
+  const refreshed = calculatorEntitySelectors.selectById(state, calculator.id)!;
   // If it was left empty, delete it; otherwise, check the current tab
   if (refreshed.tabs.length === 0) calculatorsAdapter.removeOne(state, refreshed.id);
   else if (refreshed.currentTab === tabId) {
@@ -65,11 +62,15 @@ const removeTabFromCalculator = (
     );
   }
 };
+const getTabCalculator = (
+  state: EntityState<Calculator, EntityId>,
+  tabId: EntityId,
+) => calculatorEntitySelectors.selectAll(state).find((c) => c.tabs.includes(tabId))!;
 
 // Handle calculator tabs
 type Tab = {
   id: EntityId,
-  name: string | null,
+  name: string,
   startingPoint: Point,
   endingPoint: Point,
   penalty: number,
@@ -85,20 +86,21 @@ export function isCalculatorTab(id: EntityId) {
   return id.toString().startsWith(TABS_ID_PREFIX);
 }
 
+export const DEFAULT_TAB_NAME = 'Calculator';
 function generateTab(): Tab {
   return {
     id: generateCalculatorTabId(),
-    name: null,
+    name: DEFAULT_TAB_NAME,
     startingPoint: EMPTY_POINT,
     endingPoint: EMPTY_POINT,
     penalty: 0,
     speed: Infinity,
   };
 }
-
 const tabsAdapter = createEntityAdapter<Tab>();
-export const calculatorTabsSelectors = tabsAdapter.getSelectors();
+const tabEntitySelectors = tabsAdapter.getSelectors();
 
+// Slice
 const calculatorsSlice = createSlice({
   name: 'calculators',
   initialState: {
@@ -109,7 +111,10 @@ const calculatorsSlice = createSlice({
   },
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
-      if (calculatorsSelectors.selectTotal(state.calculators) === 0 && action.payload === true) {
+      if (
+        calculatorEntitySelectors.selectTotal(state.calculators) === 0
+        && action.payload
+      ) {
         // Create a calculator
         const calculator = generateCalculator();
         // Create a tab
@@ -126,7 +131,7 @@ const calculatorsSlice = createSlice({
     moveCalculator: (state, action: PayloadAction<{ calculatorId: EntityId, delta: Point }>) => {
       // This handles the DragEndEvent from DnD Kit
       const { calculatorId, delta } = action.payload;
-      const calculator = calculatorsSelectors.selectById(state.calculators, calculatorId);
+      const calculator = calculatorEntitySelectors.selectById(state.calculators, calculatorId);
       if (!calculator) return;
       calculatorsAdapter.updateOne(
         state.calculators,
@@ -138,8 +143,9 @@ const calculatorsSlice = createSlice({
         },
       );
     },
-    createTab: (state, action: PayloadAction<EntityId>) => {
-      const calculator = calculatorsSelectors.selectById(state.calculators, action.payload);
+    createTab: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
+      const { calculatorId } = action.payload;
+      const calculator = calculatorEntitySelectors.selectById(state.calculators, calculatorId);
       if (!calculator) return;
       const tab = generateTab();
       tabsAdapter.addOne(state.tabs, tab);
@@ -149,8 +155,9 @@ const calculatorsSlice = createSlice({
         { id: calculator.id, changes: { currentTab: tab.id, tabs: [...calculator.tabs, tab.id] } },
       );
     },
-    switchTab: (state, action: PayloadAction<{ calculatorId: EntityId, tabId: EntityId }>) => {
-      const { calculatorId, tabId } = action.payload;
+    switchTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
+      const { tabId } = action.payload;
+      const calculatorId = getTabCalculator(state.calculators, tabId).id;
       calculatorsAdapter.updateOne(
         state.calculators,
         { id: calculatorId, changes: { currentTab: tabId } },
@@ -160,7 +167,7 @@ const calculatorsSlice = createSlice({
       // This handles the DragStartEvent from DnD Kit
       const { tabId } = action.payload;
       state.draggingTab = tabId;
-      const calculator = tabCalculatorSelector(state.calculators, tabId)!;
+      const calculator = getTabCalculator(state.calculators, tabId);
       calculatorsAdapter.updateOne(state.calculators, {
         id: calculator.id,
         changes: { currentTab: tabId },
@@ -171,10 +178,10 @@ const calculatorsSlice = createSlice({
       const { tabId, overId } = action.payload;
       // CASE: not over anything or over the same tab, do nothing
       if (!overId || overId === OUTSIDE_DROPPABLE_ID || tabId === overId) return;
-      const tabCalculator = tabCalculatorSelector(state.calculators, tabId)!;
+      const tabCalculator = getTabCalculator(state.calculators, tabId);
       const overCalculator = isCalculator(overId)
-        ? calculatorsSelectors.selectById(state.calculators, overId)!
-        : tabCalculatorSelector(state.calculators, overId)!;
+        ? calculatorEntitySelectors.selectById(state.calculators, overId)!
+        : getTabCalculator(state.calculators, overId);
       // CASE: in the same container, do nothing
       if (tabCalculator === overCalculator) return;
       // CASE: it's in a different container
@@ -201,7 +208,7 @@ const calculatorsSlice = createSlice({
       // This handles the DragEndEvent from DnD kit
       state.draggingTab = null;
       const { tabId, overId, delta } = action.payload;
-      const tabCalculator = tabCalculatorSelector(state.calculators, tabId)!;
+      const tabCalculator = getTabCalculator(state.calculators, tabId);
       // CASE: same tab, do nothing
       if (!overId || overId === tabId) return;
       // CASE: dropped outside
@@ -233,30 +240,65 @@ const calculatorsSlice = createSlice({
     },
     updateTab: (
       state,
-      action: PayloadAction<{ tabId: EntityId, update: Partial<Omit<Tab, 'id' | 'calculatorId'>> }>,
+      action: PayloadAction<{ tabId: EntityId, update: Partial<Omit<Tab, 'id'>> }>,
     ) => {
       const { tabId, update } = action.payload;
       tabsAdapter.updateOne(state.tabs, { id: tabId, changes: update });
     },
-    deleteTab: (state, action: PayloadAction<EntityId>) => {
-      const tabId = action.payload;
+    deleteTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
+      const { tabId } = action.payload;
       tabsAdapter.removeOne(state.tabs, tabId);
-      const calculator = tabCalculatorSelector(state.calculators, tabId)!;
+      const calculator = getTabCalculator(state.calculators, tabId);
       removeTabFromCalculator(state.calculators, calculator.id, tabId);
-      if (calculatorsSelectors.selectTotal(state.calculators) === 0) state.show = false;
+      if (calculatorEntitySelectors.selectTotal(state.calculators) === 0) state.show = false;
     },
   },
 });
 
-export const {
-  setShow,
-  moveCalculator,
-  createTab,
-  switchTab,
-  moveTabStart,
-  moveTabOver,
-  moveTabEnd,
-  updateTab,
-  deleteTab,
-} = calculatorsSlice.actions;
+// Actions
+export const calculatorsActions = calculatorsSlice.actions;
+
+// Selectors
+export const calculatorsSelectors = {
+  getCalculator: createSelector(
+    [
+      (state: RootState) => state.distanceCalculator.calculators,
+      (state: RootState, id: EntityId) => id,
+    ],
+    (calculators, id) => calculatorEntitySelectors.selectById(calculators, id),
+  ),
+  getCalculatorIds: createSelector(
+    [(state: RootState) => state.distanceCalculator.calculators],
+    (calculators) => calculatorEntitySelectors.selectIds(calculators),
+  ),
+  getCalculatorTabsMap: createSelector(
+    [(state: RootState) => state.distanceCalculator.calculators],
+    (calculators) => Object.fromEntries(
+      calculatorEntitySelectors.selectAll(calculators).map((c) => [c.id, c.tabs]),
+    ),
+  ),
+  getTab: createSelector(
+    [
+      (state: RootState) => state.distanceCalculator.tabs,
+      (state: RootState, id: EntityId) => id,
+    ],
+    (tabs, id) => tabEntitySelectors.selectById(tabs, id),
+  ),
+  getTabIds: createSelector(
+    [(state: RootState) => state.distanceCalculator.tabs],
+    (tabs) => tabEntitySelectors.selectIds(tabs),
+  ),
+  tabIsActive: createSelector(
+    [
+      (state: RootState) => state.distanceCalculator.calculators,
+      (state: RootState, tabId: EntityId) => tabId,
+    ],
+    (calculators, tabId) => calculatorEntitySelectors
+      .selectAll(calculators)
+      .some((c) => c.currentTab === tabId),
+  ),
+  draggingTab: (state: RootState) => state.distanceCalculator.draggingTab,
+  show: (state: RootState) => state.distanceCalculator.show,
+};
+
 export default calculatorsSlice.reducer;

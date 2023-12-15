@@ -8,23 +8,17 @@ import {
   CollisionDetection, closestCenter, getFirstCollision, pointerWithin, rectIntersection,
 } from '@dnd-kit/core';
 import { EntityId } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
 
-import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
+import { useAppSelector } from '../../store';
 import { OUTSIDE_DROPPABLE_ID, calculatorsSelectors } from '../../store/distance-calculator/calculatorsSlice';
 
 function useCollisionDetectionStrategy(): CollisionDetection {
   const lastOverId = useRef<EntityId | null>(null);
   const recentlyMovedToNewContainer = useRef(false);
-  const tabs = useDistanceCalculatorSelector(
-    (state) => (Object.fromEntries(
-      calculatorsSelectors.selectAll(state.calculators).map((c) => [c.id, c.tabs]),
-    )),
-    (a, b) => Object.keys(a).every((id) => shallowEqual(a[id], b[id])),
-  );
-  const activeTab = useDistanceCalculatorSelector((state) => state.draggingTab);
+  const tabs = useAppSelector(calculatorsSelectors.getCalculatorTabsMap);
+  const draggingTab = useAppSelector(calculatorsSelectors.draggingTab);
   return useCallback((args) => {
-    if (activeTab && activeTab in tabs) {
+    if (draggingTab && draggingTab in tabs) {
       return closestCenter({
         ...args,
         droppableContainers: args.droppableContainers.filter((container) => container.id in tabs),
@@ -68,12 +62,12 @@ function useCollisionDetectionStrategy(): CollisionDetection {
     // to the id of the draggable item that was moved to the new container, otherwise
     // the previous `overId` will be returned which can cause items to incorrectly shift positions
     if (recentlyMovedToNewContainer.current) {
-      lastOverId.current = activeTab;
+      lastOverId.current = draggingTab;
     }
 
     // If no droppable is matched, return the last match
     return lastOverId.current ? [{ id: lastOverId.current }] : [];
-  }, [tabs, activeTab]);
+  }, [tabs, draggingTab]);
 }
 
 export default useCollisionDetectionStrategy;

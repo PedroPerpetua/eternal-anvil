@@ -1,11 +1,9 @@
 import { memo } from 'react';
 import { MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
 
-import { useAppDispatch } from '../../store';
-import { useDistanceCalculatorSelector } from '../../store/distance-calculator';
-import { calculatorTabsSelectors, updateTab } from '../../store/distance-calculator/calculatorsSlice';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { calculatorsSelectors, calculatorsActions } from '../../store/distance-calculator/calculatorsSlice';
 import { PENALTIES } from '../../utils/gameData';
 import { calcDistance, calcTravelTime } from '../../utils/math';
 import { formatSeconds } from '../../utils/utilities';
@@ -19,10 +17,7 @@ type DistanceFormProps = {
 
 const DistanceForm = memo(({ tabId }: DistanceFormProps) => {
   const dispatch = useAppDispatch();
-  const tab = useDistanceCalculatorSelector(
-    (state) => calculatorTabsSelectors.selectById(state.tabs, tabId)!,
-    shallowEqual,
-  );
+  const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
 
   const distance = calcDistance(tab.startingPoint, tab.endingPoint, tab.penalty);
   const time = calcTravelTime(distance, tab.speed);
@@ -33,14 +28,18 @@ const DistanceForm = memo(({ tabId }: DistanceFormProps) => {
         <Typography>Starting point</Typography>
         <CoordinateInput
           value={tab.startingPoint}
-          onChange={(p) => dispatch(updateTab({ tabId, update: { startingPoint: p } }))}
+          onChange={
+            (p) => dispatch(calculatorsActions.updateTab({ tabId, update: { startingPoint: p } }))
+          }
         />
       </Stack>
       <Stack alignItems="center" spacing={1}>
         <Typography>Ending point</Typography>
         <CoordinateInput
           value={tab.endingPoint}
-          onChange={(p) => dispatch(updateTab({ tabId, update: { endingPoint: p } }))}
+          onChange={
+            (p) => dispatch(calculatorsActions.updateTab({ tabId, update: { endingPoint: p } }))
+          }
         />
       </Stack>
       <TextField
@@ -48,7 +47,7 @@ const DistanceForm = memo(({ tabId }: DistanceFormProps) => {
         label="Mission Penalty"
         value={tab.penalty}
         onChange={(e) => dispatch(
-          updateTab({ tabId, update: { penalty: Number(e.target.value) } }),
+          calculatorsActions.updateTab({ tabId, update: { penalty: Number(e.target.value) } }),
         )}
         SelectProps={{
           renderValue: (v) => {
@@ -90,7 +89,7 @@ const DistanceForm = memo(({ tabId }: DistanceFormProps) => {
       </TextField>
       <SimpleNumberField
         value={tab.speed}
-        onChange={(v) => dispatch(updateTab({ tabId, update: { speed: v } }))}
+        onChange={(v) => dispatch(calculatorsActions.updateTab({ tabId, update: { speed: v } }))}
         minValue={0}
         maxValue={150}
         textFieldProps={{
