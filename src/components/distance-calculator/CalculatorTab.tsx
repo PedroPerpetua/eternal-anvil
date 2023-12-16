@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useSortable } from '@alissavrk/dnd-kit-sortable';
+import { CSS } from '@alissavrk/dnd-kit-utilities';
 import { Box, IconButton, Stack } from '@mui/material';
 import { EntityId } from '@reduxjs/toolkit';
 
@@ -62,14 +62,20 @@ export const CalculatorTabButton = memo(({ tabId }: CalculatorTabProps) => {
   );
 });
 
-export const DraggableCalculatorTabButton = memo(({ tabId }: CalculatorTabProps) => {
+type DraggableCalculatorTabButtonProps = CalculatorTabProps & {
+  disableDrag: boolean
+};
+
+export const DraggableCalculatorTabButton = memo((
+  { tabId, disableDrag }: DraggableCalculatorTabButtonProps,
+) => {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id: tabId });
+  } = useSortable({ id: tabId, disabled: disableDrag, resizeObserverConfig: {} });
   const active = useAppSelector((state) => calculatorsSelectors.tabIsActive(state, tabId));
   const draggingTab = useAppSelector(calculatorsSelectors.draggingTab);
   const dragging = draggingTab === tabId;

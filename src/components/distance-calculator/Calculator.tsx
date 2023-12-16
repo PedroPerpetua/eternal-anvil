@@ -1,7 +1,7 @@
 import { useCallback, memo } from 'react';
-import { useDraggable, useDroppable } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { useDraggable, useDroppable } from '@alissavrk/dnd-kit-core';
+import { SortableContext } from '@alissavrk/dnd-kit-sortable';
+import { CSS } from '@alissavrk/dnd-kit-utilities';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { Box, Button, Stack } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
@@ -54,12 +54,15 @@ const Calculator = memo(({ calculatorId }: CalculatorProps) => {
         zIndex: 1001, // over leaflet
       }}
     >
-      <Stack direction="row" sx={{ marginBottom: '-10px' }} ref={setDroppableNodeRef}>
+      <Stack
+        direction="row"
+        sx={{ marginBottom: '-10px' }}
+        {...attributes}
+        {...listeners}
+        ref={(node) => { setActivatorNodeRef(node); setDroppableNodeRef(node); }}
+      >
         <SortableContext items={calculator.tabs}>
           <Box
-            ref={setActivatorNodeRef}
-            {...attributes}
-            {...listeners}
             className="center-content clickable"
             sx={{
               borderBottom: '1px solid black',
@@ -89,7 +92,11 @@ const Calculator = memo(({ calculatorId }: CalculatorProps) => {
           >
             {
               calculator.tabs.map((tabId) => (
-                <DraggableCalculatorTabButton key={tabId} tabId={tabId} />
+                <DraggableCalculatorTabButton
+                  key={tabId}
+                  tabId={tabId}
+                  disableDrag={calculator.tabs.length === 1}
+                />
               ))
             }
             <Box sx={{ borderBottom: '1px solid black', flex: 1, minWidth: '100px' }}>

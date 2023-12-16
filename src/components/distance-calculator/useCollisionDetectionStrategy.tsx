@@ -6,7 +6,7 @@
 import { useCallback, useRef } from 'react';
 import {
   CollisionDetection, closestCenter, getFirstCollision, pointerWithin, rectIntersection,
-} from '@dnd-kit/core';
+} from '@alissavrk/dnd-kit-core';
 import { EntityId } from '@reduxjs/toolkit';
 
 import { useAppSelector } from '../../store';

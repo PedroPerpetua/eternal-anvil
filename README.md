@@ -27,3 +27,11 @@ The ability to simulate combat odds (given that there's some RNG regarding items
 
 ## (Future) Share-able links
 Be able to do joint battle planning trough a share-able link that will allow viewing in real time - permissions can be given for "spectator" and "planner".
+
+
+# Implementation notes
+
+## dnd-kit version
+Currently this project is actually using a fork of dnd-kit: [alissaVrk's fork](https://github.com/alissaVrk/dnd-kit). This is due to [PR #1096](https://github.com/clauderic/dnd-kit/pull/1096) that covers the issue that dragging something re-renders all items in said context, instead of just the item being dragged. Given that dnd-kit is currently undergoing a major rework (see [#1194](https://github.com/clauderic/dnd-kit/issues/1194)) it's unlikely this PR will be merged any time soon; however, when the rework is done, this issue should be fixed.
+
+Unfortunately, the fork is not really correctly configured in NPM to be used with Vite (wrong module field in their package.json). We can fix this by running the `fix-dnd-kit-fork` script after installing dependencies.

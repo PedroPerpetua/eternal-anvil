@@ -12,6 +12,69 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@alissavrk/dnd-kit-accessibility@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@alissavrk/dnd-kit-accessibility@npm:4.0.0"
+  dependencies:
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: a14a9b10187e29345b827ee8ac20b275b1f0f007f1a59bf46843828fbd45fa79c879924ec76cc46f9a32557ec9c2e55e516a2cfcc04bdb68322c0d4a1aa37bbd
+  languageName: node
+  linkType: hard
+
+"@alissavrk/dnd-kit-core@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@alissavrk/dnd-kit-core@npm:7.0.0"
+  dependencies:
+    "@alissavrk/dnd-kit-accessibility": "npm:^4.0.0"
+    "@alissavrk/dnd-kit-utilities": "npm:^4.0.0"
+    tslib: "npm:^2.0.0"
+    use-sync-external-store: "npm:^1.2.0"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: e53327ce5914636964bbc176f11cbe2ab22b1c784791a4523a6d7ba582354f79d73145bfd3c73c91e953d0bb2b08a0e0add9f1379657427e6c9bcd7f7a95ad40
+  languageName: node
+  linkType: hard
+
+"@alissavrk/dnd-kit-modifiers@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@alissavrk/dnd-kit-modifiers@npm:7.0.0"
+  dependencies:
+    "@alissavrk/dnd-kit-utilities": "npm:^4.0.0"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@alissavrk/dnd-kit-core": ^7.0.0
+    react: ">=16.8.0"
+  checksum: 53f808932b853cc7d2ea703c502950c2a59b491ed2bb22aabf8f8c1f95cf53c6f8e9b8bf8a77ca1ce11a731aa0166cbf7f013eac2fae9cc45be0fb513fbdab59
+  languageName: node
+  linkType: hard
+
+"@alissavrk/dnd-kit-sortable@npm:8.0.0":
+  version: 8.0.0
+  resolution: "@alissavrk/dnd-kit-sortable@npm:8.0.0"
+  dependencies:
+    "@alissavrk/dnd-kit-utilities": "npm:^4.0.0"
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    "@alissavrk/dnd-kit-core": ^7.0.0
+    react: ">=16.8.0"
+  checksum: 78fde373cdca053094902a44f3fc7d3555732678c8c4525a9dff0eb02934e2404ee9ae33674de93f5154dc75def564567e3129c8056a607c83473fd6868b232d
+  languageName: node
+  linkType: hard
+
+"@alissavrk/dnd-kit-utilities@npm:4.0.0, @alissavrk/dnd-kit-utilities@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@alissavrk/dnd-kit-utilities@npm:4.0.0"
+  dependencies:
+    tslib: "npm:^2.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: d2311284fad71103b5d3f0e9b5427469791e927961b6f8f3da9cf5edd7ae275927a0e5424f90fcd2a115eaa10ceb80cff2b682bfccfe4c4120498df5bdfa5ca7
+  languageName: node
+  linkType: hard
+
 "@ampproject/remapping@npm:^2.2.0":
   version: 2.2.1
   resolution: "@ampproject/remapping@npm:2.2.1"
@@ -456,68 +519,6 @@ __metadata:
     "@babel/helper-validator-identifier": "npm:^7.19.1"
     to-fast-properties: "npm:^2.0.0"
   checksum: 23c943aa2c0d11b798e9298b55b1993da8b386504aac2f781a49b4bbf2cf2ad5e1003409241578574e421c999ff7a3aab2cf30ad3581d33eb9053d82b9e20408
-  languageName: node
-  linkType: hard
-
-"@dnd-kit/accessibility@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "@dnd-kit/accessibility@npm:3.1.0"
-  dependencies:
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 4f9d24e801d66d4fbb551ec389ed90424dd4c5bbdf527000a618e9abb9833cbd84d9a79e362f470ccbccfbd6d00217a9212c92f3cef66e01c951c7f79625b9d7
-  languageName: node
-  linkType: hard
-
-"@dnd-kit/core@npm:6.1.0":
-  version: 6.1.0
-  resolution: "@dnd-kit/core@npm:6.1.0"
-  dependencies:
-    "@dnd-kit/accessibility": "npm:^3.1.0"
-    "@dnd-kit/utilities": "npm:^3.2.2"
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: c793eb97cb59285ca8937ebcdfcd27cff09d750ae06722e36ca5ed07925e41abc36a38cff98f9f6056f7a07810878d76909826142a2968330e7e22060e6be584
-  languageName: node
-  linkType: hard
-
-"@dnd-kit/modifiers@npm:7.0.0":
-  version: 7.0.0
-  resolution: "@dnd-kit/modifiers@npm:7.0.0"
-  dependencies:
-    "@dnd-kit/utilities": "npm:^3.2.2"
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    "@dnd-kit/core": ^6.1.0
-    react: ">=16.8.0"
-  checksum: 542e1d2b6102a5c826118c36158aab23c5437d24008cab4848b0866d3d850b4410c4f465690767dd1f31fde33a1fa9d238675be70f174c179485ce376f0c8aa6
-  languageName: node
-  linkType: hard
-
-"@dnd-kit/sortable@npm:8.0.0":
-  version: 8.0.0
-  resolution: "@dnd-kit/sortable@npm:8.0.0"
-  dependencies:
-    "@dnd-kit/utilities": "npm:^3.2.2"
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    "@dnd-kit/core": ^6.1.0
-    react: ">=16.8.0"
-  checksum: a6066c652b892c6a11320c7d8f5c18fdf723e721e8eea37f4ab657dee1ac5e7ca710ac32ce0712a57fe968bc07c13bcea5d5599d90dfdd95619e162befd4d2fb
-  languageName: node
-  linkType: hard
-
-"@dnd-kit/utilities@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "@dnd-kit/utilities@npm:3.2.2"
-  dependencies:
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    react: ">=16.8.0"
-  checksum: 9aa90526f3e3fd567b5acc1b625a63177b9e8d00e7e50b2bd0e08fa2bf4dba7e19529777e001fdb8f89a7ce69f30b190c8364d390212634e0afdfa8c395e85a0
   languageName: node
   linkType: hard
 
@@ -1837,9 +1838,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:."
   dependencies:
-    "@dnd-kit/core": "npm:6.1.0"
-    "@dnd-kit/modifiers": "npm:7.0.0"
-    "@dnd-kit/sortable": "npm:8.0.0"
+    "@alissavrk/dnd-kit-core": "npm:7.0.0"
+    "@alissavrk/dnd-kit-modifiers": "npm:7.0.0"
+    "@alissavrk/dnd-kit-sortable": "npm:8.0.0"
+    "@alissavrk/dnd-kit-utilities": "npm:4.0.0"
     "@emotion/react": "npm:11.11.1"
     "@emotion/styled": "npm:11.11.0"
     "@fontsource/roboto": "npm:5.0.8"
@@ -1864,6 +1866,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:4.6.0"
     file-saver: "npm:2.0.5"
     image-js: "npm:0.35.5"
+    json: "npm:11.0.0"
     leaflet: "npm:1.9.4"
     moize: "npm:6.1.6"
     react: "npm:18.2.0"
@@ -4351,6 +4354,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"json@npm:11.0.0":
+  version: 11.0.0
+  resolution: "json@npm:11.0.0"
+  bin:
+    json: lib/json.js
+  checksum: 330eea4d69902f775b5babd65848383e066765a9d9d9536e80dd369af89bfe3728408f1287c0ba40f5d90ead391542836ed010a8ed0c8169396b4aac3847a5bf
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -6480,7 +6492,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.0.0":
+"use-sync-external-store@npm:^1.0.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:

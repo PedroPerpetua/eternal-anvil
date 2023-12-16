@@ -1,4 +1,4 @@
-import { arrayMove } from '@dnd-kit/sortable';
+import { arrayMove } from '@alissavrk/dnd-kit-sortable';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { EntityId, EntityState, PayloadAction } from '@reduxjs/toolkit';
 

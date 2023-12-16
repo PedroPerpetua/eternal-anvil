@@ -1,8 +1,8 @@
 import {
   DndContext, DragEndEvent, DragOverEvent, DragOverlay, DragStartEvent, MeasuringStrategy,
   MouseSensor, useSensor,
-} from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+} from '@alissavrk/dnd-kit-core';
+import { restrictToWindowEdges } from '@alissavrk/dnd-kit-modifiers';
 import CalculatorIcon from '@mui/icons-material/Calculate';
 import { Fab } from '@mui/material';
 
