@@ -12,11 +12,11 @@ import CustomIcon from '../../../common/CustomIcon';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
 
-const VALUE: ActionBarTabId = 'realms';
+const TAB_ID: ActionBarTabId = 'realms';
 
 function RealmsButton() {
   return (
-    <ActionBarButton value={VALUE} tooltip="Realms">
+    <ActionBarButton tabId={TAB_ID} tooltip="Realms">
       <CustomIcon src={RealmsIcon} tintColor="#d8bc68" />
     </ActionBarButton>
   );
@@ -28,7 +28,7 @@ function RealmsCard() {
     shallowEqual,
   );
   return (
-    <ActionBarCard value={VALUE}>
+    <ActionBarCard tabId={TAB_ID}>
       <Typography variant="h6">
         Realms
       </Typography>

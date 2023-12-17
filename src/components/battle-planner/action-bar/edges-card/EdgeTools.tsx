@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 
 import AddEdgeIcon from '../../../../assets/add-edge-icon.png';
 import ViewIcon from '../../../../assets/view-icon.png';
-import { EdgeToolMode } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
 import CustomIcon from '../../../common/CustomIcon';
 import DeleteIcon from '../../../common/styled-components/DeleteIcon';
 
@@ -17,6 +16,8 @@ function SelectIconComponent() {
 function DeleteIconComponent() {
   return <DeleteIcon color="error" />;
 }
+
+export type EdgeToolMode = 'view' | 'select' | 'delete';
 
 const EDGE_TOOLS: Record<EdgeToolMode, { label: string, icon: ReactNode }> = {
   view: {

@@ -4,8 +4,8 @@ import { Polyline } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
 import useMapZoom from '../../../hooks/useMapZoom';
-import { useAppDispatch } from '../../../store';
-import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { edgesTabSelectors } from '../../../store/battle-planner/action-bar/edgesTabSlice';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
 import { deleteEdge, edgesSelectors } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
@@ -19,7 +19,7 @@ type EdgeProps = {
 
 const Edge = memo(({ id }: EdgeProps) => {
   const dispatch = useAppDispatch();
-  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  const toolMode = useAppSelector(edgesTabSelectors.toolMode);
   const zoom = useMapZoom();
   const transformationMatrix = useBattleMapSelector(
     (state) => state.mapInfo.transformationMatrix,

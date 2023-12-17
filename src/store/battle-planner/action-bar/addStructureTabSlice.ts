@@ -1,29 +1,34 @@
-import { EntityId, PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
-import { EMPTY_POINT, Point } from '../../../utils/math';
+import type { RootState } from '../..';
+import { EMPTY_POINT } from '../../../utils/math';
+import type { Point } from '../../../utils/math';
 
-type AddStructureTabData = {
-  coordinates: Point,
-  selectedRealm: EntityId | '',
-};
-
-const initialState: AddStructureTabData = {
-  coordinates: EMPTY_POINT,
-  selectedRealm: '',
-};
-
+// Slice
 const addStructureTabSlice = createSlice({
   name: 'addStructureTab',
-  initialState,
+  initialState: {
+    coordinates: EMPTY_POINT,
+    selectedRealm: null as EntityId | null,
+  },
   reducers: {
     setCoordinates: (state, action: PayloadAction<Point>) => {
       state.coordinates = action.payload;
     },
-    selectRealm: (state, action: PayloadAction<EntityId | ''>) => {
-      state.selectedRealm = action.payload;
+    setSelectedRealm: (state, action: PayloadAction<{ realmId: EntityId | null }>) => {
+      state.selectedRealm = action.payload.realmId;
     },
   },
 });
 
-export const { setCoordinates, selectRealm } = addStructureTabSlice.actions;
+// Actions
+export const addStructureTabActions = addStructureTabSlice.actions;
+
+// Selectors
+export const addStructureTabSelectors = {
+  coordinates: (state: RootState) => state.battlePlanner.actionBar.addStructureTab.coordinates,
+  selectedRealm: (state: RootState) => state.battlePlanner.actionBar.addStructureTab.selectedRealm,
+};
+
 export default addStructureTabSlice.reducer;

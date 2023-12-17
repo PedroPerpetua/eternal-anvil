@@ -11,11 +11,11 @@ import CustomIcon from '../../../common/CustomIcon';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
 
-const VALUE: ActionBarTabId = 'map';
+const TAB_ID: ActionBarTabId = 'map';
 
 function MapButton() {
   return (
-    <ActionBarButton value={VALUE} tooltip="Map">
+    <ActionBarButton tabId={TAB_ID} tooltip="Map">
       <CustomIcon src={MapIcon} tintColor="#d8bc68" />
     </ActionBarButton>
   );
@@ -31,7 +31,7 @@ function MapCard() {
   };
 
   return (
-    <ActionBarCard value={VALUE}>
+    <ActionBarCard tabId={TAB_ID}>
       <Stack spacing={1}>
         <Typography variant="h6">
           Map Settings

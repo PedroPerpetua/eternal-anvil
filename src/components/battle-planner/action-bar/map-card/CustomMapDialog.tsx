@@ -3,16 +3,16 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
   Button, Dialog, Grid, Stack, ThemeProvider, Tooltip, Typography,
 } from '@mui/material';
-import { CRS, Marker as LeafletMarker } from 'leaflet';
+import { CRS } from 'leaflet';
+import type { Marker as LeafletMarker } from 'leaflet';
 import { MapContainer } from 'react-leaflet';
 
 import TargetIcon from '../../../../assets/target.png';
 import { useAppDispatch } from '../../../../store';
 import { setMapInfo } from '../../../../store/battle-planner/battle-map/mapInfoSlice';
 import theme from '../../../../theme';
-import {
-  EMPTY_POINT, Point, Triangle, computeAffineMatrix, gameToLeaflet, validCoordinates,
-} from '../../../../utils/math';
+import { EMPTY_POINT, computeAffineMatrix, gameToLeaflet, validCoordinates } from '../../../../utils/math';
+import type { Point, Triangle } from '../../../../utils/math';
 import { readFileAsURL } from '../../../../utils/utilities';
 import CoordinateInput from '../../../common/CoordinateInput';
 import CustomIcon from '../../../common/CustomIcon';

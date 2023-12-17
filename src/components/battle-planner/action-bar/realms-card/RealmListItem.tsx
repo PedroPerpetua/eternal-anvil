@@ -11,11 +11,10 @@ import { shallowEqual } from 'react-redux';
 import StructureList from './StructureList';
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import EditIcon from '../../../../assets/edit-icon.png';
-import { useAppDispatch } from '../../../../store';
-import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
-import { selectRealm } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
-import { changeTab } from '../../../../store/battle-planner/action-bar/currentTabSlice';
-import { setExpandedRealm, setOpenDelete } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import { addStructureTabActions } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
+import { currentTabActions } from '../../../../store/battle-planner/action-bar/currentTabSlice';
+import { realmsTabActions, realmsTabSelectors } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { realmSelectors, updateRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
@@ -30,7 +29,7 @@ type RealmListItemProps = {
 
 const RealmListItem = memo(({ id }: RealmListItemProps) => {
   const dispatch = useAppDispatch();
-  const isOpen = useActionBarSelector((state) => state.realmsTab.expandedRealm === id);
+  const isOpen = useAppSelector((state) => realmsTabSelectors.realmIsOpen(state, id));
   const realm = useBattleMapSelector(
     (state) => (realmSelectors.selectById(state.realms, id)),
     shallowEqual,
@@ -40,7 +39,7 @@ const RealmListItem = memo(({ id }: RealmListItemProps) => {
   return (
     <Paper sx={{ padding: '5px' }}>
       <Stack
-        onClick={() => dispatch(setExpandedRealm(isOpen ? null : id))}
+        onClick={() => dispatch(realmsTabActions.setOpenRealm({ realmId: isOpen ? null : id }))}
         className="clickable"
         direction="row"
         justifyContent="space-between"
@@ -135,13 +134,17 @@ const RealmListItem = memo(({ id }: RealmListItemProps) => {
           <GameButton
             size="small"
             onClick={() => {
-              dispatch(selectRealm(realm.id));
-              dispatch(changeTab('addStructure'));
+              dispatch(addStructureTabActions.setSelectedRealm({ realmId: id }));
+              dispatch(currentTabActions.changeTab('addStructure'));
             }}
           >
             <CustomIcon src={AddStructureIcon} tintColor="#d8bc68" />
           </GameButton>
-          <Button size="small" color="error" onClick={() => dispatch(setOpenDelete(true))}>
+          <Button
+            size="small"
+            color="error"
+            onClick={() => dispatch(realmsTabActions.setShowDelete(true))}
+          >
             <DeleteIcon stroke="black" strokeWidth="1px" />
           </Button>
         </Stack>

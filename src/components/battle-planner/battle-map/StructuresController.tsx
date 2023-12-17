@@ -7,8 +7,8 @@ import { Marker as LeafletMarker } from 'leaflet';
 import { useMap } from 'react-leaflet';
 import { shallowEqual } from 'react-redux';
 
-import { useAppDispatch } from '../../../store';
-import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { edgesTabSelectors } from '../../../store/battle-planner/action-bar/edgesTabSlice';
 import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
 import { selectStructure } from '../../../store/battle-planner/battle-map/edgesSlice';
 import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
@@ -49,7 +49,7 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
   );
 
   // Handle selection
-  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  const toolMode = useAppSelector(edgesTabSelectors.toolMode);
 
   // Handle the menu
   const map = useMap();

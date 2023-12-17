@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {
   Badge, ButtonGroup, IconButton, Stack, Typography,
@@ -6,11 +6,11 @@ import {
 import { shallowEqual } from 'react-redux';
 
 import EDGE_TOOLS from './EdgeTools';
+import type { EdgeToolMode } from './EdgeTools';
 import EdgeIcon from '../../../../assets/edge-icon.png';
-import { useAppDispatch } from '../../../../store';
-import { useActionBarSelector } from '../../../../store/battle-planner/action-bar';
-import { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
-import { EdgeToolMode, changeMode } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
+import { useAppDispatch, useAppSelector } from '../../../../store';
+import type { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
+import { edgesTabActions, edgesTabSelectors } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
 import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
 import { deselectStructure } from '../../../../store/battle-planner/battle-map/edgesSlice';
 import { structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
@@ -21,13 +21,13 @@ import GildedTooltip from '../../../common/styled-components/GildedTooltip';
 import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
 
-const VALUE: ActionBarTabId = 'edges';
+const TAB_ID: ActionBarTabId = 'edges';
 
 function EdgesButton() {
-  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  const toolMode = useAppSelector(edgesTabSelectors.toolMode);
   return (
     <ActionBarButton
-      value={VALUE}
+      tabId={TAB_ID}
       tooltip={(
         <>
           Edges
@@ -56,13 +56,13 @@ type EdgeToolButtonProps = PropsWithChildren<{
 
 function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
   const dispatch = useAppDispatch();
-  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  const toolMode = useAppSelector(edgesTabSelectors.toolMode);
   return (
     <GildedTooltip title={tooltip}>
       <GameButton
         selected={toolMode === mode}
         onClick={() => {
-          dispatch(changeMode(mode));
+          dispatch(edgesTabActions.setToolMode(mode));
           dispatch(deselectStructure());
         }}
       >
@@ -74,14 +74,14 @@ function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
 
 function EdgesCard() {
   const dispatch = useAppDispatch();
-  const toolMode = useActionBarSelector((state) => state.edgesTab.toolMode);
+  const toolMode = useAppSelector(edgesTabSelectors.toolMode);
   const selectedStructure = useBattleMapSelector((state) => state.edges.currentlySelected);
   const structure = useBattleMapSelector(
     (state) => structuresSelectors.selectById(state.structures, selectedStructure ?? '') ?? null,
     shallowEqual,
   );
   return (
-    <ActionBarCard value={VALUE}>
+    <ActionBarCard tabId={TAB_ID}>
       <Stack spacing={1}>
         <Typography variant="h6">
           Edges

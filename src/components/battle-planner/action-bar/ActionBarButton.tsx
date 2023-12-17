@@ -1,28 +1,27 @@
-import { PropsWithChildren, ReactNode } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 
-import { useAppDispatch } from '../../../store';
-import { useActionBarSelector } from '../../../store/battle-planner/action-bar';
-import { ActionBarTabId, changeTab } from '../../../store/battle-planner/action-bar/currentTabSlice';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { currentTabSelectors, currentTabActions } from '../../../store/battle-planner/action-bar/currentTabSlice';
+import type { ActionBarTabId } from '../../../store/battle-planner/action-bar/currentTabSlice';
 import GameButton from '../../common/styled-components/GameButton';
 import GildedTooltip from '../../common/styled-components/GildedTooltip';
 
 type ActionBarButtonProps = PropsWithChildren<{
-  value: ActionBarTabId,
+  tabId: ActionBarTabId,
   tooltip: string | ReactNode,
 }>;
 
-function ActionBarButton({ value, tooltip, children }: ActionBarButtonProps) {
+function ActionBarButton({ tabId, tooltip, children }: ActionBarButtonProps) {
   const dispatch = useAppDispatch();
-  const current = useActionBarSelector((state) => state.currentTab);
-  const isSelected = current === value;
+  const isActive = useAppSelector((state) => currentTabSelectors.tabIsActive(state, tabId));
   return (
     <GildedTooltip
       title={tooltip}
       placement="left"
     >
       <GameButton
-        onClick={() => dispatch(changeTab(isSelected ? null : value))}
-        selected={isSelected}
+        onClick={() => dispatch(currentTabActions.changeTab(isActive ? null : tabId))}
+        selected={isActive}
       >
         { children }
       </GameButton>

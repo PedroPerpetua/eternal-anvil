@@ -1,7 +1,11 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+
+import type { RootState } from '../..';
 
 export type ActionBarTabId = 'addStructure' | 'realms' | 'edges' | 'map' | null;
 
+// Slice
 const currentTabSlice = createSlice({
   name: 'currentTab',
   initialState: null as ActionBarTabId,
@@ -10,5 +14,18 @@ const currentTabSlice = createSlice({
   },
 });
 
-export const { changeTab } = currentTabSlice.actions;
+// Actions
+export const currentTabActions = currentTabSlice.actions;
+
+// Selectors
+export const currentTabSelectors = {
+  tabIsActive: createSelector(
+    [
+      (state: RootState) => state.battlePlanner.actionBar.currentTab,
+      (state: RootState, tabId: ActionBarTabId) => tabId,
+    ],
+    (currentTab, tabId) => currentTab === tabId,
+  ),
+};
+
 export default currentTabSlice.reducer;
