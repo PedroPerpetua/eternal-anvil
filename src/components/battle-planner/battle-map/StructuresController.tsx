@@ -2,51 +2,30 @@ import {
   memo, useCallback, useEffect, useRef, useState,
 } from 'react';
 import { IconButton } from '@mui/material';
-import { EntityId } from '@reduxjs/toolkit';
-import { Marker as LeafletMarker } from 'leaflet';
+import type { EntityId } from '@reduxjs/toolkit';
+import type { Marker as LeafletMarker } from 'leaflet';
 import { useMap } from 'react-leaflet';
-import { shallowEqual } from 'react-redux';
 
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { edgesTabSelectors } from '../../../store/battle-planner/action-bar/edgesTabSlice';
-import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
-import { selectStructure } from '../../../store/battle-planner/battle-map/edgesSlice';
-import { realmSelectors } from '../../../store/battle-planner/battle-map/realmsSlice';
-import { deleteStructure, structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
-import { NEUTRAL_COLOR, STRUCTURES_DATA } from '../../../utils/gameData';
+import { edgesActions } from '../../../store/battle-planner/battle-map/edgesSlice';
+import { mapInfoSelectors } from '../../../store/battle-planner/battle-map/mapInfoSlice';
+import { structuresActions, structuresSelectors } from '../../../store/battle-planner/battle-map/structuresSlice';
 import { gameToLeaflet } from '../../../utils/math';
 import CircularMenu from '../../common/CircularMenu';
 import MapMarker from '../../common/MapMarker';
 import DeleteIcon from '../../common/styled-components/DeleteIcon';
 
 type StructureMarkerProps = {
-  id: EntityId
+  structureId: EntityId
 };
 
-const StructureMarker = memo(({ id }: StructureMarkerProps) => {
+const StructureMarker = memo(({ structureId }: StructureMarkerProps) => {
   const dispatch = useAppDispatch();
-  const structureData = useBattleMapSelector((state) => {
-    const structure = structuresSelectors.selectById(state.structures, id);
-    if (!structure) return null;
-    const realm = realmSelectors.selectById(state.realms, structure.realm ?? '');
-    const structureInfo = STRUCTURES_DATA[structure.type];
-
-    const highlighted = (
-      state.edges.currentlySelected === id
-      || (shallowEqual(structure.coordinates, state.mapInfo.currentMouseHover)
-      ));
-    return {
-      icon: structureInfo.icon,
-      size: structureInfo.size,
-      color: realm?.color ?? NEUTRAL_COLOR,
-      position: structure.coordinates,
-      highlighted,
-    };
-  }, shallowEqual);
-  const transformationMatrix = useBattleMapSelector(
-    (state) => state.mapInfo.transformationMatrix,
-    shallowEqual,
+  const structureData = useAppSelector(
+    (state) => structuresSelectors.getStructureData(state, structureId),
   );
+  const transformationMatrix = useAppSelector(mapInfoSelectors.transformationMatrix);
 
   // Handle selection
   const toolMode = useAppSelector(edgesTabSelectors.toolMode);
@@ -63,14 +42,14 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
     map.scrollWheelZoom.enable();
     setOpenMenu(false);
   }, [map]);
-  const mapDragging = useBattleMapSelector((state) => state.mapInfo.dragging);
+  const mapDragging = useAppSelector(mapInfoSelectors.dragging);
   useEffect(() => {
     if (mapDragging) handleCloseMenu();
   }, [mapDragging, handleCloseMenu]);
 
   // Handle events
   const handleClick = () => {
-    if (toolMode === 'select') dispatch(selectStructure(id));
+    if (toolMode === 'select') dispatch(edgesActions.selectStructure({ structureId }));
     else handleOpenMenu();
   };
 
@@ -100,7 +79,10 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
       radius="40px"
       startAngle={0}
     >
-      <IconButton sx={{ backgroundColor: '#056e55' }} onClick={() => dispatch(deleteStructure(id))}>
+      <IconButton
+        sx={{ backgroundColor: '#056e55' }}
+        onClick={() => dispatch(structuresActions.deleteStructure({ structureId }))}
+      >
         <DeleteIcon />
       </IconButton>
     </CircularMenu>
@@ -108,13 +90,12 @@ const StructureMarker = memo(({ id }: StructureMarkerProps) => {
 });
 
 function StructuresController() {
-  const structureIds = useBattleMapSelector(
-    (state) => structuresSelectors.selectIds(state.structures),
-    shallowEqual,
-  );
+  const structureIds = useAppSelector(structuresSelectors.getStructureIds);
   return (
     <>
-      { structureIds.map((id) => (<StructureMarker key={id} id={id} />)) }
+      { structureIds.map((structureId) => (
+        <StructureMarker key={structureId} structureId={structureId} />
+      )) }
     </>
   );
 }

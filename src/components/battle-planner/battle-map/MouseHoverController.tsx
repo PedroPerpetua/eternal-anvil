@@ -1,25 +1,20 @@
 import { useMapEvent } from 'react-leaflet';
-import { shallowEqual } from 'react-redux';
 
-import { useAppDispatch } from '../../../store';
-import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
-import { setCurrentMouseHover } from '../../../store/battle-planner/battle-map/mapInfoSlice';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { mapInfoActions, mapInfoSelectors } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 import { EMPTY_POINT, leafletToGame } from '../../../utils/math';
 
 function MouseHoverController() {
   const dispatch = useAppDispatch();
-  const transformationMatrix = useBattleMapSelector(
-    (state) => state.mapInfo.transformationMatrix,
-    shallowEqual,
-  );
+  const transformationMatrix = useAppSelector(mapInfoSelectors.transformationMatrix);
 
   useMapEvent('mousemove', (e) => {
-    dispatch(
-      setCurrentMouseHover(leafletToGame(transformationMatrix, [e.latlng.lat, e.latlng.lng])),
-    );
+    dispatch(mapInfoActions.setCurrentMouseHover(
+      leafletToGame(transformationMatrix, [e.latlng.lat, e.latlng.lng]),
+    ));
   });
 
-  useMapEvent('mouseout', () => dispatch(setCurrentMouseHover(EMPTY_POINT)));
+  useMapEvent('mouseout', () => dispatch(mapInfoActions.setCurrentMouseHover(EMPTY_POINT)));
 
   return null;
 }

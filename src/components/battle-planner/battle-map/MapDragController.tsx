@@ -1,12 +1,12 @@
 import { useMapEvent } from 'react-leaflet';
 
 import { useAppDispatch } from '../../../store';
-import { setDragging } from '../../../store/battle-planner/battle-map/mapInfoSlice';
+import { mapInfoActions } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 
 function MapDragController() {
   const dispatch = useAppDispatch();
-  useMapEvent('dragstart', () => dispatch(setDragging(true)));
-  useMapEvent('dragend', () => dispatch(setDragging(false)));
+  useMapEvent('dragstart', () => dispatch(mapInfoActions.setDragging(true)));
+  useMapEvent('dragend', () => dispatch(mapInfoActions.setDragging(false)));
   return null;
 }
 

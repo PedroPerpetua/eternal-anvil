@@ -5,13 +5,14 @@ import EdgesController from './EdgesController';
 import MapDragController from './MapDragController';
 import MouseHoverController from './MouseHoverController';
 import StructuresController from './StructuresController';
-import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
+import { useAppSelector } from '../../../store';
+import { mapInfoSelectors } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 import MapImageLayer from '../../common/MapImageLayer';
 import ActionBar from '../action-bar/ActionBar';
 import MousePositionDisplay from '../mouse-position-display/MousePositionDisplay';
 
 function BattleMap() {
-  const image = useBattleMapSelector((state) => state.mapInfo.image);
+  const image = useAppSelector(mapInfoSelectors.image);
   return (
     <MapContainer
       crs={CRS.Simple}

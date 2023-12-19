@@ -6,12 +6,13 @@ import AddStructureCard from './add-structure-card/AddStructureCard';
 import EdgesCard from './edges-card/EdgesCard';
 import MapCard from './map-card/MapCard';
 import RealmsCard from './realms-card/RealmsCard';
-import { useBattleMapSelector } from '../../../store/battle-planner/battle-map';
+import { useAppSelector } from '../../../store';
+import { mapInfoSelectors } from '../../../store/battle-planner/battle-map/mapInfoSlice';
 import { disableMapEvents, enableMapEvents } from '../../../utils/leaflet';
 
 function ActionBar() {
   const map = useMap();
-  const dragging = useBattleMapSelector((state) => state.mapInfo.dragging);
+  const dragging = useAppSelector(mapInfoSelectors.dragging);
 
   return (
     <ThemeProvider theme={actionBarTheme}>

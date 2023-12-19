@@ -1,5 +1,7 @@
-import { EntityId, PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
+import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
+import type { RootState } from '../..';
 import { DEFAULT_REALM_COLORS, NEUTRAL_COLOR } from '../../../utils/gameData';
 import { generateId } from '../../../utils/utilities';
 
@@ -8,26 +10,58 @@ type Realm = {
   name: string,
   color: string,
 };
+type RealmPayload = Omit<Realm, 'id'>;
 
 const realmsAdapter = createEntityAdapter<Realm>();
-export const realmSelectors = realmsAdapter.getSelectors();
-const initialState = realmsAdapter.addMany(realmsAdapter.getInitialState(), [
-  { id: generateId(), name: 'Neutral', color: NEUTRAL_COLOR },
-  { id: generateId(), name: 'My Realm', color: DEFAULT_REALM_COLORS[0] },
-]);
+const realmsEntitySelectors = realmsAdapter.getSelectors();
 
+// Slice
 const realmsSlice = createSlice({
   name: 'realms',
-  initialState,
+  initialState: realmsAdapter.addMany(realmsAdapter.getInitialState(), [
+    { id: generateId(), name: 'Neutral', color: NEUTRAL_COLOR },
+    { id: generateId(), name: 'My Realm', color: DEFAULT_REALM_COLORS[0] },
+  ]),
   reducers: {
-    createRealm: (state, action: PayloadAction<Omit<Realm, 'id'>>) => {
+    createRealm: (state, action: PayloadAction<RealmPayload>) => {
       // Auto-generate an Id on creation
       realmsAdapter.addOne(state, { ...action.payload, id: generateId() });
     },
-    updateRealm: realmsAdapter.updateOne,
-    deleteRealm: realmsAdapter.removeOne,
+    updateRealm: (
+      state,
+      action: PayloadAction<{ realmId: EntityId, changes: Partial<RealmPayload> }>,
+    ) => {
+      const { realmId, changes } = action.payload;
+      realmsAdapter.updateOne(state, { id: realmId, changes });
+    },
+    deleteRealm: (state, action: PayloadAction<{ realmId: EntityId }>) => {
+      const { realmId } = action.payload;
+      realmsAdapter.removeOne(state, realmId);
+    },
   },
 });
 
-export const { createRealm, updateRealm, deleteRealm } = realmsSlice.actions;
+// Actions
+export const realmsActions = realmsSlice.actions;
+
+// Selectors
+export const realmsSelectors = {
+  entitySelectors: realmsEntitySelectors,
+  getRealm: createSelector(
+    [
+      (state: RootState) => state.battlePlanner.battleMap.realms,
+      (state: RootState, realmId: EntityId) => realmId,
+    ],
+    (realms, realmId) => realmsEntitySelectors.selectById(realms, realmId),
+  ),
+  getRealmIds: createSelector(
+    [(state: RootState) => state.battlePlanner.battleMap.realms],
+    (realms) => realmsEntitySelectors.selectIds(realms),
+  ),
+  getRealms: createSelector(
+    [(state: RootState) => state.battlePlanner.battleMap.realms],
+    (realms) => realmsEntitySelectors.selectAll(realms),
+  ),
+};
+
 export default realmsSlice.reducer;

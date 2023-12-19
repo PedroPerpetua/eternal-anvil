@@ -2,6 +2,7 @@ import { createSelector, createSlice } from '@reduxjs/toolkit';
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 import type { RootState } from '../..';
+import { realmsSelectors } from '../battle-map/realmsSlice';
 
 // Id for the "create realm" card
 export const CREATE_REALM_ID = 'create';
@@ -31,7 +32,16 @@ export const realmsTabActions = realmsTabSlice.actions;
 
 // Selectors
 export const realmsTabSelectors = {
-  openRealm: (state: RootState) => state.battlePlanner.actionBar.realmsTab.openRealm,
+  openRealm: createSelector(
+    [
+      (state: RootState) => state.battlePlanner.battleMap.realms,
+      (state: RootState) => state.battlePlanner.actionBar.realmsTab.openRealm,
+    ],
+    (realms, openRealm) => {
+      if (!openRealm) return null;
+      return realmsSelectors.entitySelectors.selectById(realms, openRealm);
+    },
+  ),
   realmIsOpen: createSelector(
     [
       (state: RootState) => state.battlePlanner.actionBar.realmsTab.openRealm,

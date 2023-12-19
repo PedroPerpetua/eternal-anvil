@@ -9,7 +9,7 @@ import { MapContainer } from 'react-leaflet';
 
 import TargetIcon from '../../../../assets/target.png';
 import { useAppDispatch } from '../../../../store';
-import { setMapInfo } from '../../../../store/battle-planner/battle-map/mapInfoSlice';
+import { mapInfoActions } from '../../../../store/battle-planner/battle-map/mapInfoSlice';
 import theme from '../../../../theme';
 import { EMPTY_POINT, computeAffineMatrix, gameToLeaflet, validCoordinates } from '../../../../utils/math';
 import type { Point, Triangle } from '../../../../utils/math';
@@ -144,7 +144,7 @@ function CustomMapDialog({ open, handleClose }: CustomMapDialogProps) {
 
   const handleSave = () => {
     if (!valid) return;
-    dispatch(setMapInfo({ image, transformationMatrix }));
+    dispatch(mapInfoActions.setMapInfo({ image, transformationMatrix }));
     onClose();
   };
 

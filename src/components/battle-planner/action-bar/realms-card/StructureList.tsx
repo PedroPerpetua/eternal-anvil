@@ -1,32 +1,20 @@
 import { memo } from 'react';
-import {
-  List, ListItemButton, ListItemIcon, ListItemText, Typography,
-} from '@mui/material';
-import { EntityId } from '@reduxjs/toolkit';
-import { useMap } from 'react-leaflet';
-import { shallowEqual } from 'react-redux';
+import { List, Typography } from '@mui/material';
+import type { EntityId } from '@reduxjs/toolkit';
 
-import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
+import StructureListItem from './StructureListItem';
+import { useAppSelector } from '../../../../store';
 import { structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
-import { STRUCTURES_DATA } from '../../../../utils/gameData';
-import { gameToLeaflet } from '../../../../utils/math';
-import CustomIcon from '../../../common/CustomIcon';
 
 type StructureListProps = {
-  realmId: EntityId | null
+  realmId: EntityId
 };
 
 const StructureList = memo(({ realmId }: StructureListProps) => {
-  const map = useMap();
-  const structures = useBattleMapSelector(
-    (state) => structuresSelectors.selectAll(state.structures).filter((s) => s.realm === realmId),
-    shallowEqual,
+  const structureIds = useAppSelector(
+    (state) => structuresSelectors.getStructureIdsForRealm(state, realmId),
   );
-  const transformationMatrix = useBattleMapSelector(
-    (state) => state.mapInfo.transformationMatrix,
-    shallowEqual,
-  );
-  if (structures.length === 0) {
+  if (structureIds.length === 0) {
     return (
       <Typography variant="subtitle2" color="gray" textAlign="center">
         No structures
@@ -36,24 +24,8 @@ const StructureList = memo(({ realmId }: StructureListProps) => {
   return (
     <List dense disablePadding sx={{ marginTop: '5px' }}>
       {
-        structures.map((s) => (
-          <ListItemButton
-            key={s.id}
-            onClick={() => map.setView(gameToLeaflet(transformationMatrix, s.coordinates))}
-          >
-            <ListItemIcon>
-              <CustomIcon src={STRUCTURES_DATA[s.type].icon} />
-            </ListItemIcon>
-            <ListItemText>
-              { STRUCTURES_DATA[s.type].name }
-              { ' ' }
-              (
-              { s.coordinates[0] }
-              |
-              { s.coordinates[1] }
-              )
-            </ListItemText>
-          </ListItemButton>
+        structureIds.map((structureId) => (
+          <StructureListItem key={structureId} structureId={structureId} />
         ))
       }
     </List>

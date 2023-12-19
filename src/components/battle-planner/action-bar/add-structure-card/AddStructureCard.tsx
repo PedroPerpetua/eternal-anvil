@@ -1,17 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   ListItemIcon, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
 
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { addStructureTabActions, addStructureTabSelectors } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import type { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
-import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
-import { realmSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
-import { createStructure, structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
+import { realmsSelectors } from '../../../../store/battle-planner/battle-map/realmsSlice';
+import { structuresActions, structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
 import { STRUCTURES_DATA } from '../../../../utils/gameData';
 import type { StructureType } from '../../../../utils/gameData';
 import { EMPTY_POINT, validCoordinates } from '../../../../utils/math';
@@ -24,8 +22,6 @@ import ActionBarButton from '../ActionBarButton';
 import ActionBarCard from '../ActionBarCard';
 
 const TAB_ID: ActionBarTabId = 'addStructure';
-
-const DEFAULT_STRUCTURE_TYPE: StructureType = 'TOWER';
 
 type RealmOptionProps = {
   label: string,
@@ -55,17 +51,11 @@ function AddStructureButton() {
 
 function AddStructureCard() {
   const dispatch = useAppDispatch();
-  const realms = useBattleMapSelector(
-    (state) => realmSelectors.selectAll(state.realms),
-    shallowEqual,
-  );
-  const occupiedCoordinates = useBattleMapSelector(
-    (state) => structuresSelectors.selectAll(state.structures).map((s) => s.coordinates),
-    shallowEqual,
-  );
+  const realms = useAppSelector(realmsSelectors.getRealms);
+  const occupiedCoordinates = useAppSelector(structuresSelectors.occupiedCoordinates);
   const coordinates = useAppSelector(addStructureTabSelectors.coordinates);
   const selectedRealm = useAppSelector(addStructureTabSelectors.selectedRealm);
-  const [structureType, setStructureType] = useState<StructureType>(DEFAULT_STRUCTURE_TYPE);
+  const structureType = useAppSelector(addStructureTabSelectors.structureType);
 
   useEffect(() => {
     // Make sure the selected realm exists (in case the current selected gets deleted)
@@ -87,7 +77,7 @@ function AddStructureCard() {
 
   const handleCreate = () => {
     if (selectedRealm === null) return;
-    dispatch(createStructure({
+    dispatch(structuresActions.createStructure({
       realm: selectedRealm,
       coordinates,
       type: structureType,
@@ -108,7 +98,9 @@ function AddStructureCard() {
         <TextField
           select
           value={structureType}
-          onChange={(e) => setStructureType(e.target.value as StructureType)}
+          onChange={(e) => dispatch(
+            addStructureTabActions.setStructureType(e.target.value as StructureType),
+          )}
           label="Structure Type"
         >
           { Object.entries(STRUCTURES_DATA).map(([k, data]) => (

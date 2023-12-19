@@ -3,7 +3,6 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import {
   Badge, ButtonGroup, IconButton, Stack, Typography,
 } from '@mui/material';
-import { shallowEqual } from 'react-redux';
 
 import EDGE_TOOLS from './EdgeTools';
 import type { EdgeToolMode } from './EdgeTools';
@@ -11,9 +10,7 @@ import EdgeIcon from '../../../../assets/edge-icon.png';
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import type { ActionBarTabId } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { edgesTabActions, edgesTabSelectors } from '../../../../store/battle-planner/action-bar/edgesTabSlice';
-import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
-import { deselectStructure } from '../../../../store/battle-planner/battle-map/edgesSlice';
-import { structuresSelectors } from '../../../../store/battle-planner/battle-map/structuresSlice';
+import { edgesActions, edgesSelectors } from '../../../../store/battle-planner/battle-map/edgesSlice';
 import { STRUCTURES_DATA } from '../../../../utils/gameData';
 import CustomIcon from '../../../common/CustomIcon';
 import GameButton from '../../../common/styled-components/GameButton';
@@ -62,8 +59,9 @@ function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
       <GameButton
         selected={toolMode === mode}
         onClick={() => {
+          if (toolMode === mode) return;
           dispatch(edgesTabActions.setToolMode(mode));
-          dispatch(deselectStructure());
+          dispatch(edgesActions.deselectStructure());
         }}
       >
         { children }
@@ -75,11 +73,7 @@ function EdgeToolButton({ mode, tooltip, children }: EdgeToolButtonProps) {
 function EdgesCard() {
   const dispatch = useAppDispatch();
   const toolMode = useAppSelector(edgesTabSelectors.toolMode);
-  const selectedStructure = useBattleMapSelector((state) => state.edges.currentlySelected);
-  const structure = useBattleMapSelector(
-    (state) => structuresSelectors.selectById(state.structures, selectedStructure ?? '') ?? null,
-    shallowEqual,
-  );
+  const structure = useAppSelector(edgesSelectors.currentlySelected);
   return (
     <ActionBarCard tabId={TAB_ID}>
       <Stack spacing={1}>
@@ -108,36 +102,35 @@ function EdgesCard() {
             ))
           }
         </ButtonGroup>
-        {
-          toolMode === 'select'
-            ? (
-              <Typography textAlign="center">
-                {
-                structure
-                  ? (
-                    <>
-                      { STRUCTURES_DATA[structure.type].name }
-                      { ' ' }
-                      (
-                      { ' ' }
-                      { structure.coordinates[0] }
-                      { ' ' }
-                      |
-                      { ' ' }
-                      { structure.coordinates[1] }
-                      { ' ' }
-                      )
-                      <IconButton size="small" onClick={() => dispatch(deselectStructure())}>
-                        <CancelIcon color="error" fontSize="inherit" />
-                      </IconButton>
-                    </>
-                  )
-                  : 'No structure selected'
-                }
-              </Typography>
-            )
-            : <Typography textAlign="center">{ EDGE_TOOLS[toolMode].label }</Typography>
-        }
+        <Typography textAlign="center">
+          {
+            (() => {
+              if (toolMode !== 'select') return EDGE_TOOLS[toolMode].label;
+              return structure
+                ? (
+                  <>
+                    { STRUCTURES_DATA[structure.type].name }
+                    { ' ' }
+                    (
+                    { ' ' }
+                    { structure.coordinates[0] }
+                    { ' ' }
+                    |
+                    { ' ' }
+                    { structure.coordinates[1] }
+                    { ' ' }
+                    )
+                    <IconButton
+                      size="small"
+                      onClick={() => dispatch(edgesActions.deselectStructure())}
+                    >
+                      <CancelIcon color="error" fontSize="inherit" />
+                    </IconButton>
+                  </>
+                ) : 'No structure selected';
+            })()
+          }
+        </Typography>
       </Stack>
     </ActionBarCard>
   );

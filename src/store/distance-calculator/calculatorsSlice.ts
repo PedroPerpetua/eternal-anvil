@@ -37,7 +37,7 @@ function generateCalculator(): Calculator {
 }
 
 const calculatorsAdapter = createEntityAdapter<Calculator>();
-const calculatorEntitySelectors = calculatorsAdapter.getSelectors();
+const calculatorsEntitySelectors = calculatorsAdapter.getSelectors();
 
 // Auxiliary methods for handling other regular calculatorsAdapter operations
 const removeTabFromCalculator = (
@@ -45,14 +45,14 @@ const removeTabFromCalculator = (
   calculatorId: EntityId,
   tabId: EntityId,
 ) => {
-  const calculator = calculatorEntitySelectors.selectById(state, calculatorId);
+  const calculator = calculatorsEntitySelectors.selectById(state, calculatorId);
   if (!calculator) return;
   calculatorsAdapter.updateOne(
     state,
     { id: calculator.id, changes: { tabs: calculator.tabs.filter((tId) => tId !== tabId) } },
   );
   // "Refresh from db"
-  const refreshed = calculatorEntitySelectors.selectById(state, calculator.id)!;
+  const refreshed = calculatorsEntitySelectors.selectById(state, calculator.id)!;
   // If it was left empty, delete it; otherwise, check the current tab
   if (refreshed.tabs.length === 0) calculatorsAdapter.removeOne(state, refreshed.id);
   else if (refreshed.currentTab === tabId) {
@@ -65,7 +65,7 @@ const removeTabFromCalculator = (
 const getTabCalculator = (
   state: EntityState<Calculator, EntityId>,
   tabId: EntityId,
-) => calculatorEntitySelectors.selectAll(state).find((c) => c.tabs.includes(tabId))!;
+) => calculatorsEntitySelectors.selectAll(state).find((c) => c.tabs.includes(tabId))!;
 
 // Handle calculator tabs
 type Tab = {
@@ -98,7 +98,7 @@ function generateTab(): Tab {
   };
 }
 const tabsAdapter = createEntityAdapter<Tab>();
-const tabEntitySelectors = tabsAdapter.getSelectors();
+const tabsEntitySelectors = tabsAdapter.getSelectors();
 
 // Slice
 const calculatorsSlice = createSlice({
@@ -112,7 +112,7 @@ const calculatorsSlice = createSlice({
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
       if (
-        calculatorEntitySelectors.selectTotal(state.calculators) === 0
+        calculatorsEntitySelectors.selectTotal(state.calculators) === 0
         && action.payload
       ) {
         // Create a calculator
@@ -131,7 +131,7 @@ const calculatorsSlice = createSlice({
     moveCalculator: (state, action: PayloadAction<{ calculatorId: EntityId, delta: Point }>) => {
       // This handles the DragEndEvent from DnD Kit
       const { calculatorId, delta } = action.payload;
-      const calculator = calculatorEntitySelectors.selectById(state.calculators, calculatorId);
+      const calculator = calculatorsEntitySelectors.selectById(state.calculators, calculatorId);
       if (!calculator) return;
       calculatorsAdapter.updateOne(
         state.calculators,
@@ -145,7 +145,7 @@ const calculatorsSlice = createSlice({
     },
     createTab: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
       const { calculatorId } = action.payload;
-      const calculator = calculatorEntitySelectors.selectById(state.calculators, calculatorId);
+      const calculator = calculatorsEntitySelectors.selectById(state.calculators, calculatorId);
       if (!calculator) return;
       const tab = generateTab();
       tabsAdapter.addOne(state.tabs, tab);
@@ -180,7 +180,7 @@ const calculatorsSlice = createSlice({
       if (!overId || overId === OUTSIDE_DROPPABLE_ID || tabId === overId) return;
       const tabCalculator = getTabCalculator(state.calculators, tabId);
       const overCalculator = isCalculator(overId)
-        ? calculatorEntitySelectors.selectById(state.calculators, overId)!
+        ? calculatorsEntitySelectors.selectById(state.calculators, overId)!
         : getTabCalculator(state.calculators, overId);
       // CASE: in the same container, do nothing
       if (tabCalculator === overCalculator) return;
@@ -250,7 +250,7 @@ const calculatorsSlice = createSlice({
       tabsAdapter.removeOne(state.tabs, tabId);
       const calculator = getTabCalculator(state.calculators, tabId);
       removeTabFromCalculator(state.calculators, calculator.id, tabId);
-      if (calculatorEntitySelectors.selectTotal(state.calculators) === 0) state.show = false;
+      if (calculatorsEntitySelectors.selectTotal(state.calculators) === 0) state.show = false;
     },
   },
 });
@@ -260,40 +260,42 @@ export const calculatorsActions = calculatorsSlice.actions;
 
 // Selectors
 export const calculatorsSelectors = {
+  calculatorsEntitySelectors,
   getCalculator: createSelector(
     [
       (state: RootState) => state.distanceCalculator.calculators,
-      (state: RootState, id: EntityId) => id,
+      (state: RootState, calculatorId: EntityId) => calculatorId,
     ],
-    (calculators, id) => calculatorEntitySelectors.selectById(calculators, id),
+    (calculators, calculatorId) => calculatorsEntitySelectors.selectById(calculators, calculatorId),
   ),
   getCalculatorIds: createSelector(
     [(state: RootState) => state.distanceCalculator.calculators],
-    (calculators) => calculatorEntitySelectors.selectIds(calculators),
+    (calculators) => calculatorsEntitySelectors.selectIds(calculators),
   ),
   getCalculatorTabsMap: createSelector(
     [(state: RootState) => state.distanceCalculator.calculators],
     (calculators) => Object.fromEntries(
-      calculatorEntitySelectors.selectAll(calculators).map((c) => [c.id, c.tabs]),
+      calculatorsEntitySelectors.selectAll(calculators).map((c) => [c.id, c.tabs]),
     ),
   ),
+  tabsEntitySelectors,
   getTab: createSelector(
     [
       (state: RootState) => state.distanceCalculator.tabs,
-      (state: RootState, id: EntityId) => id,
+      (state: RootState, tabId: EntityId) => tabId,
     ],
-    (tabs, id) => tabEntitySelectors.selectById(tabs, id),
+    (tabs, tabId) => tabsEntitySelectors.selectById(tabs, tabId),
   ),
   getTabIds: createSelector(
     [(state: RootState) => state.distanceCalculator.tabs],
-    (tabs) => tabEntitySelectors.selectIds(tabs),
+    (tabs) => tabsEntitySelectors.selectIds(tabs),
   ),
   tabIsActive: createSelector(
     [
       (state: RootState) => state.distanceCalculator.calculators,
       (state: RootState, tabId: EntityId) => tabId,
     ],
-    (calculators, tabId) => calculatorEntitySelectors
+    (calculators, tabId) => calculatorsEntitySelectors
       .selectAll(calculators)
       .some((c) => c.currentTab === tabId),
   ),

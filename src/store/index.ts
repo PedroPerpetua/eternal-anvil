@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import type { TypedUseSelectorHook } from 'react-redux';
 
 import battlePlannerReducers from './battle-planner';
 import distanceCalculatorReducers from './distance-calculator';
@@ -17,7 +18,6 @@ const store = configureStore({
 // Typed hooks
 export type RootState = ReturnType<typeof store.getState>;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppDispatch: () => typeof store.dispatch = useDispatch;
 
 export default store;

@@ -5,8 +5,7 @@ import ArrowIcon from '@mui/icons-material/ExpandLessSharp';
 import {
   Button, Collapse, Paper, Popover, Stack,
 } from '@mui/material';
-import { EntityId } from '@reduxjs/toolkit';
-import { shallowEqual } from 'react-redux';
+import type { EntityId } from '@reduxjs/toolkit';
 
 import StructureList from './StructureList';
 import AddStructureIcon from '../../../../assets/add-structure-icon.png';
@@ -15,8 +14,7 @@ import { useAppDispatch, useAppSelector } from '../../../../store';
 import { addStructureTabActions } from '../../../../store/battle-planner/action-bar/addStructureTabSlice';
 import { currentTabActions } from '../../../../store/battle-planner/action-bar/currentTabSlice';
 import { realmsTabActions, realmsTabSelectors } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
-import { useBattleMapSelector } from '../../../../store/battle-planner/battle-map';
-import { realmSelectors, updateRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
+import { realmsSelectors, realmsActions } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
 import ColoredAvatar from '../../../common/ColoredAvatar';
 import CustomIcon from '../../../common/CustomIcon';
@@ -24,22 +22,20 @@ import GameButton from '../../../common/styled-components/GameButton';
 import TypographyTextField from '../../../common/TypographyTextField';
 
 type RealmListItemProps = {
-  id: EntityId,
+  realmId: EntityId,
 };
 
-const RealmListItem = memo(({ id }: RealmListItemProps) => {
+const RealmListItem = memo(({ realmId }: RealmListItemProps) => {
   const dispatch = useAppDispatch();
-  const isOpen = useAppSelector((state) => realmsTabSelectors.realmIsOpen(state, id));
-  const realm = useBattleMapSelector(
-    (state) => (realmSelectors.selectById(state.realms, id)),
-    shallowEqual,
-  );
+  const isOpen = useAppSelector((state) => realmsTabSelectors.realmIsOpen(state, realmId));
+  const realm = useAppSelector((state) => realmsSelectors.getRealm(state, realmId));
   const [colorChangeAnchor, setColorChangeAnchor] = useState<HTMLDivElement | null>(null);
-  if (!realm) return null;
   return (
     <Paper sx={{ padding: '5px' }}>
       <Stack
-        onClick={() => dispatch(realmsTabActions.setOpenRealm({ realmId: isOpen ? null : id }))}
+        onClick={() => dispatch(
+          realmsTabActions.setOpenRealm({ realmId: isOpen ? null : realmId }),
+        )}
         className="clickable"
         direction="row"
         justifyContent="space-between"
@@ -95,7 +91,9 @@ const RealmListItem = memo(({ id }: RealmListItemProps) => {
           >
             <TwitterPicker
               color={realm.color}
-              onChangeComplete={(c) => dispatch(updateRealm({ id, changes: { color: c.hex } }))}
+              onChangeComplete={(c) => dispatch(
+                realmsActions.updateRealm({ realmId, changes: { color: c.hex } }),
+              )}
               defaultColor={DEFAULT_REALM_COLORS[0]}
               colors={DEFAULT_REALM_COLORS}
               triangle="hide"
@@ -105,7 +103,9 @@ const RealmListItem = memo(({ id }: RealmListItemProps) => {
           <TypographyTextField
             value={realm.name}
             valueIfEmpty="Realm"
-            onChange={(newName) => dispatch(updateRealm({ id, changes: { name: newName } }))}
+            onChange={(newName) => dispatch(
+              realmsActions.updateRealm({ realmId, changes: { name: newName } }),
+            )}
             editable={isOpen}
             textFieldProps={{
               multiline: true,
@@ -134,7 +134,7 @@ const RealmListItem = memo(({ id }: RealmListItemProps) => {
           <GameButton
             size="small"
             onClick={() => {
-              dispatch(addStructureTabActions.setSelectedRealm({ realmId: id }));
+              dispatch(addStructureTabActions.setSelectedRealm({ realmId }));
               dispatch(currentTabActions.changeTab('addStructure'));
             }}
           >

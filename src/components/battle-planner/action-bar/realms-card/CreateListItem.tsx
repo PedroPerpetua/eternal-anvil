@@ -7,7 +7,7 @@ import {
 
 import { useAppDispatch, useAppSelector } from '../../../../store';
 import { CREATE_REALM_ID, realmsTabActions, realmsTabSelectors } from '../../../../store/battle-planner/action-bar/realmsTabSlice';
-import { createRealm } from '../../../../store/battle-planner/battle-map/realmsSlice';
+import { realmsActions } from '../../../../store/battle-planner/battle-map/realmsSlice';
 import { DEFAULT_REALM_COLORS } from '../../../../utils/gameData';
 import GameButton from '../../../common/styled-components/GameButton';
 
@@ -21,7 +21,7 @@ function CreateListItem() {
   const [color, setColor] = useState(DEFAULT_COLOR);
 
   const handleCreate = () => {
-    dispatch(createRealm({ name: realmName, color }));
+    dispatch(realmsActions.createRealm({ name: realmName, color }));
     setRealmName(DEFAULT_REALM_NAME);
     setColor(DEFAULT_COLOR);
     dispatch(realmsTabActions.setOpenRealm({ realmId: null }));

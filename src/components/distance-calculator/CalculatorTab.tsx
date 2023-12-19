@@ -75,6 +75,8 @@ export const DraggableCalculatorTabButton = memo((
     setNodeRef,
     transform,
     transition,
+    // TODO: there's a bug with the disabled here; it doesn't allow us to drop into other
+    // containers if it's just the one tab
   } = useSortable({ id: tabId, disabled: disableDrag, resizeObserverConfig: {} });
   const active = useAppSelector((state) => calculatorsSelectors.tabIsActive(state, tabId));
   const draggingTab = useAppSelector(calculatorsSelectors.draggingTab);
