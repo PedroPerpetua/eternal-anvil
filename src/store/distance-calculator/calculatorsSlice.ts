@@ -16,6 +16,7 @@ type Calculator = {
   position: Point,
   currentTab: EntityId | null,
   tabs: EntityId[],
+  order: number, // For zIndex purposes
 };
 
 // Ids for DnD kit
@@ -33,6 +34,7 @@ function generateCalculator(): Calculator {
     position: [(window.innerWidth - 300) / 2, (window.innerHeight - 454) / 2],
     currentTab: null,
     tabs: [],
+    order: 0,
   };
 }
 
@@ -108,6 +110,7 @@ const calculatorsSlice = createSlice({
     tabs: tabsAdapter.getInitialState(),
     show: false,
     draggingTab: (null as EntityId | null),
+    highestOrder: 0, // To sort zIndex
   },
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -132,15 +135,24 @@ const calculatorsSlice = createSlice({
       // This handles the DragEndEvent from DnD Kit
       const { calculatorId, delta } = action.payload;
       const calculator = calculatorsEntitySelectors.selectById(state.calculators, calculatorId);
-      if (!calculator) return;
+      state.highestOrder += 1;
       calculatorsAdapter.updateOne(
         state.calculators,
         {
           id: calculator.id,
           changes: {
             position: [calculator.position[0] + delta[0], calculator.position[1] + delta[1]],
+            order: state.highestOrder,
           },
         },
+      );
+    },
+    bringCalculatorToFront: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
+      const { calculatorId } = action.payload;
+      state.highestOrder += 1;
+      calculatorsAdapter.updateOne(
+        state.calculators,
+        { id: calculatorId, changes: { order: state.highestOrder } },
       );
     },
     createTab: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
@@ -270,7 +282,11 @@ export const calculatorsSelectors = {
   ),
   getCalculatorIds: createSelector(
     [(state: RootState) => state.distanceCalculator.calculators],
-    (calculators) => calculatorsEntitySelectors.selectIds(calculators),
+    (calculators) => (
+      calculatorsEntitySelectors.selectAll(calculators)
+        .sort((a, b) => a.order - b.order)
+        .map((calc) => calc.id)
+    ),
   ),
   getCalculatorTabsMap: createSelector(
     [(state: RootState) => state.distanceCalculator.calculators],

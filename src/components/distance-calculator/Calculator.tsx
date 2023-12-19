@@ -21,6 +21,7 @@ const Calculator = memo(({ calculatorId }: CalculatorProps) => {
     transform,
     setNodeRef,
     setActivatorNodeRef,
+    isDragging,
   } = useDraggable({ id: calculatorId });
   const { setNodeRef: setDroppableNodeRef } = useDroppable({ id: calculatorId });
 
@@ -51,8 +52,9 @@ const Calculator = memo(({ calculatorId }: CalculatorProps) => {
         padding: 0,
         width: '300px',
         border: '1px solid black',
-        zIndex: 1001, // over leaflet
+        zIndex: 1001 + (isDragging ? 1 : 0), // over leaflet
       }}
+      onClick={() => dispatch(calculatorsActions.bringCalculatorToFront({ calculatorId }))}
     >
       <Stack
         direction="row"
