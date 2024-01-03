@@ -2,13 +2,12 @@ import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolk
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 import { shallowEqual } from 'react-redux';
 
-import { realmsActions, realmsSelectors } from './realmsSlice';
+import { realmsSelectors } from './realmsSlice';
 import type { RootState } from '../..';
 import { STRUCTURES_DATA } from '../../../utils/gameData';
 import type { StructureType } from '../../../utils/gameData';
 import type { Point } from '../../../utils/math';
 import { generateId } from '../../../utils/utilities';
-import { startListening } from '../../listenerMiddleware';
 
 type Structure = {
   id: EntityId,
@@ -111,11 +110,3 @@ export const structuresSelectors = {
 };
 
 export default structuresSlice.reducer;
-
-// Bind the cascadeRealmDelete - when we delete a realm, all of it's structures should be deleted
-startListening({
-  actionCreator: realmsActions.deleteRealm,
-  effect: async (action, listenerApi) => {
-    listenerApi.dispatch(structuresSlice.actions.cascadeRealmDelete(action.payload));
-  },
-});

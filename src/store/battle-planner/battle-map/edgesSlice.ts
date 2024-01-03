@@ -2,11 +2,10 @@ import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolk
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 import { realmsSelectors } from './realmsSlice';
-import { structuresActions, structuresSelectors } from './structuresSlice';
+import { structuresSelectors } from './structuresSlice';
 import type { RootState } from '../..';
 import { blendColors } from '../../../utils/images';
 import { generateId } from '../../../utils/utilities';
-import { startListening } from '../../listenerMiddleware';
 
 type Edge = {
   id: EntityId,
@@ -53,10 +52,10 @@ const edgesSlice = createSlice({
       const { edgeId } = action.payload;
       edgesAdapter.removeOne(state, edgeId);
     },
-    cascadeStructureDelete: (state, action: PayloadAction<{ structureId: EntityId }>) => {
-      const { structureId } = action.payload;
+    cascadeStructureDelete: (state, action: PayloadAction<{ structureIds: EntityId[] }>) => {
+      const { structureIds } = action.payload;
       const toRemove = edgesEntitySelectors.selectAll(state)
-        .filter((e) => e.structure1 === structureId || e.structure2 === structureId)
+        .filter((e) => structureIds.includes(e.structure1) || structureIds.includes(e.structure2))
         .map((e) => e.id);
       return edgesAdapter.removeMany(state, toRemove);
     },
@@ -114,15 +113,3 @@ export const edgesSelectors = {
 };
 
 export default edgesSlice.reducer;
-
-// Bind the cascadeStructureDelete - when we delete a structures, all the edges that include it
-// should be removed
-startListening({
-  actionCreator: structuresActions.deleteStructure,
-  effect: async (action, listenerApi) => {
-    listenerApi.dispatch(edgesSlice.actions.cascadeStructureDelete(action.payload));
-  },
-});
-
-// TODO: there's currently a bug where deleting a realm doesn't cascade to deleting an edge
-// See https://stackoverflow.com/questions/77687174/
