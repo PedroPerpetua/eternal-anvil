@@ -1,11 +1,11 @@
 /* eslint import/no-extraneous-dependencies: 0 */
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import eslint from 'vite-plugin-eslint';
+import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
-
+import eslint from 'vite-plugin-eslint';
 
 export default defineConfig({
+  base: '/eternal-anvil/',
   plugins: [
     react(),
     eslint({ fix: true, lintOnStart: true }),

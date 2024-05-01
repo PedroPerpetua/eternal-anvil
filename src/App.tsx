@@ -1,21 +1,8 @@
-import { Grid, Typography } from '@mui/material';
-
+import WebsiteLayout from './components/website/WebsiteLayout';
 
 function App() {
   return (
-    <Grid
-      container
-      alignItems="center"
-      justifyContent="center"
-      direction="column"
-      minHeight="100vh"
-      bgcolor="#242424"
-      color="white"
-    >
-      <Typography variant="h1" fontWeight="bold">
-        react-vite-boilerplate
-      </Typography>
-    </Grid>
+    <WebsiteLayout />
   );
 }
 
