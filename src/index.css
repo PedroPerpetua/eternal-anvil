@@ -17,3 +17,14 @@ body {
   -o-user-select: none;
   user-select: none;
 }
+
+.disable-number-spin::-webkit-outer-spin-button,
+.disable-number-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.disable-number-spin {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}

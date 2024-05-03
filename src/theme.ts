@@ -12,6 +12,7 @@ export const gameColors = {
     dark: '#745b29',
     darker: '#3a2d14',
   },
+  goldIcon: '#d8bc68',
 };
 
 const theme = createTheme({

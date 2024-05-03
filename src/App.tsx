@@ -1,10 +1,12 @@
-import ShowCalculatorsButton from './components/calculator/ShowCalculatorsButton';
+import CalculatorsOverlay from './components/calculators/CalculatorsOverlay';
+import ShowCalculatorsButton from './components/calculators/ShowCalculatorsButton';
 import WebsiteLayout from './components/website/WebsiteLayout';
 
 function App() {
   return (
     <WebsiteLayout>
       <ShowCalculatorsButton />
+      <CalculatorsOverlay />
     </WebsiteLayout>
   );
 }
