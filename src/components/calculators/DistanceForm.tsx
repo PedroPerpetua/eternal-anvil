@@ -10,11 +10,11 @@ import type { CalculatorTab } from '../../store/calculators';
 import CoordinateInput from '../common/CoordinateInput';
 import SimpleNumberField from '../common/SimpleNumberField';
 
-type CalculatorFormProps = {
+type DistanceFormProps = {
   tabId: EntityId
 };
 
-function CalculatorForm({ tabId }: CalculatorFormProps) {
+function DistanceForm({ tabId }: DistanceFormProps) {
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const update = useCallback((changes: Partial<Omit<CalculatorTab, 'id'>>) => {
@@ -55,7 +55,7 @@ function CalculatorForm({ tabId }: CalculatorFormProps) {
           <Typography color={distance !== null ? undefined : 'gray'}>
             Distance:
           </Typography>
-          <Typography sx={{ fontWeight: 'bold' }}>
+          <Typography>
             { formatDistance(distance) }
           </Typography>
         </Stack>
@@ -63,7 +63,7 @@ function CalculatorForm({ tabId }: CalculatorFormProps) {
           <Typography color={time !== null ? undefined : 'gray'}>
             Time:
           </Typography>
-          <Typography sx={{ fontWeight: 'bold' }}>
+          <Typography>
             { formatSeconds(time) }
           </Typography>
         </Stack>
@@ -72,4 +72,4 @@ function CalculatorForm({ tabId }: CalculatorFormProps) {
   );
 }
 
-export default CalculatorForm;
+export default DistanceForm;

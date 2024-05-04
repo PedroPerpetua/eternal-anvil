@@ -27,16 +27,19 @@ const calculatorsEntitySelectors = calculatorsAdapter.getSelectors();
 export type CalculatorTab = {
   id: EntityId,
   name: string,
+  mini: boolean,
   point1: [number | null, number | null],
   point2: [number | null, number | null],
   penalty: number | null,
   speed: number | null,
 };
 
+export const defaultTabName = 'Tab';
 function generateTab(): CalculatorTab {
   return {
     id: generateId(),
-    name: 'Calculator',
+    name: defaultTabName,
+    mini: false,
     point1: [null, null],
     point2: [null, null],
     penalty: 0,
@@ -91,6 +94,10 @@ const calculatorsSlice = createSlice({
         tabsAdapter.addOne(state.tabs, tab);
       }
       state.show = action.payload;
+    },
+    updateCalculator: (state, action: PayloadAction<{ calculatorId: EntityId, changes: Partial<Omit<Calculator, 'id'>> }>) => {
+      const { calculatorId, changes } = action.payload;
+      calculatorsAdapter.updateOne(state, { id: calculatorId, changes });
     },
     createTab: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
       const { calculatorId } = action.payload;
