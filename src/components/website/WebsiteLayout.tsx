@@ -3,6 +3,7 @@ import { Box, Container } from '@mui/material';
 
 import Footer from './Footer';
 import Header from './Header';
+import { backgroundColor } from '../../theme';
 
 type WebsiteLayoutProps = PropsWithChildren<object>;
 
@@ -12,7 +13,7 @@ function WebsiteLayout({ children }: WebsiteLayoutProps) {
       height: '100vh',
       display: 'flex',
       flexDirection: 'column',
-      backgroundColor: '#9e8357',
+      backgroundColor,
     }}
     >
       <Header />

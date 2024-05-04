@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material';
 
+export const backgroundColor = '#9e8357';
+
 export const gameColors = {
   teal: {
     main: '#285e51',
@@ -17,9 +19,6 @@ export const gameColors = {
 
 const theme = createTheme({
   palette: {
-    background: {
-      default: '#180E07ff',
-    },
     primary: {
       main: '#863594ff',
     },

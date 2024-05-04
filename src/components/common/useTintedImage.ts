@@ -1,18 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Image, Stack } from 'image-js';
-import type { ImageKind } from 'image-js';
 
-/**
- * Convert a hex color value into RGB values.
- * @param colorHex The hex value of the color to convert.
- * @returns Three values corresponding to red, green and blue.
- */
-function hexToRGB(colorHex: string) {
-  const convertRGB = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorHex);
-  if (!convertRGB) return [0, 0, 0] as [number, number, number];
-  convertRGB.shift();
-  return convertRGB.map((v) => parseInt(v, 16)) as [number, number, number];
-}
+import { generateColoredImage } from './utils';
 
 /**
  * Tint an image from a URL with the given color. This is achieved by stacking a solid image filled
@@ -24,23 +13,7 @@ function hexToRGB(colorHex: string) {
 async function tintImage(imageURL: string, color: string) {
   const originalImage = await Image.load(imageURL);
   // Create an overlay that's just the solid color
-  const [red, green, blue] = hexToRGB(color);
-  const pixelCount = originalImage.width * originalImage.height;
-  const pixelBitSize = 4; // RGBA;
-  const colorArray = new Uint8Array(pixelCount * pixelBitSize);
-  for (let i = 0; i < pixelCount; i += 1) {
-    const offset = i * pixelBitSize;
-    colorArray[offset] = red;
-    colorArray[offset + 1] = green;
-    colorArray[offset + 2] = blue;
-    colorArray[offset + 3] = 255; // Alpha
-  }
-  const colorOverlay = new Image({
-    width: originalImage.width,
-    height: originalImage.height,
-    kind: 'RGBA' as ImageKind,
-    data: colorArray,
-  });
+  const colorOverlay = generateColoredImage(color, originalImage.width, originalImage.height);
   // Stack them and get the result
   const stack = new Stack([colorOverlay, originalImage]);
   return stack.getMinImage().toDataURL();

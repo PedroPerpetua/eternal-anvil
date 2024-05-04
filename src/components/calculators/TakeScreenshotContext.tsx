@@ -5,7 +5,11 @@ import {
 import type { PropsWithChildren, RefObject } from 'react';
 import { Alert, Portal, Snackbar } from '@mui/material';
 import type { AlertColor } from '@mui/material';
+import { Image } from 'image-js';
 import { useScreenshot } from 'use-react-screenshot';
+
+import { backgroundColor } from '../../theme';
+import { generateColoredImage } from '../common/utils';
 
 type TakeScreenshotContextType = {
   elementRef: RefObject<HTMLDivElement>,
@@ -19,7 +23,10 @@ const TakeScreenshotContext = createContext<TakeScreenshotContextType>({
 
 function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) {
   const ref = useRef<HTMLDivElement>(null);
-  const [image, takeScreenshot] = useScreenshot();
+  const [image, takeScreenshot] = useScreenshot({
+    type: 'image/png',
+    quality: 1.0,
+  });
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('info');
 
@@ -27,8 +34,22 @@ function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) 
     if (image === null) return;
     const effect = async () => {
       try {
-        const imgFile = await fetch(image);
-        const blob = await imgFile.blob();
+        const imageVar = await Image.load(image);
+        // Create a background margin
+        const margin = 50;
+        const output = generateColoredImage(
+          backgroundColor,
+          imageVar.width + margin * 2,
+          imageVar.height + margin * 2,
+        );
+        // Put the image over the output, with the margin set appropriately
+        for (let i = 0; i < imageVar.width; i += 1) {
+          for (let j = 0; j < imageVar.height; j += 1) {
+            output.setPixelXY(margin + i, margin + j, imageVar.getPixelXY(i, j));
+          }
+        }
+        // Put the image in the clipboard
+        const blob = await output.toBlob();
         await navigator.clipboard.write([
           new ClipboardItem({
             [blob.type]: blob,
@@ -37,6 +58,7 @@ function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) 
         setSnackbarSeverity('success');
         setSnackbarMessage('Successfully copied image to clipboard.');
       } catch (e) {
+        setSnackbarSeverity('error');
         setSnackbarMessage('An error occurred: failed to copy image to clipboard.');
         console.error('Failed to copy image to clipboard', e);
       }
@@ -48,7 +70,7 @@ function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) 
     elementRef: ref,
     takeScreenshot: () => {
       if (!ref.current) return;
-      takeScreenshot(ref.current);
+      takeScreenshot(ref.current, { backgroundColor });
     },
   }), [takeScreenshot]);
   return (
