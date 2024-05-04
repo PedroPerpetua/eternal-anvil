@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
-import type { EntityId, EntityState, PayloadAction } from '@reduxjs/toolkit';
+import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 import { generateId } from './utils';
 
@@ -50,12 +50,22 @@ function generateTab(): CalculatorTab {
 const tabsAdapter = createEntityAdapter<CalculatorTab>();
 const tabsEntitySelectors = tabsAdapter.getSelectors();
 
-// Auxiliary method
-const removeTabFromCalculator = (
-  state: EntityState<Calculator, EntityId>,
+// Auxiliary methods
+function createCalculator(state: ReturnType<typeof calculatorsSlice.getInitialState>) {
+  const calculator = generateCalculator();
+  const tab = generateTab();
+  calculator.tabs.push(tab.id);
+  calculator.currentTab = tab.id;
+  calculatorsAdapter.addOne(state, calculator);
+  tabsAdapter.addOne(state.tabs, tab);
+  return calculator;
+}
+
+function removeTabFromCalculator(
+  state: ReturnType<typeof calculatorsSlice.getInitialState>,
   calculatorId: EntityId,
   tabId: EntityId,
-) => {
+) {
   const calculator = calculatorsEntitySelectors.selectById(state, calculatorId);
   if (!calculator) return;
   calculatorsAdapter.updateOne(
@@ -72,7 +82,7 @@ const removeTabFromCalculator = (
       { id: refreshed.id, changes: { currentTab: refreshed.tabs.at(-1) } },
     );
   }
-};
+}
 
 // Slice ---------------------------------------------------------------------
 const calculatorsSlice = createSlice({
@@ -85,15 +95,13 @@ const calculatorsSlice = createSlice({
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
       if (calculatorsEntitySelectors.selectTotal(state) === 0 && action.payload) {
-        // No calculators to show; let's create one with a tab.
-        const calculator = generateCalculator();
-        const tab = generateTab();
-        calculator.tabs.push(tab.id);
-        calculator.currentTab = tab.id;
-        calculatorsAdapter.addOne(state, calculator);
-        tabsAdapter.addOne(state.tabs, tab);
+        // No calculators to show; let's create one
+        createCalculator(state);
       }
       state.show = action.payload;
+    },
+    createCalculator: (state) => {
+      createCalculator(state);
     },
     updateCalculator: (state, action: PayloadAction<{ calculatorId: EntityId, changes: Partial<Omit<Calculator, 'id'>> }>) => {
       const { calculatorId, changes } = action.payload;

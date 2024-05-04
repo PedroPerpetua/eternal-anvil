@@ -22,6 +22,7 @@ const theme = createTheme({
     primary: {
       main: '#863594ff',
     },
+    secondary: gameColors.teal,
   },
 });
 
