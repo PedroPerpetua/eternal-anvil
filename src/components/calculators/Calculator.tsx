@@ -3,6 +3,7 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import CalculatorTab from './CalculatorTab';
+import TakeScreenshotContextProvider, { useTakeScreenshotRef } from './TakeScreenshotContext';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 import { gameColors } from '../../theme';
@@ -11,11 +12,13 @@ type CalculatorProps = {
   calculatorId: EntityId
 };
 
-function Calculator({ calculatorId }: CalculatorProps) {
+function CalculatorImpl({ calculatorId }: CalculatorProps) {
   const dispatch = useAppDispatch();
   const calculator = useAppSelector(
     (state) => calculatorsSelectors.getCalculator(state, calculatorId),
   );
+
+  const screenshotRef = useTakeScreenshotRef();
 
   const horizontalScrollerRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
@@ -27,12 +30,14 @@ function Calculator({ calculatorId }: CalculatorProps) {
   }, []);
 
   return (
-    <Box sx={{
-      width: '300px',
-      backgroundColor: 'white',
-      borderRadius: '5px',
-      border: '1px solid black',
-    }}
+    <Box
+      ref={screenshotRef}
+      sx={{
+        width: '300px',
+        backgroundColor: 'white',
+        borderRadius: '5px',
+        border: '1px solid black',
+      }}
     >
       <Stack direction="row" sx={{ marginBottom: '-10px' }}>
         <Stack
@@ -83,6 +88,14 @@ function Calculator({ calculatorId }: CalculatorProps) {
           )
       }
     </Box>
+  );
+}
+
+function Calculator(props: CalculatorProps) {
+  return (
+    <TakeScreenshotContextProvider>
+      <CalculatorImpl {...props} />
+    </TakeScreenshotContextProvider>
   );
 }
 

@@ -1,12 +1,10 @@
-import EastIcon from '@mui/icons-material/East';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
-import WestIcon from '@mui/icons-material/West';
-import { Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import {
   calculateDistance, calculateTime, customPenalty, formatDistance, formatSeconds, penalties,
 } from './utils';
+import DistanceIcon from '../../assets/distance-icon.png';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import CustomIcon from '../common/CustomIcon';
@@ -35,20 +33,18 @@ function MiniDisplay({ tabId }: MiniDisplayProps) {
 
   return (
     <Stack spacing={1} sx={{ padding: '20px' }}>
-      <Typography sx={{ textAlign: 'center' }}>{ tab.name }</Typography>
-      <Stack direction="row" justifyContent="space-around">
-        <Typography>
-          { `(${parse(tab.point1[0])} | ${parse(tab.point1[1])})` }
-        </Typography>
-        <Stack direction="row" spacing={-1}>
-          <WestIcon />
-          <HorizontalRuleIcon />
-          <EastIcon />
+      { /* Required wrapper to set the margin on the child element */ }
+      <Box>
+        <Stack direction="row" alignItems="center" justifyContent="space-evenly" marginY="-10px">
+          <Typography>
+            { `(${parse(tab.point1[0])} | ${parse(tab.point1[1])})` }
+          </Typography>
+          <CustomIcon src={DistanceIcon} size={[48, 24]} />
+          <Typography>
+            { `(${parse(tab.point2[0])} | ${parse(tab.point2[1])})` }
+          </Typography>
         </Stack>
-        <Typography>
-          { `(${parse(tab.point2[0])} | ${parse(tab.point2[1])})` }
-        </Typography>
-      </Stack>
+      </Box>
       <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
         <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} />
         <Typography sx={{ textAlign: 'center' }}>

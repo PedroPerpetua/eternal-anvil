@@ -7,6 +7,7 @@ import type { EntityId } from '@reduxjs/toolkit';
 
 import DistanceForm from './DistanceForm';
 import MiniDisplay from './MiniDisplay';
+import { useTakeScreenshot } from './TakeScreenshotContext';
 import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors, defaultTabName } from '../../store/calculators';
@@ -33,6 +34,7 @@ function TabButton({ tabId }: TabButtonProps) {
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const active = useAppSelector((state) => calculatorsSelectors.getTabActive(state, tabId));
+  const takeScreenshot = useTakeScreenshot();
 
   const update = useCallback((changes: Partial<Omit<CalculatorTabType, 'id'>>) => {
     dispatch(calculatorsActions.updateTab({ tabId, changes }));
@@ -61,7 +63,11 @@ function TabButton({ tabId }: TabButtonProps) {
         {
           active && (
             <Stack direction="row" spacing={1}>
-              <MiniIconButton primary={gameColors.teal.main} secondary={gameColors.teal.dark}>
+              <MiniIconButton
+                primary={gameColors.teal.main}
+                secondary={gameColors.teal.dark}
+                onClick={() => takeScreenshot()}
+              >
                 <ShareIcon style={{ color: gameColors.goldIcon, fontSize: 16 }} />
               </MiniIconButton>
               <MiniIconButton

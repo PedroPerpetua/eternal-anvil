@@ -17,6 +17,7 @@ type DistanceFormProps = {
 function DistanceForm({ tabId }: DistanceFormProps) {
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
+
   const update = useCallback((changes: Partial<Omit<CalculatorTab, 'id'>>) => {
     dispatch(calculatorsActions.updateTab({ tabId, changes }));
   }, [dispatch, tabId]);
