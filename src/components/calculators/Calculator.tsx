@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { Box, Button, Stack, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import CalculatorTab from './CalculatorTab';
@@ -7,6 +8,7 @@ import TakeScreenshotContextProvider, { useTakeScreenshotRef } from './TakeScree
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 import { gameColors } from '../../theme';
+import TealMiniIconButton from '../common/styled/TealMiniIconButton';
 
 type CalculatorProps = {
   calculatorId: EntityId
@@ -48,6 +50,7 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
             flex: 1,
             overflowX: 'scroll',
             scrollBehavior: 'smooth',
+            height: '48px',
             '&::-webkit-scrollbar': {
               height: '10px',
             },
@@ -65,10 +68,15 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
               <CalculatorTab.Button key={tabId} tabId={tabId} />
             ))
           }
-          <Box sx={{ borderBottom: '1px solid black', flex: 1, minWidth: '100px' }}>
-            <Button onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}>
-              New Tab
-            </Button>
+          <Box
+            sx={{ borderBottom: '1px solid black', padding: '5px' }}
+            className="center-content"
+          >
+            <TealMiniIconButton
+              Icon={AddIcon}
+              size={24}
+              onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
+            />
           </Box>
         </Stack>
       </Stack>
