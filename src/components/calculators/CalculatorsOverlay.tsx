@@ -33,7 +33,8 @@ function MobileCalculators() {
             transform: 'translate(-50%, -50%)',
             width: '90vw',
             height: '90vh',
-            overflow: 'auto',
+            overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
+            overflowX: 'hidden',
             '&::-webkit-scrollbar': { display: 'none' },
           }}
           ref={gridRef}

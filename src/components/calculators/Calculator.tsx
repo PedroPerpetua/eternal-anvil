@@ -37,6 +37,8 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
         backgroundColor: 'white',
         borderRadius: '5px',
         border: '1px solid black',
+        height: 'fit-content',
+        alignSelf: 'center',
       }}
     >
       <Stack direction="row" sx={{ marginBottom: '-10px' }}>

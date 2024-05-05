@@ -5,13 +5,15 @@ function useElementDimensions() {
   const [height, setHeight] = useState(0);
   const observer = useRef(new ResizeObserver((entries) => {
     // We should only ever have one entry
-    const node = entries[0];
+    const node = entries.at(0);
+    if (!node) return;
     const { width: newWidth, height: newHeight } = node.contentRect;
     setWidth(newWidth);
     setHeight(newHeight);
   }));
 
-  const ref = useCallback((node: HTMLElement) => {
+  const ref = useCallback((node: HTMLElement | null) => {
+    if (!node) return;
     // Set the initial dimensions
     const { width: initialWidth, height: initialHeight } = node.getBoundingClientRect();
     setWidth(initialWidth);
