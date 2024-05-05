@@ -6,7 +6,7 @@ export const gameColors = {
   teal: {
     main: '#285e51',
     light: '#40766c',
-    dark: '#285d52',
+    dark: '#1e463d',
     text: '#e9dfc2',
   },
   gold: {

@@ -68,6 +68,7 @@ function removeTabFromCalculator(
 ) {
   const calculator = calculatorsEntitySelectors.selectById(state, calculatorId);
   if (!calculator) return;
+  const originalIndex = calculator.tabs.indexOf(tabId);
   calculatorsAdapter.updateOne(
     state,
     { id: calculator.id, changes: { tabs: calculator.tabs.filter((tId) => tId !== tabId) } },
@@ -77,9 +78,13 @@ function removeTabFromCalculator(
   // If it was left empty, delete it; otherwise, check the current tab
   if (refreshed.tabs.length === 0) calculatorsAdapter.removeOne(state, refreshed.id);
   else if (refreshed.currentTab === tabId) {
+    let newIndex;
+    // Was the last element
+    if (originalIndex === refreshed.tabs.length) newIndex = -1;
+    else newIndex = originalIndex; // Make it the next tab
     calculatorsAdapter.updateOne(
       state,
-      { id: refreshed.id, changes: { currentTab: refreshed.tabs.at(-1) } },
+      { id: refreshed.id, changes: { currentTab: refreshed.tabs.at(newIndex) } },
     );
   }
 }
