@@ -1,12 +1,11 @@
-import { useRef, useState } from 'react';
 import { Box, Modal, useMediaQuery, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-import useResizeObserver from '@react-hook/resize-observer';
 
 import Calculator from './Calculator';
 import MobileMenu from './MobileMenu';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
+import useElementDimensions from '../common/useElementDimensions';
 
 type OffsetBoxProps = {
   extraOffset?: number
@@ -19,12 +18,8 @@ function OffsetBox({ extraOffset = 0 }: OffsetBoxProps) {
 function MobileCalculators() {
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
 
-  const gridRef = useRef<HTMLElement>(null);
-  const [numOfCols, setNumOfCols] = useState(1);
-  useResizeObserver(
-    gridRef,
-    (res) => setNumOfCols(Math.max(1, Math.floor(res.contentRect.width / 310))),
-  );
+  const { width, ref: gridRef } = useElementDimensions();
+  const numOfCols = Math.max(1, Math.floor(width / 310));
 
   return (
     <Modal open>
