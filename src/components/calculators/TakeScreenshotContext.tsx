@@ -8,6 +8,7 @@ import type { AlertColor } from '@mui/material';
 import { Image } from 'image-js';
 import { useScreenshot } from 'use-react-screenshot';
 
+import { ellipsizeText } from './utils';
 import { backgroundColor } from '../../theme';
 import { generateColoredImage } from '../common/utils';
 
@@ -70,7 +71,36 @@ function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) 
     elementRef: ref,
     takeScreenshot: () => {
       if (!ref.current) return;
-      takeScreenshot(ref.current, { backgroundColor });
+      takeScreenshot(ref.current, {
+        backgroundColor,
+        onclone: (doc, el) => {
+          // Remove the non-active tabs
+          el.querySelectorAll('[data-active=\'inactive\']').forEach((t) => t.remove());
+          // Modify the tab
+          const tab = el.querySelector<HTMLDivElement>('[data-active=\'active\']');
+          if (!tab) return;
+          // Remove all buttons
+          tab.querySelector('[data-name=\'buttons-container\']')?.remove();
+          // Remove the add button
+          if (tab.nextElementSibling) tab.parentElement?.removeChild(tab.nextElementSibling);
+          // Remove the right border
+          tab.style.borderRightWidth = '0px';
+          // Center the title and add ellipsis if needed
+          const title = tab.querySelector('p');
+          if (title) {
+            // Center the title
+            title.style.paddingTop = '5px';
+            title.style.textAlign = 'center';
+            title.style.width = '100%';
+            // Ellipsize-it; See https://github.com/niklasvh/html2canvas/issues/2262
+            title.textContent = ellipsizeText(
+              title.textContent ?? '',
+              window.getComputedStyle(title).getPropertyValue('font'),
+              el.getBoundingClientRect().width - 24,
+            );
+          }
+        },
+      });
     },
   }), [takeScreenshot]);
   return (

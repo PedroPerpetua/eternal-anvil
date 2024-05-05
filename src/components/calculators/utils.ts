@@ -94,3 +94,25 @@ export function formatSeconds(seconds: number | null) {
 
   return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(finalSeconds, 2)}`;
 }
+
+export function measureTextWidth(text: string, fontDef: string) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return 0;
+  ctx.font = fontDef;
+  const metrics = ctx.measureText(text);
+  return metrics.width;
+}
+
+export function ellipsizeText(text: string, fontDef: string, maxWidth: number) {
+  const textWidth = measureTextWidth(text, fontDef);
+  if (textWidth <= maxWidth) return text;
+  for (let i = text.length - 1; i >= 0; i -= 1) {
+    const newText = `${text.substring(0, i)}...`;
+    const newWidth = measureTextWidth(newText, fontDef);
+    if (newWidth <= maxWidth) {
+      return newText;
+    }
+  }
+  return '';
+}

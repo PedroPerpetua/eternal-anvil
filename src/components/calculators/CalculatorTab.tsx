@@ -73,6 +73,8 @@ function TabButton({ tabId }: TabButtonProps) {
       }}
       onClick={() => dispatch(calculatorsActions.selectTab({ tabId }))}
       ref={scrollRef}
+      // For screenshot purposes
+      data-active={active ? 'active' : 'inactive'}
     >
       <Stack
         direction="row"
@@ -106,7 +108,12 @@ function TabButton({ tabId }: TabButtonProps) {
         }
         {
           active && (
-            <Stack direction="row" spacing={0.5}>
+            <Stack
+              direction="row"
+              spacing={0.5}
+              // For screenshot purposes
+              data-name="buttons-container"
+            >
               <TealMiniIconButton
                 Icon={editingName ? DoneIcon : EditIcon}
                 onClick={() => handleSaveName()}
