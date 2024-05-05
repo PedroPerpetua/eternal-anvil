@@ -2,7 +2,7 @@ import { Box, Modal, useMediaQuery, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 import Calculator from './Calculator';
-import MobileMenu from './MobileMenu';
+import GridOverlayMenu from './GridOverlayMenu';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
@@ -15,7 +15,7 @@ function OffsetBox({ extraOffset = 0 }: OffsetBoxProps) {
   return (<Box sx={{ minHeight: `calc((90vh - 414px) / 2 - ${extraOffset}px)` }} />);
 }
 
-function MobileCalculators() {
+function GridOverlay() {
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
 
   const { width, ref: gridRef } = useElementDimensions();
@@ -55,7 +55,7 @@ function MobileCalculators() {
             </Grid>
           </Grid>
         </Box>
-        <MobileMenu />
+        <GridOverlayMenu />
       </Box>
     </Modal>
   );
@@ -67,7 +67,7 @@ function CalculatorsOverlay() {
   const show = useAppSelector(calculatorsSelectors.show);
 
   if (!show) return null;
-  return isMobile ? <MobileCalculators /> : <MobileCalculators />;
+  return isMobile ? <GridOverlay /> : <GridOverlay />;
 }
 
 export default CalculatorsOverlay;

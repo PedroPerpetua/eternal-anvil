@@ -1,10 +1,11 @@
-import type { CSSProperties, ComponentType } from 'react';
+import type { ComponentType } from 'react';
+import type { SxProps } from '@mui/material';
 
 import MiniIconButton from './MiniIconButton';
 import { gameColors } from '../../../theme';
 
 type TealMiniIconButtonProps = {
-  Icon: ComponentType<{ style: CSSProperties }>,
+  Icon: ComponentType<{ sx: SxProps }>,
   size?: number
   onClick: () => void,
 };
@@ -16,7 +17,7 @@ function TealMiniIconButton({ Icon, size = 16, onClick }: TealMiniIconButtonProp
       secondary={gameColors.teal.dark}
       onClick={() => onClick()}
     >
-      <Icon style={{ color: gameColors.goldIcon, fontSize: size }} />
+      <Icon sx={{ color: gameColors.goldIcon, fontSize: size }} />
     </MiniIconButton>
   );
 }
