@@ -7,15 +7,15 @@ import { gameColors } from '../../../theme';
 type TealMiniIconButtonProps = {
   Icon: ComponentType<{ sx: SxProps }>,
   size?: number
-  onClick: () => void,
+  onClick?: () => void,
 };
 
 function TealMiniIconButton({ Icon, size = 16, onClick }: TealMiniIconButtonProps) {
   return (
     <MiniIconButton
       primary={gameColors.teal.main}
-      secondary={gameColors.teal.dark}
-      onClick={() => onClick()}
+      secondary={onClick ? gameColors.teal.dark : gameColors.teal.main}
+      onClick={onClick}
     >
       <Icon sx={{ color: gameColors.goldIcon, fontSize: size }} />
     </MiniIconButton>

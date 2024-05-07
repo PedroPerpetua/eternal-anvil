@@ -75,12 +75,12 @@ function TakeScreenshotContextProvider({ children }: PropsWithChildren<object>) 
         backgroundColor,
         onclone: (doc, el) => {
           // Remove the non-active tabs
-          el.querySelectorAll('[data-active=\'inactive\']').forEach((t) => t.remove());
+          el.querySelectorAll('[data-screenshot=\'tab-inactive\']').forEach((t) => t.remove());
           // Modify the tab
-          const tab = el.querySelector<HTMLDivElement>('[data-active=\'active\']');
+          const tab = el.querySelector<HTMLDivElement>('[data-screenshot=\'tab-active\']');
           if (!tab) return;
           // Remove all buttons
-          tab.querySelector('[data-name=\'buttons-container\']')?.remove();
+          tab.querySelector('[data-screenshot=\'buttons-container\']')?.remove();
           // Remove the add button
           if (tab.nextElementSibling) tab.parentElement?.removeChild(tab.nextElementSibling);
           // Remove the right border
