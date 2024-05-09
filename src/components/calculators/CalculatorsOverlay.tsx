@@ -4,6 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Calculator from './Calculator';
 import GridOverlayMenu from './GridOverlayMenu';
 import ScreenshotOverlay from './ScreenshotOverlay';
+import SelectForScreenshotModal from './SelectForScreenshotModal';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
@@ -28,16 +29,13 @@ function GridOverlay() {
       <Box>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
             width: '90vw',
             height: '90vh',
             overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
             overflowX: 'hidden',
             '&::-webkit-scrollbar': { display: 'none' },
           }}
+          className="center-screen"
           ref={gridRef}
         >
           <Grid container spacing={1} justifyContent="center" columns={numOfCols}>
@@ -71,6 +69,7 @@ function CalculatorsOverlay() {
   return (
     <>
       { isMobile ? <GridOverlay /> : <GridOverlay /> }
+      <SelectForScreenshotModal />
       <ScreenshotOverlay />
     </>
   );

@@ -96,8 +96,11 @@ const calculatorsSlice = createSlice({
     tabs: tabsAdapter.getInitialState(),
     show: false,
     highestZIndex: 0,
-    tabsOnScreenshot: [] as EntityId[],
-    takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
+    screenshots: {
+      tabsOnScreenshot: [] as EntityId[],
+      takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
+      showSelectMultiple: false,
+    },
   }),
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -148,8 +151,16 @@ const calculatorsSlice = createSlice({
     },
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
-      state.tabsOnScreenshot = [tabId];
-      state.takeScreenshotFlag += 1;
+      state.screenshots.tabsOnScreenshot = [tabId];
+      state.screenshots.takeScreenshotFlag += 1;
+    },
+    screenshotMultipleTabs: (state, action: PayloadAction<{ tabIds: EntityId[] }>) => {
+      const { tabIds } = action.payload;
+      state.screenshots.tabsOnScreenshot = tabIds;
+      state.screenshots.takeScreenshotFlag += 1;
+    },
+    setShowSelectMultiple: (state, action: PayloadAction<boolean>) => {
+      state.screenshots.showSelectMultiple = action.payload;
     },
   },
 });
@@ -177,13 +188,6 @@ export const calculatorsSelectors = {
     ],
     (tabs, tabId) => tabsEntitySelectors.selectById(tabs, tabId),
   ),
-  getTabName: createSelector(
-    [
-      (state: RootState) => state.calculators.tabs,
-      (state: RootState, tabId) => tabId,
-    ],
-    (tabs, tabId) => tabsEntitySelectors.selectById(tabs, tabId).name,
-  ),
   getTabActive: createSelector(
     [
       (state: RootState) => state.calculators,
@@ -193,6 +197,18 @@ export const calculatorsSelectors = {
       .selectAll(calculators)
       .some((c) => c.currentTab === tabId),
   ),
-  getTabsOnScreenshot: (state: RootState) => state.calculators.tabsOnScreenshot,
-  getTakeScreenshotFlag: (state: RootState) => state.calculators.takeScreenshotFlag,
+  getTabList: createSelector(
+    [(state: RootState) => state.calculators],
+    (calculators) => calculatorsEntitySelectors
+      .selectAll(calculators)
+      .map((c) => c.tabs.map(
+        (tId) => {
+          const { id, name } = tabsEntitySelectors.selectById(calculators.tabs, tId);
+          return { id, name };
+        },
+      )),
+  ),
+  getTabsOnScreenshot: (state: RootState) => state.calculators.screenshots.tabsOnScreenshot,
+  getTakeScreenshotFlag: (state: RootState) => state.calculators.screenshots.takeScreenshotFlag,
+  getShowSelectMultiple: (state: RootState) => state.calculators.screenshots.showSelectMultiple,
 };

@@ -19,8 +19,14 @@ function WebsiteLayout({ children }: WebsiteLayoutProps) {
       <Header />
       <Container
         maxWidth="xl"
-        sx={{ flex: 1, height: '100%', padding: '25px' }}
-        className="center-content"
+        sx={{
+          flex: 1,
+          height: '100%',
+          padding: '25px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
         { children }
       </Container>

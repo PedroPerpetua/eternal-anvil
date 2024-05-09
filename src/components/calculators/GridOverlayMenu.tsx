@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ComponentType } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShareIcon from '@mui/icons-material/Share';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box, Fab, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
@@ -53,6 +54,12 @@ function GridOverlayMenu() {
               Icon={VisibilityOffIcon}
               label="Hide calculators"
               onClick={() => dispatch(calculatorsActions.setShow(false))}
+              open={open}
+            />
+            <MenuButton
+              Icon={ShareIcon}
+              label="Take screenshot of multiple"
+              onClick={() => dispatch(calculatorsActions.setShowSelectMultiple(true))}
               open={open}
             />
           </Stack>

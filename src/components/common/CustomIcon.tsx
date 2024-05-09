@@ -7,11 +7,10 @@ type CustomIconProps = {
   src: string,
   tintColor?: string,
   size?: 'huge' | 'large' | 'medium' | 'small' | number | [number, number],
-  className?: string,
   sx?: SxProps<Theme>
 };
 
-function CustomIcon({ src, tintColor, size = 'medium', className, sx }: CustomIconProps) {
+function CustomIcon({ src, tintColor, size = 'medium', sx }: CustomIconProps) {
   const image = useTintedImage(src, tintColor);
   let imgSize;
   if (typeof size === 'number') imgSize = [size, size];
@@ -38,8 +37,13 @@ function CustomIcon({ src, tintColor, size = 'medium', className, sx }: CustomIc
   return (
     <Icon
       fontSize={(size === 'large' || size === 'medium' || size === 'small') ? size : undefined}
-      sx={{ fontSize: Math.max(...imgSize), ...sx }}
-      className={['center-content', className].join(' ')}
+      sx={{
+        fontSize: Math.max(...imgSize),
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        ...sx,
+      }}
     >
       <img src={image} width={imgSize[0]} height={imgSize[1]} alt="" draggable={false} />
     </Icon>

@@ -4,8 +4,13 @@ function Footer() {
   return (
     <Box
       component="footer"
-      className="center-content"
-      sx={{ width: '100vw', backgroundColor: 'gray' }}
+      sx={{
+        width: '100vw',
+        backgroundColor: 'gray',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
     >
       <Typography variant="caption" color="initial">
         Copyright ©

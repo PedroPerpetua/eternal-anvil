@@ -65,8 +65,13 @@ function Calculator({ calculatorId }: CalculatorProps) {
             ))
           }
           <Box
-            sx={{ borderBottom: '1px solid black', padding: '5px' }}
-            className="center-content"
+            sx={{
+              borderBottom: '1px solid black',
+              padding: '5px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
             <TealMiniIconButton
               Icon={AddIcon}

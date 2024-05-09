@@ -50,7 +50,7 @@ function CalculatorScreenshotDisplay({ tabId }: CalculatorScreenshotDisplayProps
 function ScreenshotOverlay() {
   const takeScreenshotFlag = useAppSelector(calculatorsSelectors.getTakeScreenshotFlag);
   const tabsOnScreenshot = useAppSelector(calculatorsSelectors.getTabsOnScreenshot);
-  const cols = Math.floor(Math.sqrt(tabsOnScreenshot.length));
+  const cols = Math.ceil(Math.sqrt(tabsOnScreenshot.length));
 
   const screenshotRef = useRef(null);
   const [image, takeScreenshot] = useScreenshot({
@@ -105,8 +105,17 @@ function ScreenshotOverlay() {
 
   return (
     <>
-      <Box ref={screenshotRef} sx={{ backgroundColor, padding: '25px', display: 'none' }}>
-        <Grid container columns={cols}>
+      <Box
+        ref={screenshotRef}
+        sx={{
+          backgroundColor,
+          padding: '25px',
+          display: 'none',
+          width: 'fit-content',
+          height: 'fit-content',
+        }}
+      >
+        <Grid container columns={cols} spacing={1} rowGap={0} columnGap={0}>
           {
             tabsOnScreenshot.map((tabId) => (
               <Grid key={tabId} xs={1}>
