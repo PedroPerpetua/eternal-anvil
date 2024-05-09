@@ -96,6 +96,8 @@ const calculatorsSlice = createSlice({
     tabs: tabsAdapter.getInitialState(),
     show: false,
     highestZIndex: 0,
+    tabsOnScreenshot: [] as EntityId[],
+    takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
   }),
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -144,6 +146,11 @@ const calculatorsSlice = createSlice({
       removeTabFromCalculator(state, calculator.id, tabId);
       if (calculatorsEntitySelectors.selectTotal(state) === 0) state.show = false;
     },
+    screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
+      const { tabId } = action.payload;
+      state.tabsOnScreenshot = [tabId];
+      state.takeScreenshotFlag += 1;
+    },
   },
 });
 
@@ -186,4 +193,6 @@ export const calculatorsSelectors = {
       .selectAll(calculators)
       .some((c) => c.currentTab === tabId),
   ),
+  getTabsOnScreenshot: (state: RootState) => state.calculators.tabsOnScreenshot,
+  getTakeScreenshotFlag: (state: RootState) => state.calculators.takeScreenshotFlag,
 };

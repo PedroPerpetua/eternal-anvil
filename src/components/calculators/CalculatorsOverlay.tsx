@@ -3,6 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 import Calculator from './Calculator';
 import GridOverlayMenu from './GridOverlayMenu';
+import ScreenshotOverlay from './ScreenshotOverlay';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
@@ -67,7 +68,12 @@ function CalculatorsOverlay() {
   const show = useAppSelector(calculatorsSelectors.show);
 
   if (!show) return null;
-  return isMobile ? <GridOverlay /> : <GridOverlay />;
+  return (
+    <>
+      { isMobile ? <GridOverlay /> : <GridOverlay /> }
+      <ScreenshotOverlay />
+    </>
+  );
 }
 
 export default CalculatorsOverlay;

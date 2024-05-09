@@ -32,7 +32,7 @@ function MiniDisplay({ tabId }: MiniDisplayProps) {
   const time = calculateTime(distance, tab.speed);
 
   return (
-    <Stack spacing={1} sx={{ padding: '20px' }}>
+    <Stack spacing={1} sx={{ padding: '20px', paddingTop: '10px' }}>
       { /* Required wrapper to set the margin on the child element */ }
       <Box>
         <Stack direction="row" alignItems="center" justifyContent="space-evenly" marginY="-10px">
@@ -46,18 +46,14 @@ function MiniDisplay({ tabId }: MiniDisplayProps) {
         </Stack>
       </Box>
       <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-        <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} />
+        { distance !== null && <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} /> }
         <Typography sx={{ textAlign: 'center' }}>
           { distance === null ? 'Unknown distance' : `${formatDistance(distance)} units` }
         </Typography>
       </Stack>
-      {
-        time && (
-        <Typography sx={{ textAlign: 'center' }}>
-          { `${formatSeconds(time)} (@ ${parse(tab.speed)} speed)` }
-        </Typography>
-        )
-      }
+      <Typography sx={{ textAlign: 'center' }}>
+        { time === null ? 'Unknown time' : `${formatSeconds(time)} (@ ${parse(tab.speed)} speed)` }
+      </Typography>
     </Stack>
   );
 }

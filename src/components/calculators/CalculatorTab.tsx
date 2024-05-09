@@ -12,7 +12,6 @@ import type { EntityId } from '@reduxjs/toolkit';
 
 import DistanceForm from './DistanceForm';
 import MiniDisplay from './MiniDisplay';
-import { useTakeScreenshot } from './TakeScreenshotContext';
 import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
@@ -37,7 +36,6 @@ type TabButtonProps = {
 
 function TabButton({ tabId }: TabButtonProps) {
   const dispatch = useAppDispatch();
-  const takeScreenshot = useTakeScreenshot();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const active = useAppSelector((state) => calculatorsSelectors.getTabActive(state, tabId));
 
@@ -75,6 +73,8 @@ function TabButton({ tabId }: TabButtonProps) {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         sx={{ marginLeft: '15px' }}
+        disableEnforceFocus
+        disableRestoreFocus
       >
         <MenuItem
           disabled={editingName}
@@ -85,7 +85,12 @@ function TabButton({ tabId }: TabButtonProps) {
             <TealMiniIconButton Icon={EditIcon} />
           </Stack>
         </MenuItem>
-        <MenuItem onClick={() => { setShowMenu(false); takeScreenshot(); }}>
+        <MenuItem
+          onClick={() => {
+            setShowMenu(false);
+            dispatch(calculatorsActions.screenshotTab({ tabId }));
+          }}
+        >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
             <Typography>Copy as image</Typography>
             <TealMiniIconButton Icon={ShareIcon} />
