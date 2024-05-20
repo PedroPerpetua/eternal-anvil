@@ -117,6 +117,8 @@ export function ellipsizeText(text: string, fontDef: string, maxWidth: number) {
   return '';
 }
 
+export const calculatorWidth = 300;
+
 export function calculatorGridWidth(numOfCols: number, spacingPx: number, paddingPx: number = 0) {
-  return 300 * numOfCols + spacingPx * (numOfCols - 1) + paddingPx * 2;
+  return calculatorWidth * numOfCols + spacingPx * (numOfCols - 1) + paddingPx * 2;
 }

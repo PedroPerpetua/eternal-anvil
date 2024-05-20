@@ -4,6 +4,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import CalculatorTab from './CalculatorTab';
+import { calculatorWidth } from './utils';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 import { gameColors } from '../../theme';
@@ -31,7 +32,7 @@ function Calculator({ calculatorId }: CalculatorProps) {
   return (
     <Box
       sx={{
-        width: '300px',
+        width: calculatorWidth,
         backgroundColor: 'white',
         borderRadius: '5px',
         border: '1px solid black',

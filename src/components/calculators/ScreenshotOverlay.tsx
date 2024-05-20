@@ -8,7 +8,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { useScreenshot } from 'use-react-screenshot';
 
 import MiniDisplay from './MiniDisplay';
-import { calculatorGridWidth, ellipsizeText } from './utils';
+import { calculatorGridWidth, calculatorWidth, ellipsizeText } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import { backgroundColor } from '../../theme';
@@ -22,7 +22,7 @@ function CalculatorScreenshotDisplay({ tabId }: CalculatorScreenshotDisplayProps
   return (
     <Box
       sx={{
-        width: '300px',
+        width: calculatorWidth,
         backgroundColor: 'white',
         borderRadius: '5px',
         border: '1px solid black',
