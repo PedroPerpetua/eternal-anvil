@@ -8,7 +8,7 @@ import { EntityId } from '@reduxjs/toolkit';
 import { useScreenshot } from 'use-react-screenshot';
 
 import MiniDisplay from './MiniDisplay';
-import { ellipsizeText } from './utils';
+import { calculatorGridWidth, ellipsizeText } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import { backgroundColor } from '../../theme';
@@ -102,7 +102,6 @@ function ScreenshotOverlay() {
   // We ONLY want to fire this when the screenshot flag changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [takeScreenshotFlag]);
-
   return (
     <>
       <Box
@@ -111,14 +110,13 @@ function ScreenshotOverlay() {
           backgroundColor,
           padding: '25px',
           display: 'none',
-          width: 'fit-content',
-          height: 'fit-content',
+          width: calculatorGridWidth(cols, 8, 25),
         }}
       >
-        <Grid container columns={cols} spacing={1} rowGap={0} columnGap={0}>
+        <Grid container columns={cols} spacing={1}>
           {
             tabsOnScreenshot.map((tabId) => (
-              <Grid key={tabId} xs={1}>
+              <Grid key={tabId}>
                 <CalculatorScreenshotDisplay tabId={tabId} />
               </Grid>
             ))
