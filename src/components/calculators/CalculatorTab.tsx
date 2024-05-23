@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import FullScreenIcon from '@mui/icons-material/Fullscreen';
@@ -32,19 +34,29 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
 
 type TabButtonProps = {
   tabId: EntityId,
+  overlay?: boolean
 };
 
-function TabButton({ tabId }: TabButtonProps) {
+function TabButton({ tabId, overlay = false }: TabButtonProps) {
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const active = useAppSelector((state) => calculatorsSelectors.getTabActive(state, tabId));
+  const dragging = useAppSelector((state) => calculatorsSelectors.getTabDragging(state, tabId));
 
   const update = (changes: Partial<Omit<CalculatorTabType, 'id'>>) => {
     dispatch(calculatorsActions.updateTab({ tabId, changes }));
   };
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setSortableRef,
+    transform,
+    transition,
+  } = useSortable({ id: tabId });
+
   const [showMenu, setShowMenu] = useState(false);
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   const [editingName, setEditingName] = useState(false);
   const [currName, setCurrName] = useState(tab.name);
@@ -58,7 +70,7 @@ function TabButton({ tabId }: TabButtonProps) {
     setEditingName((curr) => !curr);
   };
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!active || !scrollRef.current) return;
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
@@ -114,19 +126,28 @@ function TabButton({ tabId }: TabButtonProps) {
         </MenuItem>
       </Menu>
       <Box
+        {...attributes}
+        {...listeners}
+        ref={(node: HTMLDivElement) => {
+          scrollRef.current = node;
+          setSortableRef(node);
+        }}
         className="clickable"
         sx={{
+          backgroundColor: 'white',
           padding: '2px 10px',
-          borderRight: '1px solid black',
-          borderBottom: '1px solid',
-          borderBottomColor: active ? 'transparent' : 'black',
+          borderRight: overlay ? undefined : '1px solid black',
+          borderBottom: (overlay || active) ? undefined : '1px solid black',
           display: 'flex',
           flex: 1,
+          height: '100%',
+          // Dragging
+          transform: CSS.Translate.toString(transform),
+          transition,
+          opacity: (overlay || !dragging) ? undefined : 0.5,
+          pointerEvents: overlay ? 'none' : undefined,
         }}
         onClick={() => dispatch(calculatorsActions.selectTab({ tabId }))}
-        ref={scrollRef}
-        // For screenshot purposes
-        data-screenshot={`tab-${active ? 'active' : 'inactive'}`}
       >
         <Stack
           direction="row"
@@ -146,7 +167,7 @@ function TabButton({ tabId }: TabButtonProps) {
                     padding: '2px',
                     marginBottom: '1px',
                     marginLeft: '-2px',
-                    minWidth: '100px',
+                    minWidth: '80px',
                   } }}
                   sx={{
                     '& fieldset': {
@@ -158,19 +179,14 @@ function TabButton({ tabId }: TabButtonProps) {
                 />
               )
               : (
-                <Typography noWrap sx={{ minWidth: '100px', width: active ? undefined : '100px' }}>
+                <Typography noWrap sx={{ minWidth: '80px', width: active ? undefined : '80px' }}>
                   { tab.name }
                 </Typography>
               )
           }
           {
           active && (
-            <Stack
-              direction="row"
-              spacing={0.5}
-              // For screenshot purposes
-              data-screenshot="buttons-container"
-            >
+            <Stack direction="row" spacing={0.5}>
               {
                 editingName && (
                   <TealMiniIconButton Icon={DoneIcon} onClick={() => handleSaveName()} />

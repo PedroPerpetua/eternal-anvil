@@ -1,3 +1,4 @@
+import { arrayMove } from '@dnd-kit/sortable';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
@@ -12,9 +13,19 @@ export type Calculator = {
   tabs: EntityId[],
 };
 
+const calculatorPrefix = 'Calculator';
+
+function generateCalculatorId() {
+  return `${calculatorPrefix}-${generateId()}`;
+}
+
+function isCalculatorId(id?: EntityId) {
+  return id && id.toString().startsWith(calculatorPrefix);
+}
+
 function generateCalculator(): Calculator {
   return {
-    id: generateId(),
+    id: generateCalculatorId(),
     currentTab: null,
     tabs: [],
   };
@@ -34,10 +45,20 @@ export type CalculatorTab = {
   speed: number | null,
 };
 
+const tabPrefix = 'Tab';
+
+function generateTabId() {
+  return `${tabPrefix}-${generateId()}`;
+}
+
+function isTabId(id?: EntityId) {
+  return id && id.toString().startsWith(tabPrefix);
+}
+
 export const defaultTabName = 'Tab';
 function generateTab(): CalculatorTab {
   return {
-    id: generateId(),
+    id: generateTabId(),
     name: defaultTabName,
     mini: false,
     point1: [null, null],
@@ -101,6 +122,7 @@ const calculatorsSlice = createSlice({
       takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
       showSelectMultiple: false,
     },
+    draggingTab: null as EntityId | null,
   }),
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -149,6 +171,7 @@ const calculatorsSlice = createSlice({
       removeTabFromCalculator(state, calculator.id, tabId);
       if (calculatorsEntitySelectors.selectTotal(state) === 0) state.show = false;
     },
+    // Screenshots
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
       state.screenshots.tabsOnScreenshot = [tabId];
@@ -161,6 +184,65 @@ const calculatorsSlice = createSlice({
     },
     setShowSelectMultiple: (state, action: PayloadAction<boolean>) => {
       state.screenshots.showSelectMultiple = action.payload;
+    },
+    // Dragging
+    handleDragStart: (state, action: PayloadAction<{ activeId: EntityId }>) => {
+      const { activeId } = action.payload;
+      if (isTabId(activeId)) {
+        state.draggingTab = activeId;
+        const calculator = calculatorsEntitySelectors
+          .selectAll(state)
+          .find((c) => c.tabs.includes(activeId));
+        if (!calculator) return;
+        calculatorsAdapter.updateOne(state, {
+          id: calculator.id,
+          changes: { currentTab: activeId },
+        });
+      }
+    },
+    handleDragOver: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
+      const { activeId, overId } = action.payload;
+      if (!overId) return;
+      if (!isTabId(activeId)) return;
+      const calculator = calculatorsEntitySelectors
+        .selectAll(state)
+        .find((c) => c.tabs.includes(activeId));
+      if (!calculator) return;
+      const overCalculator = isCalculatorId(overId)
+        ? calculatorsEntitySelectors.selectById(state, overId)
+        : calculatorsEntitySelectors.selectAll(state).find((c) => c.tabs.includes(overId));
+      if (!overCalculator || calculator.id === overCalculator.id) return;
+      // Remove from the old calculator
+      removeTabFromCalculator(state, calculator.id, activeId);
+      // Add it to the new calculator
+      const newTabs = [...overCalculator.tabs];
+      newTabs.splice(overCalculator.tabs.indexOf(overId), 0, activeId);
+      calculatorsAdapter.updateOne(
+        state,
+        {
+          id: overCalculator.id,
+          changes: {
+            tabs: newTabs,
+            currentTab: activeId,
+          },
+        },
+      );
+    },
+    handleDragEnd: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
+      const { activeId, overId } = action.payload;
+      if (isTabId(activeId)) {
+        state.draggingTab = null;
+        const calculator = calculatorsEntitySelectors
+          .selectAll(state)
+          .find((c) => c.tabs.includes(activeId));
+        if (!calculator || !overId || overId === activeId) return;
+        const oldIndex = calculator.tabs.indexOf(activeId);
+        const newIndex = calculator.tabs.indexOf(overId);
+        calculatorsAdapter.updateOne(state, {
+          id: calculator.id,
+          changes: { tabs: arrayMove(calculator.tabs, oldIndex, newIndex) },
+        });
+      }
     },
   },
 });
@@ -184,19 +266,20 @@ export const calculatorsSelectors = {
   getTab: createSelector(
     [
       (state: RootState) => state.calculators.tabs,
-      (state: RootState, tabId) => tabId,
+      (state: RootState, tabId: EntityId) => tabId,
     ],
     (tabs, tabId) => tabsEntitySelectors.selectById(tabs, tabId),
   ),
   getTabActive: createSelector(
     [
       (state: RootState) => state.calculators,
-      (state: RootState, tabId) => tabId,
+      (state: RootState, tabId: EntityId) => tabId,
     ],
     (calculators, tabId) => calculatorsEntitySelectors
       .selectAll(calculators)
       .some((c) => c.currentTab === tabId),
   ),
+  // Screenshots
   getTabList: createSelector(
     [(state: RootState) => state.calculators],
     (calculators) => calculatorsEntitySelectors
@@ -211,4 +294,13 @@ export const calculatorsSelectors = {
   getTabsOnScreenshot: (state: RootState) => state.calculators.screenshots.tabsOnScreenshot,
   getTakeScreenshotFlag: (state: RootState) => state.calculators.screenshots.takeScreenshotFlag,
   getShowSelectMultiple: (state: RootState) => state.calculators.screenshots.showSelectMultiple,
+  // Dragging
+  getTabDragging: createSelector(
+    [
+      (state: RootState) => state.calculators.draggingTab,
+      (state: RootState, tabId: EntityId) => tabId,
+    ],
+    (draggingTab, tabId) => draggingTab === tabId,
+  ),
+  getDraggingTab: (state: RootState) => state.calculators.draggingTab,
 };

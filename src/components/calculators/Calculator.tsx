@@ -1,4 +1,6 @@
 import { useCallback } from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
@@ -20,6 +22,8 @@ function Calculator({ calculatorId }: CalculatorProps) {
     (state) => calculatorsSelectors.getCalculator(state, calculatorId),
   );
 
+  const { setNodeRef: setDroppableNodeRef } = useDroppable({ id: calculatorId });
+
   const horizontalScrollerRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
     const onWheel = (e: WheelEvent) => {
@@ -30,59 +34,61 @@ function Calculator({ calculatorId }: CalculatorProps) {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: calculatorWidth,
-        backgroundColor: 'white',
-        borderRadius: '5px',
-        border: '1px solid black',
-        height: 'fit-content',
-        alignSelf: 'center',
-      }}
-    >
-      <Stack direction="row" sx={{ marginBottom: '-10px' }}>
-        <Stack
-          direction="row"
-          sx={{
-            flex: 1,
-            overflowX: 'scroll',
-            scrollBehavior: 'smooth',
-            height: '48px',
-            '&::-webkit-scrollbar': {
-              height: '10px',
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: gameColors.goldIcon,
-              border: '2px solid transparent',
-              backgroundClip: 'content-box',
-              borderRadius: '5px',
-            },
-          }}
-          ref={horizontalScrollerRef}
-        >
-          {
-            calculator.tabs.map((tabId) => (
-              <CalculatorTab.Button key={tabId} tabId={tabId} />
-            ))
-          }
-          <Box
+    <SortableContext items={calculator.tabs} strategy={horizontalListSortingStrategy}>
+      <Box
+        sx={{
+          width: calculatorWidth,
+          backgroundColor: 'white',
+          borderRadius: '5px',
+          border: '1px solid black',
+          height: 'fit-content',
+          alignSelf: 'center',
+          overflow: 'hidden',
+        }}
+      >
+        <Stack ref={setDroppableNodeRef} direction="row" sx={{ marginBottom: '-10px' }}>
+          <Stack
+            direction="row"
             sx={{
-              borderBottom: '1px solid black',
-              padding: '5px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              flex: 1,
+              overflowY: 'hidden',
+              overflowX: 'scroll',
+              height: '48px',
+              '&::-webkit-scrollbar': {
+                height: '10px',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: gameColors.goldIcon,
+                border: '2px solid transparent',
+                backgroundClip: 'content-box',
+                borderRadius: '5px',
+              },
             }}
+            ref={horizontalScrollerRef}
           >
-            <TealMiniIconButton
-              Icon={AddIcon}
-              size={24}
-              onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
-            />
-          </Box>
+            {
+              calculator.tabs.map((tabId) => (
+                <CalculatorTab.Button key={tabId} tabId={tabId} />
+              ))
+            }
+            <Box
+              sx={{
+                borderBottom: '1px solid black',
+                padding: '5px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <TealMiniIconButton
+                Icon={AddIcon}
+                size={24}
+                onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
+              />
+            </Box>
+          </Stack>
         </Stack>
-      </Stack>
-      {
+        {
         calculator.currentTab
           ? (<CalculatorTab tabId={calculator.currentTab} />)
           : (
@@ -99,7 +105,8 @@ function Calculator({ calculatorId }: CalculatorProps) {
             </Typography>
           )
       }
-    </Box>
+      </Box>
+    </SortableContext>
   );
 }
 
