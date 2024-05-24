@@ -46,8 +46,13 @@ function Calculator({ calculatorId }: CalculatorProps) {
           overflow: 'hidden',
         }}
       >
-        <Stack ref={setDroppableNodeRef} direction="row" sx={{ marginBottom: '-10px' }}>
+        <Stack
+          ref={setDroppableNodeRef}
+          direction="row"
+          sx={{ marginBottom: '-10px', overflow: 'hidden' }}
+        >
           <Stack
+            ref={horizontalScrollerRef}
             direction="row"
             sx={{
               flex: 1,
@@ -64,7 +69,6 @@ function Calculator({ calculatorId }: CalculatorProps) {
                 borderRadius: '5px',
               },
             }}
-            ref={horizontalScrollerRef}
           >
             {
               calculator.tabs.map((tabId) => (

@@ -14,6 +14,7 @@ import type { EntityId } from '@reduxjs/toolkit';
 
 import DistanceForm from './DistanceForm';
 import MiniDisplay from './MiniDisplay';
+import { calculatorWidth } from './utils';
 import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
@@ -34,14 +35,12 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
 
 type TabButtonProps = {
   tabId: EntityId,
-  overlay?: boolean
 };
 
-function TabButton({ tabId, overlay = false }: TabButtonProps) {
+function TabButton({ tabId }: TabButtonProps) {
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const active = useAppSelector((state) => calculatorsSelectors.getTabActive(state, tabId));
-  const dragging = useAppSelector((state) => calculatorsSelectors.getTabDragging(state, tabId));
 
   const update = (changes: Partial<Omit<CalculatorTabType, 'id'>>) => {
     dispatch(calculatorsActions.updateTab({ tabId, changes }));
@@ -71,9 +70,12 @@ function TabButton({ tabId, overlay = false }: TabButtonProps) {
   };
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (!active || !scrollRef.current) return;
+  const scrollToTab = () => {
+    if (!scrollRef.current) return;
     scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  };
+  useEffect(() => {
+    if (active) scrollToTab();
   }, [active]);
 
   return (
@@ -136,18 +138,20 @@ function TabButton({ tabId, overlay = false }: TabButtonProps) {
         sx={{
           backgroundColor: 'white',
           padding: '2px 10px',
-          borderRight: overlay ? undefined : '1px solid black',
-          borderBottom: (overlay || active) ? undefined : '1px solid black',
+          borderRight: '1px solid black',
+          borderBottom: active ? undefined : '1px solid black',
           display: 'flex',
           flex: 1,
           height: '100%',
           // Dragging
           transform: CSS.Translate.toString(transform),
           transition,
-          opacity: (overlay || !dragging) ? undefined : 0.5,
-          pointerEvents: overlay ? 'none' : undefined,
+          touchAction: 'none',
         }}
-        onClick={() => dispatch(calculatorsActions.selectTab({ tabId }))}
+        onClick={() => {
+          dispatch(calculatorsActions.selectTab({ tabId }));
+          scrollToTab();
+        }}
       >
         <Stack
           direction="row"
@@ -202,6 +206,47 @@ function TabButton({ tabId, overlay = false }: TabButtonProps) {
   );
 }
 
+type TabOverlayProps = {
+  tabId: EntityId
+};
+
+function TabOverlay({ tabId }: TabOverlayProps) {
+  const tabName = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId).name);
+  const [topRightRadius, setTopRightRadius] = useState(5);
+
+  return (
+    <Stack sx={{ opacity: 0.9 }}>
+      <Box
+        ref={(node?: HTMLElement) => {
+          if (!node) return;
+          setTopRightRadius(Math.min(5, calculatorWidth - node.getBoundingClientRect().width));
+        }}
+        sx={{
+          backgroundColor: 'white',
+          padding: '2px 10px',
+          borderRadius: '5px 5px 0 0',
+          minWidth: '80px',
+          maxWidth: calculatorWidth,
+        }}
+      >
+        <Typography noWrap sx={{ maxWidth: calculatorWidth }}>
+          { tabName }
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          borderRadius: `0 ${topRightRadius}px 5px 5px`,
+          width: calculatorWidth,
+        }}
+      >
+        <CalculatorTab tabId={tabId} />
+      </Box>
+    </Stack>
+  );
+}
+
 CalculatorTab.Button = TabButton;
+CalculatorTab.Overlay = TabOverlay;
 
 export default CalculatorTab;

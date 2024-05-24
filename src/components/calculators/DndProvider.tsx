@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import type { PropsWithChildren } from 'react';
 import {
-  DndContext, DragOverlay, MouseSensor, TouchSensor, useSensor, useSensors,
+  DndContext, DragOverlay, MouseSensor, TouchSensor, pointerWithin, useSensor, useSensors,
 } from '@dnd-kit/core';
 import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { Portal } from '@mui/material';
 
 import CalculatorTab from './CalculatorTab';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -44,11 +45,14 @@ function DndProvider({ children }: PropsWithChildren<object>) {
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
+      collisionDetection={pointerWithin}
     >
       { children }
-      <DragOverlay zIndex={9999}>
-        { currentDragging && <CalculatorTab.Button tabId={currentDragging} overlay /> }
-      </DragOverlay>
+      <Portal>
+        <DragOverlay zIndex={9999} modifiers={modifiers}>
+          { currentDragging && <CalculatorTab.Overlay tabId={currentDragging} /> }
+        </DragOverlay>
+      </Portal>
     </DndContext>
   );
 }
