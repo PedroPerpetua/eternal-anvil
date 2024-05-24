@@ -180,6 +180,12 @@ function TabButton({ tabId }: TabButtonProps) {
                   }}
                   autoFocus
                   onFocus={(e) => e.target.select()}
+                  onBlur={() => handleSaveName()}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter') return;
+                    e.preventDefault();
+                    handleSaveName();
+                  }}
                 />
               )
               : (
