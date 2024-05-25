@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
@@ -16,7 +17,7 @@ type CalculatorProps = {
   calculatorId: EntityId
 };
 
-function Calculator({ calculatorId }: CalculatorProps) {
+function CalculatorImpl({ calculatorId }: CalculatorProps) {
   const dispatch = useAppDispatch();
   const calculator = useAppSelector(
     (state) => calculatorsSelectors.getCalculator(state, calculatorId),
@@ -34,65 +35,67 @@ function Calculator({ calculatorId }: CalculatorProps) {
   }, []);
 
   return (
-    <SortableContext items={calculator.tabs} strategy={horizontalListSortingStrategy}>
-      <Box
-        sx={{
-          width: calculatorWidth,
-          backgroundColor: 'white',
-          borderRadius: '5px',
-          border: '1px solid black',
-          height: 'fit-content',
-          alignSelf: 'center',
-          overflow: 'hidden',
-        }}
+    <Box
+      sx={{
+        width: calculatorWidth,
+        backgroundColor: 'white',
+        borderRadius: '5px',
+        border: '1px solid black',
+        height: 'fit-content',
+        alignSelf: 'center',
+        overflow: 'hidden',
+        userSelect: 'none',
+      }}
+    >
+      <Stack
+        ref={setDroppableNodeRef}
+        direction="row"
+        sx={{ marginBottom: '-10px', overflow: 'hidden' }}
       >
         <Stack
-          ref={setDroppableNodeRef}
+          ref={horizontalScrollerRef}
           direction="row"
-          sx={{ marginBottom: '-10px', overflow: 'hidden' }}
+          sx={{
+            flex: 1,
+            overflowY: 'hidden',
+            overflowX: 'scroll',
+            height: '48px',
+            '&::-webkit-scrollbar': {
+              height: '10px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: gameColors.goldIcon,
+              border: '2px solid transparent',
+              backgroundClip: 'content-box',
+              borderRadius: '5px',
+            },
+          }}
         >
-          <Stack
-            ref={horizontalScrollerRef}
-            direction="row"
-            sx={{
-              flex: 1,
-              overflowY: 'hidden',
-              overflowX: 'scroll',
-              height: '48px',
-              '&::-webkit-scrollbar': {
-                height: '10px',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: gameColors.goldIcon,
-                border: '2px solid transparent',
-                backgroundClip: 'content-box',
-                borderRadius: '5px',
-              },
-            }}
-          >
+          <SortableContext items={calculator.tabs} strategy={horizontalListSortingStrategy}>
             {
               calculator.tabs.map((tabId) => (
                 <CalculatorTab.Button key={tabId} tabId={tabId} />
               ))
             }
-            <Box
-              sx={{
-                borderBottom: '1px solid black',
-                padding: '5px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <TealMiniIconButton
-                Icon={AddIcon}
-                size={24}
-                onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
-              />
-            </Box>
-          </Stack>
+          </SortableContext>
+          <Box
+            sx={{
+              borderBottom: '1px solid black',
+              padding: '5px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <TealMiniIconButton
+              Icon={AddIcon}
+              size={24}
+              onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
+            />
+          </Box>
         </Stack>
-        {
+      </Stack>
+      {
         calculator.currentTab
           ? (<CalculatorTab tabId={calculator.currentTab} />)
           : (
@@ -109,9 +112,46 @@ function Calculator({ calculatorId }: CalculatorProps) {
             </Typography>
           )
       }
-      </Box>
-    </SortableContext>
+    </Box>
   );
 }
+
+function Calculator({ calculatorId }: CalculatorProps) {
+  const {
+    attributes,
+    listeners,
+    transform,
+    setNodeRef: setDraggableNodeRef,
+    transition,
+  } = useSortable({ id: calculatorId });
+  return (
+    <Box
+      {...attributes}
+      {...listeners}
+      ref={setDraggableNodeRef}
+      sx={{
+        transform: CSS.Translate.toString(transform),
+        transition,
+        touchAction: 'none',
+      }}
+    >
+      <CalculatorImpl calculatorId={calculatorId} />
+    </Box>
+  );
+}
+
+type CalculatorOverlayProps = {
+  calculatorId: EntityId
+};
+
+function CalculatorOverlay({ calculatorId }: CalculatorOverlayProps) {
+  return (
+    <Box sx={{ opacity: 0.9 }}>
+      <CalculatorImpl calculatorId={calculatorId} />
+    </Box>
+  );
+}
+
+Calculator.Overlay = CalculatorOverlay;
 
 export default Calculator;

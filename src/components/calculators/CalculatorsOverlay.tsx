@@ -1,3 +1,4 @@
+import { SortableContext } from '@dnd-kit/sortable';
 import { Box, Modal, useMediaQuery, useTheme } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
@@ -32,7 +33,7 @@ function GridOverlay() {
           <Box
             sx={{
               width: '90vw',
-              height: '90vh',
+              height: '100vh',
               overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
               overflowX: 'hidden',
               '&::-webkit-scrollbar': { display: 'none' },
@@ -44,13 +45,15 @@ function GridOverlay() {
               <Grid xs={numOfCols}>
                 <OffsetBox extraOffset={-17} />
               </Grid>
-              {
-                calculatorIds.map((id) => (
-                  <Grid xs={1} key={id} display="flex" justifyContent="center">
-                    <Calculator key={id} calculatorId={id} />
-                  </Grid>
-                ))
-              }
+              <SortableContext items={calculatorIds}>
+                {
+                  calculatorIds.map((id) => (
+                    <Grid xs={1} key={id} display="flex" justifyContent="center">
+                      <Calculator key={id} calculatorId={id} />
+                    </Grid>
+                  ))
+                }
+              </SortableContext>
               <Grid xs={numOfCols}>
                 <OffsetBox extraOffset={-18} />
               </Grid>

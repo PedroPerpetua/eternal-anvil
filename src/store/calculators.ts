@@ -19,7 +19,7 @@ function generateCalculatorId() {
   return `${calculatorPrefix}-${generateId()}`;
 }
 
-function isCalculatorId(id?: EntityId) {
+export function isCalculatorId(id?: EntityId) {
   return id && id.toString().startsWith(calculatorPrefix);
 }
 
@@ -51,7 +51,7 @@ function generateTabId() {
   return `${tabPrefix}-${generateId()}`;
 }
 
-function isTabId(id?: EntityId) {
+export function isTabId(id?: EntityId) {
   return id && id.toString().startsWith(tabPrefix);
 }
 
@@ -78,6 +78,7 @@ function createCalculator(state: ReturnType<typeof calculatorsSlice.getInitialSt
   calculator.tabs.push(tab.id);
   calculator.currentTab = tab.id;
   calculatorsAdapter.addOne(state, calculator);
+  state.orderedIds.push(calculator.id);
   tabsAdapter.addOne(state.tabs, tab);
   return calculator;
 }
@@ -97,8 +98,10 @@ function removeTabFromCalculator(
   // "Refresh from db"
   const refreshed = calculatorsEntitySelectors.selectById(state, calculator.id)!;
   // If it was left empty, delete it; otherwise, check the current tab
-  if (refreshed.tabs.length === 0) calculatorsAdapter.removeOne(state, refreshed.id);
-  else if (refreshed.currentTab === tabId) {
+  if (refreshed.tabs.length === 0) {
+    calculatorsAdapter.removeOne(state, refreshed.id);
+    state.orderedIds = state.orderedIds.filter((cId) => cId !== refreshed.id);
+  } else if (refreshed.currentTab === tabId) {
     let newIndex;
     // Was the last element
     if (originalIndex === refreshed.tabs.length) newIndex = -1;
@@ -114,15 +117,15 @@ function removeTabFromCalculator(
 const calculatorsSlice = createSlice({
   name: 'calculators',
   initialState: calculatorsAdapter.getInitialState({
+    orderedIds: [] as EntityId[],
     tabs: tabsAdapter.getInitialState(),
     show: false,
-    highestZIndex: 0,
     screenshots: {
       tabsOnScreenshot: [] as EntityId[],
       takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
       showSelectMultiple: false,
     },
-    draggingTab: null as EntityId | null,
+    dragging: null as EntityId | null,
   }),
   reducers: {
     setShow: (state, action: PayloadAction<boolean>) => {
@@ -188,8 +191,8 @@ const calculatorsSlice = createSlice({
     // Dragging
     handleDragStart: (state, action: PayloadAction<{ activeId: EntityId }>) => {
       const { activeId } = action.payload;
+      state.dragging = activeId;
       if (isTabId(activeId)) {
-        state.draggingTab = activeId;
         const calculator = calculatorsEntitySelectors
           .selectAll(state)
           .find((c) => c.tabs.includes(activeId));
@@ -202,8 +205,7 @@ const calculatorsSlice = createSlice({
     },
     handleDragOver: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
       const { activeId, overId } = action.payload;
-      if (!overId) return;
-      if (!isTabId(activeId)) return;
+      if (!overId || !isTabId(activeId)) return;
       const calculator = calculatorsEntitySelectors
         .selectAll(state)
         .find((c) => c.tabs.includes(activeId));
@@ -231,7 +233,7 @@ const calculatorsSlice = createSlice({
     handleDragEnd: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
       const { activeId, overId } = action.payload;
       if (isTabId(activeId)) {
-        state.draggingTab = null;
+        state.dragging = null;
         const calculator = calculatorsEntitySelectors
           .selectAll(state)
           .find((c) => c.tabs.includes(activeId));
@@ -242,6 +244,11 @@ const calculatorsSlice = createSlice({
           id: calculator.id,
           changes: { tabs: arrayMove(calculator.tabs, oldIndex, newIndex) },
         });
+      }
+      if (isCalculatorId(activeId)) {
+        const oldIndex = state.orderedIds.indexOf(activeId);
+        const newIndex = overId ? state.orderedIds.indexOf(overId) : state.orderedIds.length;
+        state.orderedIds = arrayMove(state.orderedIds, oldIndex, newIndex);
       }
     },
   },
@@ -261,7 +268,7 @@ export const calculatorsSelectors = {
   ),
   getCalculatorIds: createSelector(
     [(state: RootState) => state.calculators],
-    (calculators) => calculatorsEntitySelectors.selectIds(calculators),
+    (calculators) => calculators.orderedIds,
   ),
   getTab: createSelector(
     [
@@ -295,12 +302,5 @@ export const calculatorsSelectors = {
   getTakeScreenshotFlag: (state: RootState) => state.calculators.screenshots.takeScreenshotFlag,
   getShowSelectMultiple: (state: RootState) => state.calculators.screenshots.showSelectMultiple,
   // Dragging
-  getTabDragging: createSelector(
-    [
-      (state: RootState) => state.calculators.draggingTab,
-      (state: RootState, tabId: EntityId) => tabId,
-    ],
-    (draggingTab, tabId) => draggingTab === tabId,
-  ),
-  getDraggingTab: (state: RootState) => state.calculators.draggingTab,
+  getDragging: (state: RootState) => state.calculators.dragging,
 };

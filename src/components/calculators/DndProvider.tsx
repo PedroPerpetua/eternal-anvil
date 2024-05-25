@@ -7,13 +7,14 @@ import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Portal } from '@mui/material';
 
+import Calculator from './Calculator';
 import CalculatorTab from './CalculatorTab';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
+import { calculatorsActions, calculatorsSelectors, isCalculatorId, isTabId } from '../../store/calculators';
 
 function DndProvider({ children }: PropsWithChildren<object>) {
   const dispatch = useAppDispatch();
-  const currentDragging = useAppSelector(calculatorsSelectors.getDraggingTab);
+  const currentDragging = useAppSelector(calculatorsSelectors.getDragging);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -50,7 +51,16 @@ function DndProvider({ children }: PropsWithChildren<object>) {
       { children }
       <Portal>
         <DragOverlay zIndex={9999} modifiers={modifiers}>
-          { currentDragging && <CalculatorTab.Overlay tabId={currentDragging} /> }
+          {
+            currentDragging && isTabId(currentDragging) && (
+              <CalculatorTab.Overlay tabId={currentDragging} />
+            )
+          }
+          {
+            currentDragging && isCalculatorId(currentDragging) && (
+              <Calculator.Overlay calculatorId={currentDragging} />
+            )
+          }
         </DragOverlay>
       </Portal>
     </DndContext>
