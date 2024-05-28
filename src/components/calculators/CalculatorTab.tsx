@@ -146,7 +146,6 @@ function TabButton({ tabId }: TabButtonProps) {
           // Dragging
           transform: CSS.Translate.toString(transform),
           transition,
-          touchAction: 'none',
         }}
         onClick={() => {
           dispatch(calculatorsActions.selectTab({ tabId }));
@@ -221,7 +220,7 @@ function TabOverlay({ tabId }: TabOverlayProps) {
   const [topRightRadius, setTopRightRadius] = useState(5);
 
   return (
-    <Stack sx={{ opacity: 0.9 }}>
+    <Stack sx={{ opacity: 0.9, transform: 'scale(0.9)' }}>
       <Box
         ref={(node?: HTMLElement) => {
           if (!node) return;

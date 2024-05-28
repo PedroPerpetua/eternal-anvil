@@ -132,7 +132,6 @@ function Calculator({ calculatorId }: CalculatorProps) {
       sx={{
         transform: CSS.Translate.toString(transform),
         transition,
-        touchAction: 'none',
       }}
     >
       <CalculatorImpl calculatorId={calculatorId} />
@@ -146,7 +145,7 @@ type CalculatorOverlayProps = {
 
 function CalculatorOverlay({ calculatorId }: CalculatorOverlayProps) {
   return (
-    <Box sx={{ opacity: 0.9 }}>
+    <Box sx={{ opacity: 0.9, transform: 'scale(0.9)' }}>
       <CalculatorImpl calculatorId={calculatorId} />
     </Box>
   );
