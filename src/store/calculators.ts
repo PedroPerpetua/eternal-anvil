@@ -19,8 +19,9 @@ function generateCalculatorId() {
   return `${calculatorPrefix}-${generateId()}`;
 }
 
-export function isCalculatorId(id?: EntityId) {
-  return id && id.toString().startsWith(calculatorPrefix);
+export function isCalculatorId(id?: EntityId | null) {
+  if (!id) return false;
+  return id.toString().startsWith(calculatorPrefix);
 }
 
 function generateCalculator(): Calculator {
@@ -51,8 +52,9 @@ function generateTabId() {
   return `${tabPrefix}-${generateId()}`;
 }
 
-export function isTabId(id?: EntityId) {
-  return id && id.toString().startsWith(tabPrefix);
+export function isTabId(id?: EntityId | null) {
+  if (!id) return false;
+  return id.toString().startsWith(tabPrefix);
 }
 
 export const defaultTabName = 'Tab';

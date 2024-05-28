@@ -1,10 +1,9 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import type { PropsWithChildren } from 'react';
 import {
   DndContext, DragOverlay, MouseSensor, TouchSensor, pointerWithin, useSensor, useSensors,
 } from '@dnd-kit/core';
 import type { DragStartEvent, DragOverEvent, DragEndEvent } from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { Portal } from '@mui/material';
 
 import Calculator from './Calculator';
@@ -32,7 +31,7 @@ function DndProvider({ children }: PropsWithChildren<object>) {
       },
     }),
   );
-  const modifiers = useMemo(() => [restrictToWindowEdges], []);
+
   const onDragStart = useCallback((e: DragStartEvent) => {
     dispatch(calculatorsActions.handleDragStart({ activeId: e.active.id }));
   }, [dispatch]);
@@ -46,7 +45,6 @@ function DndProvider({ children }: PropsWithChildren<object>) {
   return (
     <DndContext
       sensors={sensors}
-      modifiers={modifiers}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
@@ -54,7 +52,7 @@ function DndProvider({ children }: PropsWithChildren<object>) {
     >
       { children }
       <Portal>
-        <DragOverlay zIndex={9999} modifiers={modifiers}>
+        <DragOverlay zIndex={9999}>
           {
             currentDragging && isTabId(currentDragging) && (
               <CalculatorTab.Overlay tabId={currentDragging} />
