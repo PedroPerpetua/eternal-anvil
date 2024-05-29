@@ -58,7 +58,7 @@ export function isTabId(id?: EntityId | null) {
 }
 
 export const defaultTabName = 'Tab';
-function generateTab(): CalculatorTab {
+function generateTab(initialData?: Partial<CalculatorTab>): CalculatorTab {
   return {
     id: generateTabId(),
     name: defaultTabName,
@@ -67,6 +67,7 @@ function generateTab(): CalculatorTab {
     point2: [null, null],
     penalty: 0,
     speed: null,
+    ...initialData,
   };
 }
 
@@ -175,6 +176,32 @@ const calculatorsSlice = createSlice({
       if (!calculator) return;
       removeTabFromCalculator(state, calculator.id, tabId);
       if (calculatorsEntitySelectors.selectTotal(state) === 0) state.show = false;
+    },
+    copyTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
+      const { tabId } = action.payload;
+      const tab = tabsEntitySelectors.selectById(state.tabs, tabId);
+      const calculator = calculatorsEntitySelectors
+        .selectAll(state)
+        .find((c) => c.tabs.includes(tabId));
+      if (!calculator) return;
+      const newTab = generateTab({
+        name: `Copy of ${tab.name}`,
+        mini: tab.mini,
+        point1: tab.point1,
+        point2: tab.point2,
+        penalty: tab.penalty,
+        speed: tab.speed,
+      });
+      tabsAdapter.addOne(state.tabs, newTab);
+      const newTabs = [...calculator.tabs];
+      newTabs.splice(calculator.tabs.indexOf(tabId) + 1, 0, newTab.id);
+      calculatorsAdapter.updateOne(state, {
+        id: calculator.id,
+        changes: {
+          currentTab: newTab.id,
+          tabs: newTabs,
+        },
+      });
     },
     // Screenshots
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {

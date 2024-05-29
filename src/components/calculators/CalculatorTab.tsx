@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import FullScreenIcon from '@mui/icons-material/Fullscreen';
@@ -97,6 +98,17 @@ function TabButton({ tabId }: TabButtonProps) {
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
             <Typography>Edit name</Typography>
             <TealMiniIconButton Icon={EditIcon} />
+          </Stack>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setShowMenu(false);
+            dispatch(calculatorsActions.copyTab({ tabId }));
+          }}
+        >
+          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
+            <Typography>Copy</Typography>
+            <TealMiniIconButton Icon={ContentCopyIcon} />
           </Stack>
         </MenuItem>
         <MenuItem
