@@ -7,18 +7,23 @@ import DndProvider from './DndProvider';
 import GridOverlayMenu from './GridOverlayMenu';
 import ScreenshotOverlay from './ScreenshotOverlay';
 import SelectForScreenshotModal from './SelectForScreenshotModal';
-import { calculatorGridWidth } from './utils';
+import { calculatorGridWidth, calculatorWidth } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
 
+const spacing = 12;
 const adjustedOffset = 'calc((100vh - 417px) / 2)';
 
 function GridOverlay() {
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
 
+  // We fit as many calculators in a row as we can
   const { width, ref: gridRef } = useElementDimensions();
-  const numOfCols = Math.max(1, Math.floor(width / 310));
+  let numOfCols = 1;
+  while (calculatorGridWidth(numOfCols + 1, 8 * spacing) < width) {
+    numOfCols += 1;
+  }
 
   return (
     <DndProvider>
@@ -53,16 +58,21 @@ function GridOverlay() {
           >
             <Grid
               container
-              spacing={1}
+              spacing={spacing}
               columns={numOfCols}
               justifyContent="center"
-              width={calculatorGridWidth(numOfCols, 8)}
+              width={calculatorGridWidth(numOfCols, spacing * 8)}
             >
               <Grid xs={numOfCols} minHeight={adjustedOffset} />
               <SortableContext items={calculatorIds}>
                 {
                   calculatorIds.map((id) => (
-                    <Grid xs={1} key={id} display="flex" justifyContent="center">
+                    <Grid
+                      key={id}
+                      display="flex"
+                      justifyContent="center"
+                      width={calculatorWidth + spacing * 8}
+                    >
                       <Calculator key={id} calculatorId={id} />
                     </Grid>
                   ))
