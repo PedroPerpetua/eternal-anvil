@@ -8,14 +8,16 @@ type TealMiniIconButtonProps = {
   Icon: ComponentType<{ sx: SxProps }>,
   size?: number
   onClick?: () => void,
+  sx?: SxProps
 };
 
-function TealMiniIconButton({ Icon, size = 16, onClick }: TealMiniIconButtonProps) {
+function TealMiniIconButton({ Icon, size = 16, onClick, sx }: TealMiniIconButtonProps) {
   return (
     <MiniIconButton
       primary={gameColors.teal.main}
       secondary={onClick ? gameColors.teal.dark : gameColors.teal.main}
       onClick={onClick}
+      sx={sx}
     >
       <Icon sx={{ color: gameColors.goldIcon, fontSize: size }} />
     </MiniIconButton>

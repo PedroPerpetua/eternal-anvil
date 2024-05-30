@@ -8,6 +8,7 @@ import FullScreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShareIcon from '@mui/icons-material/Share';
+import SplitscreenIcon from '@mui/icons-material/Splitscreen';
 import {
   Box, Menu, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
@@ -109,6 +110,17 @@ function TabButton({ tabId }: TabButtonProps) {
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
             <Typography>Copy</Typography>
             <TealMiniIconButton Icon={ContentCopyIcon} />
+          </Stack>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setShowMenu(false);
+            dispatch(calculatorsActions.splitTab({ tabId }));
+          }}
+        >
+          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
+            <Typography>Split</Typography>
+            <TealMiniIconButton Icon={SplitscreenIcon} sx={{ rotate: '90deg' }} />
           </Stack>
         </MenuItem>
         <MenuItem

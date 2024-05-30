@@ -2,7 +2,7 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
-import { generateId } from './utils';
+import { generateId, insertAfter } from './utils';
 
 import type { RootState } from '.';
 
@@ -92,7 +92,6 @@ function removeTabFromCalculator(
   tabId: EntityId,
 ) {
   const calculator = calculatorsEntitySelectors.selectById(state, calculatorId);
-  if (!calculator) return;
   const originalIndex = calculator.tabs.indexOf(tabId);
   calculatorsAdapter.updateOne(
     state,
@@ -114,6 +113,13 @@ function removeTabFromCalculator(
       { id: refreshed.id, changes: { currentTab: refreshed.tabs.at(newIndex) } },
     );
   }
+}
+
+function findCalculator(
+  state: ReturnType<typeof calculatorsSlice.getInitialState>,
+  tabId: EntityId,
+) {
+  return calculatorsEntitySelectors.selectAll(state).find((c) => c.tabs.includes(tabId))!;
 }
 
 // Slice ---------------------------------------------------------------------
@@ -157,10 +163,7 @@ const calculatorsSlice = createSlice({
     },
     selectTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
-      const calculator = calculatorsEntitySelectors
-        .selectAll(state)
-        .find((c) => c.tabs.includes(tabId));
-      if (!calculator) return;
+      const calculator = findCalculator(state, tabId);
       calculatorsAdapter.updateOne(state, { id: calculator.id, changes: { currentTab: tabId } });
     },
     updateTab: (state, action: PayloadAction<{ tabId: EntityId, changes: Partial<Omit<CalculatorTab, 'id'>> }>) => {
@@ -170,20 +173,14 @@ const calculatorsSlice = createSlice({
     deleteTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
       tabsAdapter.removeOne(state.tabs, tabId);
-      const calculator = calculatorsEntitySelectors
-        .selectAll(state)
-        .find((c) => c.tabs.includes(tabId));
-      if (!calculator) return;
+      const calculator = findCalculator(state, tabId);
       removeTabFromCalculator(state, calculator.id, tabId);
       if (calculatorsEntitySelectors.selectTotal(state) === 0) state.show = false;
     },
     copyTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
       const tab = tabsEntitySelectors.selectById(state.tabs, tabId);
-      const calculator = calculatorsEntitySelectors
-        .selectAll(state)
-        .find((c) => c.tabs.includes(tabId));
-      if (!calculator) return;
+      const calculator = findCalculator(state, tab.id);
       const newTab = generateTab({
         name: `Copy of ${tab.name}`,
         mini: tab.mini,
@@ -193,15 +190,27 @@ const calculatorsSlice = createSlice({
         speed: tab.speed,
       });
       tabsAdapter.addOne(state.tabs, newTab);
-      const newTabs = [...calculator.tabs];
-      newTabs.splice(calculator.tabs.indexOf(tabId) + 1, 0, newTab.id);
       calculatorsAdapter.updateOne(state, {
         id: calculator.id,
         changes: {
           currentTab: newTab.id,
-          tabs: newTabs,
+          tabs: insertAfter(newTab.id, calculator.tabs, tab.id),
         },
       });
+    },
+    splitTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
+      const { tabId } = action.payload;
+      const tab = tabsEntitySelectors.selectById(state.tabs, tabId);
+      const calculator = findCalculator(state, tabId);
+      if (calculator.tabs.length <= 1) return;
+      // Remove the tab from the old calculator
+      removeTabFromCalculator(state, calculator.id, tab.id);
+      // Create a new calculator with the tab
+      const newCalculator = generateCalculator();
+      newCalculator.tabs.push(tab.id);
+      newCalculator.currentTab = tab.id;
+      calculatorsAdapter.addOne(state, newCalculator);
+      state.orderedIds = insertAfter(newCalculator.id, state.orderedIds, calculator.id);
     },
     // Screenshots
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
@@ -222,10 +231,7 @@ const calculatorsSlice = createSlice({
       const { activeId } = action.payload;
       state.dragging = activeId;
       if (isTabId(activeId)) {
-        const calculator = calculatorsEntitySelectors
-          .selectAll(state)
-          .find((c) => c.tabs.includes(activeId));
-        if (!calculator) return;
+        const calculator = findCalculator(state, activeId);
         calculatorsAdapter.updateOne(state, {
           id: calculator.id,
           changes: { currentTab: activeId },
@@ -235,25 +241,20 @@ const calculatorsSlice = createSlice({
     handleDragOver: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
       const { activeId, overId } = action.payload;
       if (!overId || !isTabId(activeId)) return;
-      const calculator = calculatorsEntitySelectors
-        .selectAll(state)
-        .find((c) => c.tabs.includes(activeId));
-      if (!calculator) return;
+      const calculator = findCalculator(state, activeId);
       const overCalculator = isCalculatorId(overId)
         ? calculatorsEntitySelectors.selectById(state, overId)
-        : calculatorsEntitySelectors.selectAll(state).find((c) => c.tabs.includes(overId));
-      if (!overCalculator || calculator.id === overCalculator.id) return;
+        : findCalculator(state, overId);
+      if (calculator.id === overCalculator.id) return;
       // Remove from the old calculator
       removeTabFromCalculator(state, calculator.id, activeId);
       // Add it to the new calculator
-      const newTabs = [...overCalculator.tabs];
-      newTabs.splice(overCalculator.tabs.indexOf(overId), 0, activeId);
       calculatorsAdapter.updateOne(
         state,
         {
           id: overCalculator.id,
           changes: {
-            tabs: newTabs,
+            tabs: insertAfter(activeId, overCalculator.tabs, overId),
             currentTab: activeId,
           },
         },
@@ -263,10 +264,8 @@ const calculatorsSlice = createSlice({
       const { activeId, overId } = action.payload;
       if (isTabId(activeId)) {
         state.dragging = null;
-        const calculator = calculatorsEntitySelectors
-          .selectAll(state)
-          .find((c) => c.tabs.includes(activeId));
-        if (!calculator || !overId || overId === activeId) return;
+        if (!overId || overId === activeId) return;
+        const calculator = findCalculator(state, activeId);
         const oldIndex = calculator.tabs.indexOf(activeId);
         const newIndex = calculator.tabs.indexOf(overId);
         calculatorsAdapter.updateOne(state, {
