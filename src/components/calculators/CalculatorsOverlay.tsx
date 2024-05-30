@@ -12,7 +12,7 @@ import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
 
-const spacing = 12;
+const spacing = 4;
 const adjustedOffset = 'calc((100vh - 417px) / 2)';
 
 function GridOverlay() {
