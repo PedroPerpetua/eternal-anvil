@@ -13,7 +13,7 @@ import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
 
 const spacing = 4;
-const adjustedOffset = 'calc((100vh - 417px) / 2)';
+const adjustedOffset = 'calc((100dvh - 417px) / 2)';
 
 function GridOverlay() {
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
@@ -28,13 +28,16 @@ function GridOverlay() {
   return (
     <DndProvider>
       <Modal open>
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          width: '100vw',
-        }}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100dvh',
+            width: '100vw',
+            overflowY: 'scroll',
+            '&::-webkit-scrollbar': { display: 'none' },
+          }}
         >
           <Box
             sx={{
