@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
-import { useDroppable } from '@dnd-kit/core';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import AddIcon from '@mui/icons-material/Add';
 import { Box, Stack, Typography } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import CalculatorTab from './CalculatorTab';
@@ -38,10 +39,10 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
     <Box
       sx={{
         width: calculatorWidth,
+        height: 'fit-content',
         backgroundColor: 'white',
         borderRadius: '5px',
         border: '1px solid black',
-        height: 'fit-content',
         alignSelf: 'center',
         overflow: 'hidden',
         userSelect: 'none',
@@ -117,23 +118,46 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
 }
 
 function Calculator({ calculatorId }: CalculatorProps) {
-  const {
-    attributes,
-    listeners,
-    transform,
-    setNodeRef: setDraggableNodeRef,
-    transition,
-  } = useSortable({ id: calculatorId });
+  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
+  const calculator = useAppSelector(
+    (state) => calculatorsSelectors.getCalculator(state, calculatorId),
+  );
+  /**
+   * Depending on the display mode, we want to use a sortable (if we're in grid mode) or a
+   * draggable (if we're in free-drag) mode.
+   * Here we do the separation of props based on that.
+   * We have to initialized both node refs to be set even at the start.
+   */
+  // Process which to use - sortable or draggable
+  const sortableAttrs = useSortable({ id: calculatorId, disabled: displayMode !== 'grid' });
+  const draggableAttrs = useDraggable({ id: calculatorId, disabled: displayMode !== 'free-drag' });
+  const currAttrs = displayMode === 'grid' ? sortableAttrs : draggableAttrs;
+  const setNodeRef = (node: HTMLElement | null) => {
+    sortableAttrs.setNodeRef(node);
+    draggableAttrs.setNodeRef(node);
+  };
+  const sx: SxProps<Theme> = {
+    transform: CSS.Translate.toString(currAttrs.transform),
+  };
+  let attributes;
+  let listeners;
+  if (displayMode === 'grid') {
+    attributes = sortableAttrs.attributes;
+    listeners = sortableAttrs.listeners;
+    sx.transition = sortableAttrs.transition;
+  }
+  if (displayMode === 'free-drag') {
+    attributes = draggableAttrs.attributes;
+    listeners = draggableAttrs.listeners;
+    sx.position = 'absolute';
+    [sx.left, sx.top] = calculator.position;
+    if (draggableAttrs.isDragging) {
+      sx.boxShadow = `0 0 25px ${gameColors.gold.light}`;
+    }
+  }
+
   return (
-    <Box
-      {...attributes}
-      {...listeners}
-      ref={setDraggableNodeRef}
-      sx={{
-        transform: CSS.Translate.toString(transform),
-        transition,
-      }}
-    >
+    <Box {...attributes} {...listeners} ref={setNodeRef} sx={sx}>
       <CalculatorImpl calculatorId={calculatorId} />
     </Box>
   );

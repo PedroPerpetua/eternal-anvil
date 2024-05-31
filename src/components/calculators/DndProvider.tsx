@@ -13,13 +13,14 @@ import { calculatorsActions, calculatorsSelectors, isCalculatorId, isTabId } fro
 
 function DndProvider({ children }: PropsWithChildren<object>) {
   const dispatch = useAppDispatch();
+  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
   const currentDragging = useAppSelector(calculatorsSelectors.getDragging);
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
         distance: 10,
-        delay: 700,
+        delay: 350,
         tolerance: 10,
       },
     }),
@@ -39,7 +40,11 @@ function DndProvider({ children }: PropsWithChildren<object>) {
     dispatch(calculatorsActions.handleDragOver({ activeId: e.active.id, overId: e.over?.id }));
   }, [dispatch]);
   const onDragEnd = useCallback((e: DragEndEvent) => {
-    dispatch(calculatorsActions.handleDragEnd({ activeId: e.active.id, overId: e.over?.id }));
+    dispatch(calculatorsActions.handleDragEnd({
+      activeId: e.active.id,
+      overId: e.over?.id,
+      delta: [e.delta.x, e.delta.y],
+    }));
   }, [dispatch]);
 
   return (
@@ -59,7 +64,7 @@ function DndProvider({ children }: PropsWithChildren<object>) {
             )
           }
           {
-            currentDragging && isCalculatorId(currentDragging) && (
+            currentDragging && isCalculatorId(currentDragging) && displayMode !== 'free-drag' && (
               <Calculator.Overlay calculatorId={currentDragging} />
             )
           }

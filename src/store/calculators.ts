@@ -3,6 +3,7 @@ import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolk
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 import { generateId, insertAfter } from './utils';
+import { calculatorHeight, calculatorWidth } from '../components/calculators/utils';
 
 import type { RootState } from '.';
 
@@ -11,6 +12,7 @@ export type Calculator = {
   id: EntityId,
   currentTab: EntityId | null,
   tabs: EntityId[],
+  position: [number, number],
 };
 
 const calculatorPrefix = 'Calculator';
@@ -29,6 +31,10 @@ function generateCalculator(): Calculator {
     id: generateCalculatorId(),
     currentTab: null,
     tabs: [],
+    position: [
+      Math.floor((window.innerWidth - calculatorWidth) / 2),
+      Math.floor((window.innerHeight - calculatorHeight) / 2),
+    ],
   };
 }
 
@@ -123,12 +129,14 @@ function findCalculator(
 }
 
 // Slice ---------------------------------------------------------------------
+type DisplayMode = 'grid' | 'free-drag';
 const calculatorsSlice = createSlice({
   name: 'calculators',
   initialState: calculatorsAdapter.getInitialState({
     orderedIds: [] as EntityId[],
     tabs: tabsAdapter.getInitialState(),
     show: false,
+    displayMode: 'grid' as DisplayMode,
     screenshots: {
       tabsOnScreenshot: [] as EntityId[],
       takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
@@ -143,6 +151,9 @@ const calculatorsSlice = createSlice({
         createCalculator(state);
       }
       state.show = action.payload;
+    },
+    setDisplayMode: (state, action: PayloadAction<DisplayMode>) => {
+      state.displayMode = action.payload;
     },
     createCalculator: (state) => {
       createCalculator(state);
@@ -260,8 +271,11 @@ const calculatorsSlice = createSlice({
         },
       );
     },
-    handleDragEnd: (state, action: PayloadAction<{ activeId: EntityId, overId?: EntityId }>) => {
-      const { activeId, overId } = action.payload;
+    handleDragEnd: (
+      state,
+      action: PayloadAction<{ activeId: EntityId, overId?: EntityId, delta?: [number, number] }>,
+    ) => {
+      const { activeId, overId, delta } = action.payload;
       if (isTabId(activeId)) {
         state.dragging = null;
         if (!overId || overId === activeId) return;
@@ -274,9 +288,21 @@ const calculatorsSlice = createSlice({
         });
       }
       if (isCalculatorId(activeId)) {
-        const oldIndex = state.orderedIds.indexOf(activeId);
-        const newIndex = overId ? state.orderedIds.indexOf(overId) : state.orderedIds.length;
-        state.orderedIds = arrayMove(state.orderedIds, oldIndex, newIndex);
+        if (state.displayMode === 'grid') {
+          const oldIndex = state.orderedIds.indexOf(activeId);
+          const newIndex = overId ? state.orderedIds.indexOf(overId) : state.orderedIds.length;
+          state.orderedIds = arrayMove(state.orderedIds, oldIndex, newIndex);
+          return;
+        }
+        if (state.displayMode === 'free-drag' && delta) {
+          const calculator = calculatorsEntitySelectors.selectById(state, activeId);
+          calculatorsAdapter.updateOne(state, {
+            id: activeId,
+            changes: {
+              position: [calculator.position[0] + delta[0], calculator.position[1] + delta[1]],
+            },
+          });
+        }
       }
     },
   },
@@ -287,6 +313,7 @@ export default calculatorsSlice.reducer;
 export const calculatorsActions = calculatorsSlice.actions;
 export const calculatorsSelectors = {
   show: (state: RootState) => state.calculators.show,
+  displayMode: (state: RootState) => state.calculators.displayMode,
   getCalculator: createSelector(
     [
       (state: RootState) => state.calculators,

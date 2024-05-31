@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import type { ComponentType } from 'react';
 import AddIcon from '@mui/icons-material/Add';
+import Grid3x3Icon from '@mui/icons-material/Grid3x3';
 import MenuIcon from '@mui/icons-material/Menu';
+import PanToolIcon from '@mui/icons-material/PanTool';
 import ShareIcon from '@mui/icons-material/Share';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import {
   Box, Fab, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
 
-import { useAppDispatch } from '../../store';
-import { calculatorsActions } from '../../store/calculators';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 
 type MenuButtonProps = {
   Icon: ComponentType<object>,
@@ -37,6 +39,7 @@ function MenuButton({ Icon, label, onClick, open }: MenuButtonProps) {
 
 function GridOverlayMenu() {
   const dispatch = useAppDispatch();
+  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
   const [open, setOpen] = useState(false);
 
   return (
@@ -48,6 +51,12 @@ function GridOverlayMenu() {
               Icon={AddIcon}
               label="Add calculator"
               onClick={() => dispatch(calculatorsActions.createCalculator())}
+              open={open}
+            />
+            <MenuButton
+              Icon={displayMode === 'grid' ? PanToolIcon : Grid3x3Icon}
+              label={`Change to ${displayMode === 'grid' ? 'Free-Drag' : 'Grid'}`}
+              onClick={() => dispatch(calculatorsActions.setDisplayMode(displayMode === 'grid' ? 'free-drag' : 'grid'))}
               open={open}
             />
             <MenuButton
