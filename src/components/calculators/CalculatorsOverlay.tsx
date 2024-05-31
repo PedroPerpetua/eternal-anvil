@@ -41,58 +41,59 @@ function GridOverlay() {
     <DndProvider>
       <Modal open>
         <>
-          {
-          displayMode === 'free-drag'
-            ? (calculatorElements)
-            : (
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100dvh',
-                  width: '100vw',
-                  overflowY: 'scroll',
-                  '&::-webkit-scrollbar': { display: 'none' },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
-                    overflowX: 'hidden',
-                    '&::-webkit-scrollbar': { display: 'none' },
-                    display: 'flex',
-                    justifyContent: 'center',
-                    mask: `linear-gradient(to bottom,
-                      rgba(0, 0, 0, 0) 0%,
-                      rgba(0, 0, 0, 0) 10%,
-                      rgba(0, 0, 0, 1) 15%,
-                      rgba(0, 0, 0, 1) 90%,
-                      rgba(0, 0, 0, 0) 95%,
-                      rgba(0, 0, 0, 0) 100%
-                    )`,
-                  }}
-                  ref={gridRef}
-                >
-                  <Grid
-                    container
-                    spacing={spacing}
-                    columns={numOfCols}
-                    justifyContent="center"
-                    width={calculatorGridWidth(numOfCols, spacing * 8)}
+          <Box
+            sx={{
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100dvh',
+              width: '100vw',
+              overflowY: 'scroll',
+              '&::-webkit-scrollbar': { display: 'none' },
+              mask: `linear-gradient(to bottom,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 0, 0, 0) 10%,
+                rgba(0, 0, 0, 1) 15%,
+                rgba(0, 0, 0, 1) 90%,
+                rgba(0, 0, 0, 0) 95%,
+                rgba(0, 0, 0, 0) 100%
+              )`,
+            }}
+          >
+            {
+              displayMode === 'free-drag'
+                ? (calculatorElements)
+                : (
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
+                      overflowX: 'hidden',
+                      '&::-webkit-scrollbar': { display: 'none' },
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                    ref={gridRef}
                   >
-                    <Grid xs={numOfCols} minHeight={adjustedOffset} />
-                    <SortableContext items={calculatorIds}>
-                      { calculatorElements }
-                    </SortableContext>
-                    <Grid xs={numOfCols} minHeight={adjustedOffset} />
-                  </Grid>
-                </Box>
-              </Box>
-            )
-          }
+                    <Grid
+                      container
+                      spacing={spacing}
+                      columns={numOfCols}
+                      justifyContent="center"
+                      width={calculatorGridWidth(numOfCols, spacing * 8)}
+                    >
+                      <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                      <SortableContext items={calculatorIds}>
+                        { calculatorElements }
+                      </SortableContext>
+                      <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                    </Grid>
+                  </Box>
+                )
+            }
+          </Box>
           <GridOverlayMenu />
         </>
       </Modal>

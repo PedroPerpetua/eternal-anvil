@@ -13,6 +13,7 @@ export type Calculator = {
   currentTab: EntityId | null,
   tabs: EntityId[],
   position: [number, number],
+  zIndex: number
 };
 
 const calculatorPrefix = 'Calculator';
@@ -35,6 +36,7 @@ function generateCalculator(): Calculator {
       Math.floor((window.innerWidth - calculatorWidth) / 2),
       Math.floor((window.innerHeight - calculatorHeight) / 2),
     ],
+    zIndex: 0,
   };
 }
 
@@ -86,6 +88,8 @@ function createCalculator(state: ReturnType<typeof calculatorsSlice.getInitialSt
   const tab = generateTab();
   calculator.tabs.push(tab.id);
   calculator.currentTab = tab.id;
+  state.highestZIndex += 1;
+  calculator.zIndex = state.highestZIndex;
   calculatorsAdapter.addOne(state, calculator);
   state.orderedIds.push(calculator.id);
   tabsAdapter.addOne(state.tabs, tab);
@@ -134,6 +138,7 @@ const calculatorsSlice = createSlice({
   name: 'calculators',
   initialState: calculatorsAdapter.getInitialState({
     orderedIds: [] as EntityId[],
+    highestZIndex: 0,
     tabs: tabsAdapter.getInitialState(),
     show: false,
     displayMode: 'grid' as DisplayMode,
@@ -153,6 +158,24 @@ const calculatorsSlice = createSlice({
       state.show = action.payload;
     },
     setDisplayMode: (state, action: PayloadAction<DisplayMode>) => {
+      if (state.displayMode === 'free-drag') {
+        // Re-organize the ids by "closest to the corner"
+        state.orderedIds = calculatorsEntitySelectors.selectAll(state)
+          .sort((c1, c2) => c1.position[0] + c1.position[1] - c2.position[0] - c2.position[1])
+          .map((calc) => calc.id);
+      }
+      if (state.displayMode === 'grid') {
+        // Set each position to the current grid position
+        calculatorsEntitySelectors.selectAll(state).forEach((calc) => {
+          const calcElement = document.getElementById(calc.id.toString());
+          if (!calcElement) return;
+          const rect = calcElement.getBoundingClientRect();
+          calculatorsAdapter.updateOne(state, {
+            id: calc.id,
+            changes: { position: [rect.left, rect.top] },
+          });
+        });
+      }
       state.displayMode = action.payload;
     },
     createCalculator: (state) => {
@@ -161,6 +184,14 @@ const calculatorsSlice = createSlice({
     updateCalculator: (state, action: PayloadAction<{ calculatorId: EntityId, changes: Partial<Omit<Calculator, 'id'>> }>) => {
       const { calculatorId, changes } = action.payload;
       calculatorsAdapter.updateOne(state, { id: calculatorId, changes });
+    },
+    bringCalculatorToTop: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
+      const { calculatorId } = action.payload;
+      state.highestZIndex += 1;
+      calculatorsAdapter.updateOne(state, {
+        id: calculatorId,
+        changes: { zIndex: state.highestZIndex },
+      });
     },
     createTab: (state, action: PayloadAction<{ calculatorId: EntityId }>) => {
       const { calculatorId } = action.payload;

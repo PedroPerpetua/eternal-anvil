@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -118,6 +118,7 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
 }
 
 function Calculator({ calculatorId }: CalculatorProps) {
+  const dispatch = useAppDispatch();
   const displayMode = useAppSelector(calculatorsSelectors.displayMode);
   const calculator = useAppSelector(
     (state) => calculatorsSelectors.getCalculator(state, calculatorId),
@@ -138,6 +139,7 @@ function Calculator({ calculatorId }: CalculatorProps) {
   };
   const sx: SxProps<Theme> = {
     transform: CSS.Translate.toString(currAttrs.transform),
+    zIndex: calculator.zIndex,
   };
   let attributes;
   let listeners;
@@ -156,8 +158,24 @@ function Calculator({ calculatorId }: CalculatorProps) {
     }
   }
 
+  // Handle zIndex
+  const bringToTop = useCallback(() => {
+    dispatch(calculatorsActions.bringCalculatorToTop({ calculatorId }));
+  }, [calculatorId, dispatch]);
+
+  useEffect(() => {
+    if (currAttrs.isDragging) bringToTop();
+  }, [currAttrs.isDragging, bringToTop]);
+
   return (
-    <Box {...attributes} {...listeners} ref={setNodeRef} sx={sx}>
+    <Box
+      {...attributes}
+      {...listeners}
+      ref={setNodeRef}
+      id={calculatorId.toString()}
+      sx={sx}
+      onClick={() => bringToTop()}
+    >
       <CalculatorImpl calculatorId={calculatorId} />
     </Box>
   );
