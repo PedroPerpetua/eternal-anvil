@@ -1,11 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
-
 /**
  * Shortcut function to generate a random unique universal identifier.
  * @returns A random uuid4
  */
 export function generateId() {
-  return uuidv4();
+  return crypto.randomUUID();
 }
 
 export function insertAfter<T>(elementToInsert: T, arr: T[], after?: T) {
