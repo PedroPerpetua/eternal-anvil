@@ -42,7 +42,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ env.ref_name }}
+        tags: ghcr.io/${{ github.repository }}:${{ env.ref_name }}
 
     - name: Logout from GitHub Container Registry
       run: docker logout ghcr.io
