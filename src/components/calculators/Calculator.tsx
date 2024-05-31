@@ -8,6 +8,7 @@ import type { SxProps, Theme } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
 
 import CalculatorTab from './CalculatorTab';
+import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { calculatorWidth } from './utils';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
@@ -119,10 +120,10 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
 
 function Calculator({ calculatorId }: CalculatorProps) {
   const dispatch = useAppDispatch();
-  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
   const calculator = useAppSelector(
     (state) => calculatorsSelectors.getCalculator(state, calculatorId),
   );
+  const displayMode = useCalculatorsDisplayMode();
   /**
    * Depending on the display mode, we want to use a sortable (if we're in grid mode) or a
    * draggable (if we're in free-drag) mode.

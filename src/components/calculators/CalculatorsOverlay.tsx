@@ -4,9 +4,10 @@ import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 import Calculator from './Calculator';
 import DndProvider from './DndProvider';
-import GridOverlayMenu from './GridOverlayMenu';
+import OverlayMenu from './OverlayMenu';
 import ScreenshotOverlay from './ScreenshotOverlay';
 import SelectForScreenshotModal from './SelectForScreenshotModal';
+import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { calculatorGridWidth, calculatorWidth } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
@@ -15,9 +16,10 @@ import useElementDimensions from '../common/useElementDimensions';
 const spacing = 4;
 const adjustedOffset = 'calc((100dvh - 417px) / 2)';
 
-function GridOverlay() {
-  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
+function CalculatorsOverlay() {
+  const show = useAppSelector(calculatorsSelectors.show);
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
+  const displayMode = useCalculatorsDisplayMode();
 
   // We fit as many calculators in a row as we can
   const { width, ref: gridRef } = useElementDimensions();
@@ -37,77 +39,69 @@ function GridOverlay() {
     </Grid>
   ));
 
-  return (
-    <DndProvider>
-      <Modal open>
-        <>
-          <Box
-            sx={{
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100dvh',
-              width: '100vw',
-              overflowY: 'scroll',
-              '&::-webkit-scrollbar': { display: 'none' },
-              mask: `linear-gradient(to bottom,
-                rgba(0, 0, 0, 0) 0%,
-                rgba(0, 0, 0, 0) 10%,
-                rgba(0, 0, 0, 1) 15%,
-                rgba(0, 0, 0, 1) 90%,
-                rgba(0, 0, 0, 0) 95%,
-                rgba(0, 0, 0, 0) 100%
-              )`,
-            }}
-          >
-            {
-              displayMode === 'free-drag'
-                ? (calculatorElements)
-                : (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
-                      overflowX: 'hidden',
-                      '&::-webkit-scrollbar': { display: 'none' },
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}
-                    ref={gridRef}
-                  >
-                    <Grid
-                      container
-                      spacing={spacing}
-                      columns={numOfCols}
-                      justifyContent="center"
-                      width={calculatorGridWidth(numOfCols, spacing * 8)}
-                    >
-                      <Grid xs={numOfCols} minHeight={adjustedOffset} />
-                      <SortableContext items={calculatorIds}>
-                        { calculatorElements }
-                      </SortableContext>
-                      <Grid xs={numOfCols} minHeight={adjustedOffset} />
-                    </Grid>
-                  </Box>
-                )
-            }
-          </Box>
-          <GridOverlayMenu />
-        </>
-      </Modal>
-    </DndProvider>
-  );
-}
-
-function CalculatorsOverlay() {
-  const show = useAppSelector(calculatorsSelectors.show);
-
   if (!show) return null;
   return (
     <>
-      <GridOverlay />
+      <DndProvider>
+        <Modal open>
+          <>
+            <Box
+              sx={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100dvh',
+                width: '100vw',
+                overflowY: 'scroll',
+                '&::-webkit-scrollbar': { display: 'none' },
+                mask: `linear-gradient(to bottom,
+                  rgba(0, 0, 0, 0) 0%,
+                  rgba(0, 0, 0, 0) 10%,
+                  rgba(0, 0, 0, 1) 15%,
+                  rgba(0, 0, 0, 1) 90%,
+                  rgba(0, 0, 0, 0) 95%,
+                  rgba(0, 0, 0, 0) 100%
+                )`,
+              }}
+            >
+              {
+                displayMode === 'free-drag'
+                  ? (calculatorElements)
+                  : (
+                    <Box
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        overflowY: calculatorIds.length > numOfCols ? 'auto' : 'hidden',
+                        overflowX: 'hidden',
+                        '&::-webkit-scrollbar': { display: 'none' },
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                      ref={gridRef}
+                    >
+                      <Grid
+                        container
+                        spacing={spacing}
+                        columns={numOfCols}
+                        justifyContent="center"
+                        width={calculatorGridWidth(numOfCols, spacing * 8)}
+                      >
+                        <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                        <SortableContext items={calculatorIds}>
+                          { calculatorElements }
+                        </SortableContext>
+                        <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                      </Grid>
+                    </Box>
+                  )
+              }
+            </Box>
+            <OverlayMenu />
+          </>
+        </Modal>
+      </DndProvider>
       <SelectForScreenshotModal />
       <ScreenshotOverlay />
     </>

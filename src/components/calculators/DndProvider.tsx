@@ -8,13 +8,14 @@ import { Portal } from '@mui/material';
 
 import Calculator from './Calculator';
 import CalculatorTab from './CalculatorTab';
+import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors, isCalculatorId, isTabId } from '../../store/calculators';
 
 function DndProvider({ children }: PropsWithChildren<object>) {
   const dispatch = useAppDispatch();
-  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
   const currentDragging = useAppSelector(calculatorsSelectors.getDragging);
+  const displayMode = useCalculatorsDisplayMode();
 
   const sensors = useSensors(
     useSensor(MouseSensor, {

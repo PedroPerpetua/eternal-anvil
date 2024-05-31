@@ -133,7 +133,7 @@ function findCalculator(
 }
 
 // Slice ---------------------------------------------------------------------
-type DisplayMode = 'grid' | 'free-drag';
+export type DisplayMode = 'grid' | 'free-drag';
 const calculatorsSlice = createSlice({
   name: 'calculators',
   initialState: calculatorsAdapter.getInitialState({

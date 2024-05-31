@@ -10,8 +10,9 @@ import {
   Box, Fab, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
 
-import { useAppDispatch, useAppSelector } from '../../store';
-import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
+import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
+import { useAppDispatch } from '../../store';
+import { calculatorsActions } from '../../store/calculators';
 
 type MenuButtonProps = {
   Icon: ComponentType<object>,
@@ -37,9 +38,12 @@ function MenuButton({ Icon, label, onClick, open }: MenuButtonProps) {
   );
 }
 
-function GridOverlayMenu() {
+function OverlayMenu() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const dispatch = useAppDispatch();
-  const displayMode = useAppSelector(calculatorsSelectors.displayMode);
+  const displayMode = useCalculatorsDisplayMode();
   const [open, setOpen] = useState(false);
 
   return (
@@ -53,12 +57,20 @@ function GridOverlayMenu() {
               onClick={() => dispatch(calculatorsActions.createCalculator())}
               open={open}
             />
-            <MenuButton
-              Icon={displayMode === 'grid' ? PanToolIcon : Grid3x3Icon}
-              label={`Change to ${displayMode === 'grid' ? 'Free-Drag' : 'Grid'}`}
-              onClick={() => dispatch(calculatorsActions.setDisplayMode(displayMode === 'grid' ? 'free-drag' : 'grid'))}
-              open={open}
-            />
+            {
+              !isMobile && (
+                <MenuButton
+                  Icon={displayMode === 'grid' ? PanToolIcon : Grid3x3Icon}
+                  label={`Change to ${displayMode === 'grid' ? 'Free-Drag' : 'Grid'}`}
+                  onClick={() => dispatch(calculatorsActions.setDisplayMode(
+                    displayMode === 'grid'
+                      ? 'free-drag'
+                      : 'grid',
+                  ))}
+                  open={open}
+                />
+              )
+            }
             <MenuButton
               Icon={VisibilityOffIcon}
               label="Hide calculators"
@@ -81,4 +93,4 @@ function GridOverlayMenu() {
   );
 }
 
-export default GridOverlayMenu;
+export default OverlayMenu;
