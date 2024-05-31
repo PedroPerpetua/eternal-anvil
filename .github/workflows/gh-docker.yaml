@@ -16,7 +16,6 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Extract branch or tag name
-      id: extract_ref
       run: |
         if [[ "${{ github.ref }}" == refs/heads/* ]]; then
           echo "ref_type=branch" >> $GITHUB_ENV
@@ -25,6 +24,10 @@ jobs:
           echo "ref_type=tag" >> $GITHUB_ENV
           echo "ref_name=${{ github.ref }}" | sed 's#refs/tags/##' >> $GITHUB_ENV
         fi
+
+    - name: Extract repository path # and lowercase it
+      run: |
+        echo "repo_path=${GITHUB_REPOSITORY@L}" >> "${GITHUB_ENV}"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -42,7 +45,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/${{ github.repository }}:${{ env.ref_name }}
+        tags: ghcr.io/${{ env.repo_path }}:${{ env.ref_name }}
 
     - name: Logout from GitHub Container Registry
       run: docker logout ghcr.io
