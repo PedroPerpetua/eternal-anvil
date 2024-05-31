@@ -49,7 +49,7 @@
     "vite-plugin-eslint": "1.8.1"
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": "==20.14.0"
   },
   "packageManager": "yarn@4.2.2"
 }
