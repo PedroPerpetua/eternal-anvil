@@ -9,8 +9,8 @@ import ScreenshotOverlay from './ScreenshotOverlay';
 import SelectForScreenshotModal from './SelectForScreenshotModal';
 import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { calculatorGridWidth, calculatorHeight, calculatorSpacing, calculatorWidth } from './utils';
-import { useAppSelector } from '../../store';
-import { calculatorsSelectors } from '../../store/calculators';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
 
 /**
@@ -20,6 +20,7 @@ import useElementDimensions from '../common/useElementDimensions';
 const adjustedOffset = `calc((100dvh - ${calculatorHeight}px) / 2)`;
 
 function CalculatorsOverlay() {
+  const dispatch = useAppDispatch();
   const show = useAppSelector(calculatorsSelectors.show);
   const calculatorIds = useAppSelector(calculatorsSelectors.getCalculatorIds);
   const displayMode = useCalculatorsDisplayMode();
@@ -35,8 +36,9 @@ function CalculatorsOverlay() {
   return (
     <>
       <DndProvider>
-        <Modal open>
-          <>
+        <Modal open onClose={() => dispatch(calculatorsActions.setShow(false))}>
+          { /* This div receives the modal ref and allows using ESX to close */ }
+          <div>
             <Box
               sx={{
                 position: 'relative',
@@ -102,7 +104,7 @@ function CalculatorsOverlay() {
               }
             </Box>
             <OverlayMenu />
-          </>
+          </div>
         </Modal>
       </DndProvider>
       <SelectForScreenshotModal />

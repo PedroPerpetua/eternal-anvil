@@ -104,23 +104,23 @@ function TabButton({ tabId }: TabButtonProps) {
         <MenuItem
           onClick={() => {
             setShowMenu(false);
-            dispatch(calculatorsActions.copyTab({ tabId }));
-          }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Copy</Typography>
-            <TealMiniIconButton Icon={ContentCopyIcon} />
-          </Stack>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setShowMenu(false);
             dispatch(calculatorsActions.splitTab({ tabId }));
           }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
             <Typography>Split</Typography>
             <TealMiniIconButton Icon={SplitscreenIcon} sx={{ rotate: '90deg' }} />
+          </Stack>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setShowMenu(false);
+            dispatch(calculatorsActions.copyTab({ tabId }));
+          }}
+        >
+          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
+            <Typography>Copy</Typography>
+            <TealMiniIconButton Icon={ContentCopyIcon} />
           </Stack>
         </MenuItem>
         <MenuItem

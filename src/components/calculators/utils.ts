@@ -72,7 +72,7 @@ export function calculateDistance(
 
 export function formatDistance(distance: number | null) {
   if (distance === null) return '∞';
-  return distance.toFixed(3);
+  return Math.round(distance * 1000) / 1000;
 }
 
 export function calculateTime(distance: number | null, speedPerHour: number | null) {

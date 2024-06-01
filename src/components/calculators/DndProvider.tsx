@@ -20,7 +20,7 @@ function DndProvider({ children }: PropsWithChildren<object>) {
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 0, // We need to set this to allow on-clicks below it
+        distance: 10,
       },
     }),
     useSensor(TouchSensor, {
