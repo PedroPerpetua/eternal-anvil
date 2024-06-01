@@ -4,17 +4,19 @@ import {
   Box, Divider, Link, Modal, Stack, Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import { Trans, useTranslation } from 'react-i18next';
 
 import AboutImage from '../../assets/about-me.png';
 import PrimaryGameButton from '../common/styled/PrimaryGameButton';
 
 function About() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <PrimaryGameButton onClick={() => setOpen(true)}>
-        About
+        { t('website.about.button') }
       </PrimaryGameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
@@ -34,45 +36,46 @@ function About() {
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid xs={12} sm={8}>
               <Stack spacing={2}>
+                <Typography variant="h6">
+                  { t('website.about.title') }
+                </Typography>
                 <Stack>
-                  <Typography variant="h6">The Eternal Anvil project</Typography>
                   <Typography textAlign="justify">
-                    This project is open source.
-                    <br />
-                    For suggestions, contributions, and bug reports, please visit
-                    { ' ' }
-                    <Link
-                      href="https://github.com/PedroPerpetua/eternal-anvil"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      <GitHubIcon fontSize="inherit" />
-                      Github
-                    </Link>
-                    .
+                    <Trans
+                      i18nKey="website.about.openSource"
+                      components={[
+                        <br />,
+                        <Link
+                          href="https://github.com/PedroPerpetua/eternal-anvil"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          <GitHubIcon fontSize="inherit" sx={{ marginRight: '1px' }} />
+                          Github
+                        </Link>,
+                      ]}
+                    />
                   </Typography>
                 </Stack>
                 <Divider />
                 <Stack>
-                  <Typography>
-                    This project was developed by Pedro Perpétua.
-                  </Typography>
-                  <Typography>
-                    You can visit my website
-                    { ' ' }
-                    <Link
-                      href="https://www.pedroperpetua.com"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      here
-                    </Link>
-                    .
-                  </Typography>
-                  <Typography>
-                    Find me on Discord under
-                    { ' ' }
-                    <i>warriorpp</i>
+                  <Typography textAlign="justify">
+                    <Trans
+                      i18nKey="website.about.developer"
+                      values={{
+                        developer: 'Pedro Perpétua',
+                        discord: 'warriorpp',
+                      }}
+                      components={[
+                        <br />,
+                        <Link
+                          href="https://www.pedroperpetua.com"
+                          target="_blank"
+                          rel="noopener"
+                        />,
+                        <Typography component="i" />,
+                      ]}
+                    />
                   </Typography>
                 </Stack>
               </Stack>

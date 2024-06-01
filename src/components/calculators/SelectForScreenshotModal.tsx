@@ -4,11 +4,13 @@ import {
   Typography,
 } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 
 function SelectForScreenshotModal() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const tabList = useAppSelector(calculatorsSelectors.getTabList);
   const open = useAppSelector(calculatorsSelectors.getShowSelectMultiple);
@@ -34,7 +36,7 @@ function SelectForScreenshotModal() {
       >
         <Stack>
           <Typography>
-            Select tabs to screenshot...
+            { t('calculators.tab.copyImage.multiple.title') }
           </Typography>
           {
             tabList.map((calculatorTabList, i) => (
@@ -70,7 +72,7 @@ function SelectForScreenshotModal() {
               handleClose();
             }}
           >
-            Screenshot and copy to clipboard
+            { t('calculators.tab.copyImage.multiple.submit') }
           </Button>
         </Stack>
       </Box>

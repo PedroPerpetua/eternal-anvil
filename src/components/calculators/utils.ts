@@ -1,3 +1,5 @@
+import type { ParseKeys } from 'i18next';
+
 import AddWarlordIcon from '../../assets/penalty-icons/add-warlord-icon.png';
 import ConquerIcon from '../../assets/penalty-icons/conquer-icon.png';
 import CustomPenaltyIcon from '../../assets/penalty-icons/custom-icon.png';
@@ -8,8 +10,8 @@ import { gameColors } from '../../theme';
 
 type Penalty = {
   value: number,
-  name: string,
-  description: string,
+  nameTKey: ParseKeys,
+  descriptionTKey: ParseKeys | '',
   iconSrc: string,
   iconColor?: string
 };
@@ -17,35 +19,35 @@ type Penalty = {
 export const penalties: Penalty[] = [
   {
     value: 0,
-    name: 'No penalty',
-    description: 'Add to mission / Goblin Fort / Relic',
+    nameTKey: 'calculators.tab.distanceForm.penalties.0.name',
+    descriptionTKey: 'calculators.tab.distanceForm.penalties.0.description',
     iconSrc: AddWarlordIcon,
     iconColor: gameColors.goldIcon,
   },
   {
     value: 5,
-    name: 'Goblin Tower',
-    description: 'Raid a goblin tower',
+    nameTKey: 'calculators.tab.distanceForm.penalties.5.name',
+    descriptionTKey: 'calculators.tab.distanceForm.penalties.5.description',
     iconSrc: GTIcon,
   },
   {
     value: 10,
-    name: 'Support',
-    description: 'Send on watch / support mission',
+    nameTKey: 'calculators.tab.distanceForm.penalties.10.name',
+    descriptionTKey: 'calculators.tab.distanceForm.penalties.10.description',
     iconSrc: SendOnWatchIcon,
     iconColor: gameColors.goldIcon,
   },
   {
     value: 16,
-    name: 'Raid',
-    description: 'Raid an enemy tower',
+    nameTKey: 'calculators.tab.distanceForm.penalties.16.name',
+    descriptionTKey: 'calculators.tab.distanceForm.penalties.16.description',
     iconSrc: RaidIcon,
     iconColor: gameColors.goldIcon,
   },
   {
     value: 20,
-    name: 'Conquer',
-    description: 'Conquer an enemy tower / portal',
+    nameTKey: 'calculators.tab.distanceForm.penalties.20.name',
+    descriptionTKey: 'calculators.tab.distanceForm.penalties.20.description',
     iconSrc: ConquerIcon,
     iconColor: gameColors.goldIcon,
   },
@@ -53,8 +55,8 @@ export const penalties: Penalty[] = [
 
 export const customPenalty: Penalty = {
   value: 0,
-  name: 'Custom Penalty',
-  description: '',
+  nameTKey: 'calculators.tab.distanceForm.penalties.custom',
+  descriptionTKey: '',
   iconSrc: CustomPenaltyIcon,
   iconColor: gameColors.goldIcon,
 };

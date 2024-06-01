@@ -5,20 +5,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import { customPenalty, penalties } from './utils';
 import CustomIcon from '../common/CustomIcon';
 
 type PenaltySelectorProps = {
+  label: string,
   value: number | null,
   onChange: (v: number | null) => void,
 };
 
-function PenaltySelector({ value, onChange }: PenaltySelectorProps) {
+function PenaltySelector({ label, value, onChange }: PenaltySelectorProps) {
+  const { t } = useTranslation();
   return (
     <Autocomplete
       value={value}
-      onChange={(e, newValue) => onChange(newValue === null ? newValue : Number(newValue))}
+      onChange={(_, newValue) => onChange(newValue === null ? newValue : Number(newValue))}
       freeSolo
       options={penalties.map((p) => p.value)}
       getOptionLabel={(v) => v.toString()}
@@ -35,10 +38,16 @@ function PenaltySelector({ value, onChange }: PenaltySelectorProps) {
                   { penalty.value }
                   )
                   { ' ' }
-                  { penalty.name }
+                  { t(penalty.nameTKey) }
                 </Typography>
               </Stack>
-              <Typography variant="subtitle2">{ penalty.description }</Typography>
+              {
+                penalty.descriptionTKey && (
+                  <Typography variant="subtitle2">
+                    { t(penalty.descriptionTKey) }
+                  </Typography>
+                )
+              }
             </Stack>
           </Box>
         );
@@ -50,7 +59,7 @@ function PenaltySelector({ value, onChange }: PenaltySelectorProps) {
           <TextField
             {...params}
             type="number"
-            label="Mission Penalty"
+            label={label}
             FormHelperTextProps={{ component: 'div' }}
             InputLabelProps={{ shrink: true }}
             helperText={(
@@ -61,7 +70,7 @@ function PenaltySelector({ value, onChange }: PenaltySelectorProps) {
                   { currVal }
                   )
                   { ' ' }
-                  { penalty.name }
+                  { t(penalty.nameTKey) }
                 </Typography>
               </Stack>
             )}

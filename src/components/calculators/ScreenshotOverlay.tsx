@@ -5,6 +5,7 @@ import {
 import type { AlertColor } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { EntityId } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 import { useScreenshot } from 'use-react-screenshot';
 
 import MiniDisplay from './MiniDisplay';
@@ -48,6 +49,7 @@ function CalculatorScreenshotDisplay({ tabId }: CalculatorScreenshotDisplayProps
  * to the clipboard.
  */
 function ScreenshotOverlay() {
+  const { t } = useTranslation();
   const takeScreenshotFlag = useAppSelector(calculatorsSelectors.getTakeScreenshotFlag);
   const tabsOnScreenshot = useAppSelector(calculatorsSelectors.getTabsOnScreenshot);
   const cols = Math.ceil(Math.sqrt(tabsOnScreenshot.length));
@@ -73,17 +75,17 @@ function ScreenshotOverlay() {
           }),
         ]);
         setSnackbarSeverity('success');
-        setSnackbarMessage('Successfully copied image to clipboard.');
+        setSnackbarMessage(t('calculators.tab.copyImage.success'));
       } catch (e) {
         setSnackbarSeverity('error');
-        setSnackbarMessage('An error occurred: failed to copy image to clipboard.');
+        setSnackbarMessage(t('calculators.tab.copyImage.error'));
         console.error('Failed to copy image to clipboard', e);
       } finally {
         setShowSnackbar(true);
       }
     };
     effect();
-  }, [image, takeScreenshotFlag]);
+  }, [image, t, takeScreenshotFlag]);
 
   useEffect(() => {
     const effect = async () => {

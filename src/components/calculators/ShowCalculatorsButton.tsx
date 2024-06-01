@@ -1,15 +1,15 @@
-import { useAppDispatch, useAppSelector } from '../../store';
-import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
+import { useTranslation } from 'react-i18next';
+
+import { useAppDispatch } from '../../store';
+import { calculatorsActions } from '../../store/calculators';
 import GameButton from '../common/styled/GameButton';
 
 function ShowCalculatorsButton() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const show = useAppSelector(calculatorsSelectors.show);
   return (
-    <GameButton size="large" onClick={() => dispatch(calculatorsActions.setShow(!show))}>
-      { show ? 'Hide' : 'Show' }
-      { ' ' }
-      calculators
+    <GameButton size="large" onClick={() => dispatch(calculatorsActions.setShow(true))}>
+      { t('calculators.button') }
     </GameButton>
   );
 }

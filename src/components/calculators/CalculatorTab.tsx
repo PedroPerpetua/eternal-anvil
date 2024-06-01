@@ -13,6 +13,7 @@ import {
   Box, Menu, MenuItem, Stack, TextField, Typography,
 } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 import DistanceForm from './DistanceForm';
 import MiniDisplay from './MiniDisplay';
@@ -40,6 +41,7 @@ type TabButtonProps = {
 };
 
 function TabButton({ tabId }: TabButtonProps) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const active = useAppSelector((state) => calculatorsSelectors.getTabActive(state, tabId));
@@ -97,7 +99,7 @@ function TabButton({ tabId }: TabButtonProps) {
           onClick={() => { setShowMenu(false); setEditingName(true); }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Edit name</Typography>
+            <Typography>{ t('calculators.tab.menu.editName') }</Typography>
             <TealMiniIconButton Icon={EditIcon} />
           </Stack>
         </MenuItem>
@@ -108,7 +110,7 @@ function TabButton({ tabId }: TabButtonProps) {
           }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Split</Typography>
+            <Typography>{ t('calculators.tab.menu.split') }</Typography>
             <TealMiniIconButton Icon={SplitscreenIcon} sx={{ rotate: '90deg' }} />
           </Stack>
         </MenuItem>
@@ -119,7 +121,7 @@ function TabButton({ tabId }: TabButtonProps) {
           }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Copy</Typography>
+            <Typography>{ t('calculators.tab.menu.copy') }</Typography>
             <TealMiniIconButton Icon={ContentCopyIcon} />
           </Stack>
         </MenuItem>
@@ -130,13 +132,15 @@ function TabButton({ tabId }: TabButtonProps) {
           }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Copy as image</Typography>
+            <Typography>{ t('calculators.tab.menu.copyImage') }</Typography>
             <TealMiniIconButton Icon={ShareIcon} />
           </Stack>
         </MenuItem>
         <MenuItem onClick={() => { setShowMenu(false); update({ mini: !tab.mini }); }}>
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ tab.mini ? 'Expand' : 'Minify' }</Typography>
+            <Typography>
+              { t(`calculators.tab.menu.${tab.mini ? 'expand' : 'minify'}`) }
+            </Typography>
             <TealMiniIconButton Icon={tab.mini ? FullScreenIcon : FullscreenExitIcon} size={24} />
           </Stack>
         </MenuItem>
@@ -144,7 +148,7 @@ function TabButton({ tabId }: TabButtonProps) {
           onClick={() => { setShowMenu(false); dispatch(calculatorsActions.deleteTab({ tabId })); }}
         >
           <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>Delete Tab</Typography>
+            <Typography>{ t('calculators.tab.menu.delete') }</Typography>
             <MiniIconButton primary="red" secondary="red">
               <CustomIcon src={XIcon} tintColor={gameColors.goldIcon} size={16} />
             </MiniIconButton>

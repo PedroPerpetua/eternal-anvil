@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Box, Modal, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import PrimaryGameButton from '../common/styled/PrimaryGameButton';
 
 function Donations() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
     <>
       <PrimaryGameButton onClick={() => setOpen(true)}>
-        Help keep the site running
+        { t('website.donations.button') }
       </PrimaryGameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
@@ -28,14 +30,13 @@ function Donations() {
         >
           <Stack>
             <Typography variant="h6">
-              Thank you for using the Eternal Anvil!
+              { t('website.donations.title') }
             </Typography>
             <Typography>
-              If you wish to help with the website upkeep costs, or show appreciation for my work,
-              you can leave a donation here!
+              { t('website.donations.content') }
             </Typography>
             <Typography variant="subtitle2">
-              Donations are in no way required. Take care of yourself first.
+              { t('website.donations.disclaimer') }
             </Typography>
             <iframe
               id="kofiframe"

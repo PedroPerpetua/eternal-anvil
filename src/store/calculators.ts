@@ -1,6 +1,7 @@
 import { arrayMove } from '@dnd-kit/sortable';
 import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
+import { t } from 'i18next';
 
 import { generateId, insertAfter } from './utils';
 import { calculatorHeight, calculatorSpacing, calculatorWidth } from '../components/calculators/utils';
@@ -65,11 +66,10 @@ export function isTabId(id?: EntityId | null) {
   return id.toString().startsWith(tabPrefix);
 }
 
-export const defaultTabName = 'Tab';
 function generateTab(initialData?: Partial<CalculatorTab>): CalculatorTab {
   return {
     id: generateTabId(),
-    name: defaultTabName,
+    name: t('calculators.tab.defaultName'),
     mini: false,
     point1: [null, null],
     point2: [null, null],
@@ -224,7 +224,7 @@ const calculatorsSlice = createSlice({
       const tab = tabsEntitySelectors.selectById(state.tabs, tabId);
       const calculator = findCalculator(state, tab.id);
       const newTab = generateTab({
-        name: `Copy of ${tab.name}`,
+        name: t('calculators.tab.copyName', { name: tab.name }),
         mini: tab.mini,
         point1: tab.point1,
         point2: tab.point2,

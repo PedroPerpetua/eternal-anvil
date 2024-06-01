@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 import PenaltySelector from './PenaltySelector';
 import { calculateDistance, calculateTime, formatDistance, formatSeconds } from './utils';
@@ -15,6 +16,7 @@ type DistanceFormProps = {
 };
 
 function DistanceForm({ tabId }: DistanceFormProps) {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
 
@@ -35,26 +37,31 @@ function DistanceForm({ tabId }: DistanceFormProps) {
     <Stack spacing={3} sx={{ padding: '20px' }}>
       <Stack spacing={2}>
         <Stack alignItems="center" flexDirection="row" justifyContent="space-between">
-          <Typography>Point 1</Typography>
+          <Typography>{ t('calculators.tab.distanceForm.point1') }</Typography>
           <CoordinateInput value={tab.point1} onChange={(p) => update({ point1: p })} />
         </Stack>
         <Stack alignItems="center" flexDirection="row" justifyContent="space-between">
-          <Typography>Point 2</Typography>
+          <Typography>{ t('calculators.tab.distanceForm.point2') }</Typography>
           <CoordinateInput value={tab.point2} onChange={(p) => update({ point2: p })} />
         </Stack>
       </Stack>
-      <PenaltySelector value={tab.penalty} onChange={(v) => update({ penalty: v })} />
+      <PenaltySelector
+        label={t('calculators.tab.distanceForm.penalties.label')}
+        value={tab.penalty}
+        onChange={(v) => update({ penalty: v })}
+      />
       <SimpleNumberField
         value={tab.speed}
         onChange={(v) => update({ speed: v })}
         minValue={0}
         maxValue={350}
-        textFieldProps={{ label: 'Warlord Speed' }}
+        textFieldProps={{ label: t('calculators.tab.distanceForm.speed') }}
       />
       <Stack spacing={1}>
         <Stack direction="row" justifyContent="space-between">
           <Typography color={distance !== null ? undefined : 'gray'}>
-            Distance:
+            { t('calculators.tab.distanceForm.distance') }
+            :
           </Typography>
           <Typography>
             { formatDistance(distance) }
@@ -62,7 +69,8 @@ function DistanceForm({ tabId }: DistanceFormProps) {
         </Stack>
         <Stack direction="row" justifyContent="space-between">
           <Typography color={time !== null ? undefined : 'gray'}>
-            Time:
+            { t('calculators.tab.distanceForm.time') }
+            :
           </Typography>
           <Typography>
             { formatSeconds(time) }

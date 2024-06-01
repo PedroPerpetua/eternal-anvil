@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 import {
   calculateDistance, calculateTime, customPenalty, formatDistance, formatSeconds, penalties,
@@ -19,6 +20,7 @@ type MiniDisplayProps = {
 };
 
 function MiniDisplay({ tabId }: MiniDisplayProps) {
+  const { t } = useTranslation();
   const tab = useAppSelector((state) => calculatorsSelectors.getTab(state, tabId));
   const penalty = penalties.find((p) => p.value === tab.penalty) ?? customPenalty;
 
@@ -48,11 +50,22 @@ function MiniDisplay({ tabId }: MiniDisplayProps) {
       <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
         { distance !== null && <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} /> }
         <Typography sx={{ textAlign: 'center' }}>
-          { distance === null ? 'Unknown distance' : `${formatDistance(distance)} units` }
+          {
+            distance === null
+              ? t('calculators.tab.minified.distance_unknown')
+              : t('calculators.tab.minified.distance', { distance: formatDistance(distance) })
+          }
         </Typography>
       </Stack>
       <Typography sx={{ textAlign: 'center' }}>
-        { time === null ? 'Unknown time' : `${formatSeconds(time)} (@ ${parse(tab.speed)} speed)` }
+        {
+          time === null
+            ? t('calculators.tab.minified.time_unknown')
+            : t('calculators.tab.minified.time', {
+              time: formatSeconds(time),
+              speed: parse(tab.speed),
+            })
+        }
       </Typography>
     </Stack>
   );

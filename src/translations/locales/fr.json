@@ -1,5 +1,7 @@
 {
     "website": {
-        "subtitle": "Boîte à Outils Arkheim"
+        "header": {
+            "subtitle": "Boîte à Outils Arkheim"
+        }
     }
 }

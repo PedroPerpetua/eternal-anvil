@@ -16,7 +16,7 @@ function Header() {
             Eternal Anvil
           </Typography>
           <Typography fontSize="12px" fontWeight="bold" fontStyle="italic">
-            { t('website.subtitle') }
+            { t('website.header.subtitle') }
           </Typography>
         </Box>
         <LanguageSelector />

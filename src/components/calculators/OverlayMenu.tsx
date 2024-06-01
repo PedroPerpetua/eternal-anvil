@@ -9,6 +9,7 @@ import {
   Box, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
 import type { SvgIcon } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { useAppDispatch } from '../../store';
@@ -41,6 +42,7 @@ function MenuButton({ Icon, label, onClick, open }: MenuButtonProps) {
 }
 
 function OverlayMenu() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -55,7 +57,7 @@ function OverlayMenu() {
           <Stack spacing={1}>
             <MenuButton
               Icon={AddIcon}
-              label="Add calculator"
+              label={t('calculators.menu.add')}
               onClick={() => dispatch(calculatorsActions.createCalculator())}
               open={open}
             />
@@ -63,7 +65,8 @@ function OverlayMenu() {
               !isMobile && (
                 <MenuButton
                   Icon={displayMode === 'grid' ? WavingHandIcon : Grid3x3Icon}
-                  label={`Change to ${displayMode === 'grid' ? 'Free-Drag' : 'Grid'}`}
+                  // We want the reverse one
+                  label={t(`calculators.menu.switchMode.${displayMode === 'grid' ? 'free-drag' : 'grid'}`)}
                   onClick={() => dispatch(calculatorsActions.setDisplayMode(
                     displayMode === 'grid'
                       ? 'free-drag'
@@ -75,13 +78,13 @@ function OverlayMenu() {
             }
             <MenuButton
               Icon={VisibilityOffIcon}
-              label="Hide calculators"
+              label={t('calculators.menu.hide')}
               onClick={() => dispatch(calculatorsActions.setShow(false))}
               open={open}
             />
             <MenuButton
               Icon={ShareIcon}
-              label="Take screenshot of multiple"
+              label={t('calculators.menu.copyImageMultiple')}
               onClick={() => dispatch(calculatorsActions.setShowSelectMultiple(true))}
               open={open}
             />

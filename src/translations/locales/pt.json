@@ -1,5 +1,92 @@
 {
     "website": {
-        "subtitle": "Kit de Ferramentas Arkheim"
+        "header": {
+            "subtitle": "Kit de Ferramentas Arkheim"
+        },
+        "footer": {
+            "copyright": "{{year}} ©{{developer}} - Todos os direitos reservados."
+        },
+        "about": {
+            "button": "Sobre",
+            "title": "O projeto Eternal Anvil",
+            "openSource": "Este projeto é open source.<0 />Para sugestões, contribuições, e reporte de bugs, por favor visita o <1 /> do projeto.",
+            "developer": "Este projeto foi desenvolvido por {{developer}}.<0 />Podes encontrar o meu website <1>aqui</1>.<0 />Encontra-me no discord como <2>{{discord}}</2>."
+        },
+        "donations": {
+            "button": "Ajuda a manter este website de pé",
+            "title": "Obrigado por usar a Eternal Anvil!",
+            "content": "Se desejas ajudar com os custos de manutenção do website, ou mostrar apreciação pelo meu trabalho, podes deixar um donativo aqui!",
+            "disclaimer": "Donativos não são de maneira nenhuma obrigatórios. Toma conta de ti próprio(a) primeiro."
+        }
+    },
+    "calculators": {
+        "button": "Mostrar Calculadoras",
+        "menu": {
+            "add": "Adicionar calculadora",
+            "switchMode": {
+                "grid": "Mudar para grelha",
+                "free-drag": "Mudar para arrasto-livre"
+            },
+            "hide": "Esconder calculadoras",
+            "copyImageMultiple": "Copiar múltiplas como imagem"
+        },
+        "tab": {
+            "defaultName": "Aba",
+            "copyName": "Cópia de {{name}}",
+            "menu": {
+                "editName": "Editar nome",
+                "split": "Dividir",
+                "copy": "Copiar",
+                "copyImage": "Copiar como imagem",
+                "minify": "Minificar",
+                "expand": "Expandir",
+                "delete": "Apagar aba"
+            },
+            "distanceForm": {
+                "point1": "Ponto 1",
+                "point2": "Ponto 2",
+                "penalties": {
+                    "label": "Penalidade da missão",
+                    "custom": "Penalidade personalizada",
+                    "0": {
+                        "name": "Sem penalidade",
+                        "description": "Adicionar a missão / Forte Goblin / Relíquia"
+                    },
+                    "5": {
+                        "name": "Torre goblin",
+                        "description": "Assaltar uma torre goblin"
+                    },
+                    "10": {
+                        "name": "Apoiar",
+                        "description": "Missão de enviar de vigia / apoiar"
+                    },
+                    "16": {
+                        "name": "Assaltar",
+                        "description": "Assaltar uma torre inimiga"
+                    },
+                    "20": {
+                        "name": "Conquistar",
+                        "description": "Conquistar uma torre / portal inimiga"
+                    }
+                },
+                "speed": "Velocidade do General",
+                "distance": "Distância",
+                "time": "Tempo"
+            },
+            "minified": {
+                "distance": "{{distance}} unidades",
+                "distance_unknown": "Distância desconhecida",
+                "time": "{{time}} (@ {{speed}} velocidade)",
+                "time_unknown": "Tempo desconhecido"
+            },
+            "copyImage": {
+                "multiple": {
+                    "title": "Selecione as abas para copiar como imagem...",
+                    "submit": "Copiar como imagem"
+                },
+                "success": "Imagem copiada para a área de transferência com sucesso.",
+                "error": "Ocorreu um erro: falha ao copiar imagem para a área de transferência."
+            }
+        }
     }
 }

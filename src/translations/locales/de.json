@@ -1,5 +1,7 @@
 {
     "website": {
-        "subtitle": "Arkheim-Werkzeugsatz"
+        "header": {
+            "subtitle": "Arkheim-Werkzeugsatz"
+        }
     }
 }
