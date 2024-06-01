@@ -31,17 +31,6 @@ function CalculatorsOverlay() {
     numOfCols += 1;
   }
 
-  const calculatorElements = calculatorIds.map((id) => (
-    <Grid
-      key={id}
-      display="flex"
-      justifyContent="center"
-      width={calculatorWidth + calculatorSpacing * 8}
-    >
-      <Calculator key={id} calculatorId={id} />
-    </Grid>
-  ));
-
   if (!show) return null;
   return (
     <>
@@ -70,7 +59,7 @@ function CalculatorsOverlay() {
             >
               {
                 displayMode === 'free-drag'
-                  ? (calculatorElements)
+                  ? (calculatorIds.map((id) => <Calculator key={id} calculatorId={id} />))
                   : (
                     <Box
                       sx={{
@@ -89,11 +78,22 @@ function CalculatorsOverlay() {
                         spacing={calculatorSpacing}
                         columns={numOfCols}
                         justifyContent="center"
-                        width={calculatorGridWidth(numOfCols, calculatorSpacing * 8)}
+                        width="100%"
                       >
                         <Grid xs={numOfCols} minHeight={adjustedOffset} />
                         <SortableContext items={calculatorIds}>
-                          { calculatorElements }
+                          {
+                            calculatorIds.map((id) => (
+                              <Grid
+                                key={id}
+                                display="flex"
+                                justifyContent="center"
+                                width={calculatorWidth + calculatorSpacing * 8}
+                              >
+                                <Calculator calculatorId={id} />
+                              </Grid>
+                            ))
+                          }
                         </SortableContext>
                         <Grid xs={numOfCols} minHeight={adjustedOffset} />
                       </Grid>
