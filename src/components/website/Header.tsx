@@ -1,9 +1,12 @@
 import { AppBar, Toolbar, Typography, Box } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
+import LanguageSelector from './LanguageSelector';
 import WebsiteIcon from '../../assets/icon.png';
 import CustomIcon from '../common/CustomIcon';
 
 function Header() {
+  const { t } = useTranslation();
   return (
     <AppBar position="static">
       <Toolbar>
@@ -13,9 +16,10 @@ function Header() {
             Eternal Anvil
           </Typography>
           <Typography fontSize="12px" fontWeight="bold" fontStyle="italic">
-            Arkheim Toolkit
+            { t('website.subtitle') }
           </Typography>
         </Box>
+        <LanguageSelector />
       </Toolbar>
     </AppBar>
   );

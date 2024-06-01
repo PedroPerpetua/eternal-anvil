@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import App from './App';
 import store from './store';
 import theme from './theme';
+import './translations/i18n';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
