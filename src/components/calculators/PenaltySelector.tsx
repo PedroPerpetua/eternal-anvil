@@ -52,6 +52,7 @@ function PenaltySelector({ value, onChange }: PenaltySelectorProps) {
             type="number"
             label="Mission Penalty"
             FormHelperTextProps={{ component: 'div' }}
+            InputLabelProps={{ shrink: true }}
             helperText={(
               <Stack direction="row" alignItems="center" spacing={1} component="span">
                 <CustomIcon size={24} src={penalty.iconSrc} tintColor={penalty.iconColor} />

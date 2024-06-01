@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Box, Modal, Stack, Typography } from '@mui/material';
 
-import SecondaryGameButton from '../common/styled/SecondaryGameButton';
+import PrimaryGameButton from '../common/styled/PrimaryGameButton';
 
 function Donations() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <SecondaryGameButton onClick={() => setOpen(true)}>
+      <PrimaryGameButton onClick={() => setOpen(true)}>
         Help keep the site running
-      </SecondaryGameButton>
+      </PrimaryGameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{

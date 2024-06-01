@@ -154,9 +154,6 @@ function Calculator({ calculatorId }: CalculatorProps) {
     listeners = draggableAttrs.listeners;
     sx.position = 'absolute';
     [sx.left, sx.top] = calculator.position;
-    if (draggableAttrs.isDragging) {
-      sx.boxShadow = `0 0 25px ${gameColors.gold.light}`;
-    }
   }
 
   // Handle zIndex

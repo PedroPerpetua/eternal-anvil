@@ -1,21 +1,23 @@
 import { useState } from 'react';
-import type { ComponentType } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import Grid3x3Icon from '@mui/icons-material/Grid3x3';
 import MenuIcon from '@mui/icons-material/Menu';
-import PanToolIcon from '@mui/icons-material/PanTool';
 import ShareIcon from '@mui/icons-material/Share';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import WavingHandIcon from '@mui/icons-material/WavingHand';
 import {
-  Box, Fab, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
+  Box, Fade, Stack, Tooltip, Typography, useMediaQuery, useTheme,
 } from '@mui/material';
+import type { SvgIcon } from '@mui/material';
 
 import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { useAppDispatch } from '../../store';
 import { calculatorsActions } from '../../store/calculators';
+import { gameColors } from '../../theme';
+import PrimaryFabGameButton from '../common/styled/PrimaryFabGameButton';
 
 type MenuButtonProps = {
-  Icon: ComponentType<object>,
+  Icon: typeof SvgIcon,
   label: string,
   onClick: () => void;
   open: boolean,
@@ -26,14 +28,14 @@ function MenuButton({ Icon, label, onClick, open }: MenuButtonProps) {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Tooltip open={!isMobile && open} title={<Typography>{ label }</Typography>} placement="left">
-      <Fab
+      <PrimaryFabGameButton
         color="primary"
         size={isMobile ? 'small' : 'medium'}
         onClick={() => onClick()}
         variant="circular"
       >
-        <Icon />
-      </Fab>
+        <Icon htmlColor={gameColors.goldIcon} />
+      </PrimaryFabGameButton>
     </Tooltip>
   );
 }
@@ -60,7 +62,7 @@ function OverlayMenu() {
             {
               !isMobile && (
                 <MenuButton
-                  Icon={displayMode === 'grid' ? PanToolIcon : Grid3x3Icon}
+                  Icon={displayMode === 'grid' ? WavingHandIcon : Grid3x3Icon}
                   label={`Change to ${displayMode === 'grid' ? 'Free-Drag' : 'Grid'}`}
                   onClick={() => dispatch(calculatorsActions.setDisplayMode(
                     displayMode === 'grid'
@@ -85,9 +87,9 @@ function OverlayMenu() {
             />
           </Stack>
         </Fade>
-        <Fab size="large" color="primary" onClick={() => setOpen((curr) => !curr)}>
-          <MenuIcon />
-        </Fab>
+        <PrimaryFabGameButton size="large" color="primary" onClick={() => setOpen((curr) => !curr)}>
+          <MenuIcon htmlColor={gameColors.goldIcon} />
+        </PrimaryFabGameButton>
       </Stack>
     </Box>
   );

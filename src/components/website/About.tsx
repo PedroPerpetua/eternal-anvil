@@ -6,14 +6,16 @@ import {
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 import AboutImage from '../../assets/about-me.png';
-import SecondaryGameButton from '../common/styled/SecondaryGameButton';
+import PrimaryGameButton from '../common/styled/PrimaryGameButton';
 
 function About() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <SecondaryGameButton onClick={() => setOpen(true)}>About</SecondaryGameButton>
+      <PrimaryGameButton onClick={() => setOpen(true)}>
+        About
+      </PrimaryGameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
