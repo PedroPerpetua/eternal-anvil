@@ -6,7 +6,7 @@ function Footer() {
       component="footer"
       sx={{
         width: '100vw',
-        backgroundColor: 'gray',
+        backgroundColor: 'secondary.main',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

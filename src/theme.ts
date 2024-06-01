@@ -20,10 +20,14 @@ export const gameColors = {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#863594',
+      light: '#BC56E7',
+      main: '#AB1DE4',
+      dark: '#9610BF',
     },
     secondary: {
-      main: '#0076CD',
+      light: '#B0B0B0',
+      main: '#9C9D9A',
+      dark: '#5F605F',
     },
   },
 });
