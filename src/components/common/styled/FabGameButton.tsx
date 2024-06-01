@@ -9,7 +9,7 @@ type FabGameButtonExtraProps = {
 };
 
 const FabGameButton = styled(Fab)(({ selected = false }: FabGameButtonExtraProps) => ({
-  color: teal.text,
+  color: teal.contrastText,
   letterSpacing: '0px',
   fontWeight: 900,
   backgroundColor: selected ? teal.light : teal.main,

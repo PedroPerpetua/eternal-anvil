@@ -9,11 +9,11 @@ type GameButtonExtraProps = {
 };
 
 const GameButton = styled(Button)(({ selected = false }: GameButtonExtraProps) => ({
-  color: teal.text,
+  color: teal.contrastText,
   letterSpacing: '0px',
   fontWeight: 900,
   backgroundColor: selected ? teal.light : teal.main,
-  '&:hover': { backgroundColor: teal.light },
+  '&:hover': { backgroundColor: teal.dark },
   '&.Mui-disabled': { backgroundColor: teal.dark },
   textShadow: '1px 1px 1px black',
   border: '1px solid',

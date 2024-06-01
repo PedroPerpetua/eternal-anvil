@@ -4,15 +4,15 @@ export const backgroundColor = '#9e8357';
 
 export const gameColors = {
   teal: {
-    main: '#285e51',
-    light: '#40766c',
-    dark: '#1e463d',
-    text: '#e9dfc2',
+    main: '#325E54',
+    light: '#5b7e76',
+    dark: '#23413a',
+    contrastText: '#e9dfc2',
   },
   gold: {
-    light: '#987f3c',
-    dark: '#745b29',
-    darker: '#3a2d14',
+    main: '#745b29',
+    light: '#8f7b53',
+    dark: '#513f1c',
   },
   goldIcon: '#d8bc68',
 };
@@ -20,14 +20,10 @@ export const gameColors = {
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#BC56E7',
-      main: '#AB1DE4',
-      dark: '#9610BF',
+      main: '#543263',
     },
     secondary: {
-      light: '#B0B0B0',
-      main: '#9C9D9A',
-      dark: '#5F605F',
+      main: '#4D4351',
     },
   },
 });
