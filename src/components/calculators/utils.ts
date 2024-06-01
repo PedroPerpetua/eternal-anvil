@@ -121,6 +121,8 @@ export const calculatorWidth = 300;
 
 export const calculatorHeight = 417;
 
+export const calculatorSpacing = 4;
+
 export function calculatorGridWidth(numOfCols: number, spacingPx: number, paddingPx: number = 0) {
   return calculatorWidth * numOfCols + spacingPx * (numOfCols - 1) + paddingPx * 2;
 }

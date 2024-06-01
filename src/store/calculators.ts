@@ -3,7 +3,7 @@ import { createEntityAdapter, createSelector, createSlice } from '@reduxjs/toolk
 import type { EntityId, PayloadAction } from '@reduxjs/toolkit';
 
 import { generateId, insertAfter } from './utils';
-import { calculatorHeight, calculatorWidth } from '../components/calculators/utils';
+import { calculatorHeight, calculatorSpacing, calculatorWidth } from '../components/calculators/utils';
 
 import type { RootState } from '.';
 
@@ -252,7 +252,32 @@ const calculatorsSlice = createSlice({
       newCalculator.tabs.push(tab.id);
       newCalculator.currentTab = tab.id;
       calculatorsAdapter.addOne(state, newCalculator);
+      // The calculator's position should:
+      // After the current one, order wise
       state.orderedIds = insertAfter(newCalculator.id, state.orderedIds, calculator.id);
+      // Split moving the original to the left, and the new to the right, while both to top
+      state.highestZIndex += 1;
+      calculatorsAdapter.updateOne(state, {
+        id: calculator.id,
+        changes: {
+          position: [
+            calculator.position[0] - (calculatorWidth + calculatorSpacing * 8) / 2,
+            calculator.position[1],
+          ],
+          zIndex: state.highestZIndex,
+        },
+      });
+      state.highestZIndex += 1;
+      calculatorsAdapter.updateOne(state, {
+        id: newCalculator.id,
+        changes: {
+          position: [
+            calculator.position[0] + (calculatorWidth + calculatorSpacing * 8) / 2,
+            calculator.position[1],
+          ],
+          zIndex: state.highestZIndex,
+        },
+      });
     },
     // Screenshots
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {

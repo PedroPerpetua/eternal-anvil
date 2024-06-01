@@ -8,13 +8,16 @@ import OverlayMenu from './OverlayMenu';
 import ScreenshotOverlay from './ScreenshotOverlay';
 import SelectForScreenshotModal from './SelectForScreenshotModal';
 import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
-import { calculatorGridWidth, calculatorWidth } from './utils';
+import { calculatorGridWidth, calculatorHeight, calculatorSpacing, calculatorWidth } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
 import useElementDimensions from '../common/useElementDimensions';
 
-const spacing = 4;
-const adjustedOffset = 'calc((100dvh - 417px) / 2)';
+/**
+ * To ensure that, while on the grid, the user can scroll and center the calculator on the screen,
+ * we add this artificial offset on both sides
+ */
+const adjustedOffset = `calc((100dvh - ${calculatorHeight}px) / 2)`;
 
 function CalculatorsOverlay() {
   const show = useAppSelector(calculatorsSelectors.show);
@@ -24,7 +27,7 @@ function CalculatorsOverlay() {
   // We fit as many calculators in a row as we can
   const { width, ref: gridRef } = useElementDimensions();
   let numOfCols = 1;
-  while (calculatorGridWidth(numOfCols + 1, 8 * spacing) < width) {
+  while (calculatorGridWidth(numOfCols + 1, 8 * calculatorSpacing) < width) {
     numOfCols += 1;
   }
 
@@ -33,7 +36,7 @@ function CalculatorsOverlay() {
       key={id}
       display="flex"
       justifyContent="center"
-      width={calculatorWidth + spacing * 8}
+      width={calculatorWidth + calculatorSpacing * 8}
     >
       <Calculator key={id} calculatorId={id} />
     </Grid>
@@ -83,10 +86,10 @@ function CalculatorsOverlay() {
                     >
                       <Grid
                         container
-                        spacing={spacing}
+                        spacing={calculatorSpacing}
                         columns={numOfCols}
                         justifyContent="center"
-                        width={calculatorGridWidth(numOfCols, spacing * 8)}
+                        width={calculatorGridWidth(numOfCols, calculatorSpacing * 8)}
                       >
                         <Grid xs={numOfCols} minHeight={adjustedOffset} />
                         <SortableContext items={calculatorIds}>
