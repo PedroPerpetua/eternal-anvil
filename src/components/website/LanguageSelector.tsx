@@ -33,6 +33,14 @@ function LanguageSelector() {
         open={open}
         onClose={() => setOpen(false)}
         anchorEl={anchorRef.current}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
         slotProps={{
           paper: {
             sx: {
