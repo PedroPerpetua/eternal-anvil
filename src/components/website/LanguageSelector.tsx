@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
-import { Menu, MenuItem, Stack, Typography } from '@mui/material';
+import {
+  Menu, MenuItem, Stack, Typography, useMediaQuery, useTheme,
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 import { gameColors } from '../../theme';
@@ -9,20 +11,23 @@ import { languageNameFromCode } from '../../translations/utils';
 import PrimaryGameButton from '../common/styled/PrimaryGameButton';
 
 function LanguageSelector() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { i18n } = useTranslation();
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
+  const flagEl = (<FlagIcon lngCode={i18n.language} />);
 
   return (
     <>
       <PrimaryGameButton
         ref={anchorRef}
-        startIcon={<FlagIcon lngCode={i18n.language} />}
+        startIcon={isMobile ? null : flagEl}
         onClick={() => setOpen(true)}
-        sx={{ minWidth: '125px' }}
+        sx={{ minWidth: isMobile ? undefined : '150px' }}
       >
-        { languageNameFromCode(i18n.language) }
+        { isMobile ? flagEl : languageNameFromCode(i18n.language) }
       </PrimaryGameButton>
       <Menu
         open={open}

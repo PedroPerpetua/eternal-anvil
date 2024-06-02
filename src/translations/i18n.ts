@@ -28,7 +28,6 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    lng: defaultLng,
     fallbackLng: defaultLng,
     supportedLngs,
     defaultNS,
