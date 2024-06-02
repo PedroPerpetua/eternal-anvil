@@ -1,92 +1,92 @@
 {
-    "website": {
-        "header": {
-            "subtitle": "Arkheim Toolkit"
-        },
-        "footer": {
-            "copyright": "{{year}} ©{{developer}} - All rights reserved."
-        },
-        "about": {
-            "button": "About",
-            "title": "The Eternal Anvil project",
-            "openSource": "This project is open source.<0 />For suggestions, contributions, and bug reports, please visit the project's <1 />.",
-            "developer": "This project was developed by {{developer}}.<0 />You can find my website <1>here</1>.<0 />Find me on Discord as <2>{{discord}}</2>."
-        },
-        "donations": {
-            "button": "Help keep the website running",
-            "title": "Thank you for using the Eternal Anvil!",
-            "content": "If you wish to help with the website upkeep costs, or show appreciation for my work, you can leave a donation here!",
-            "disclaimer": "Donations are in no way required. Take care of yourself first."
-        }
+  "calculators": {
+    "button": "Show Calculators",
+    "menu": {
+      "add": "Add calculator",
+      "copyImageMultiple": "Copy multiple as image",
+      "hide": "Hide calculators",
+      "switchMode": {
+        "free-drag": "Change to free-drag",
+        "grid": "Change to grid"
+      }
     },
-    "calculators": {
-        "button": "Show Calculators",
-        "menu": {
-            "add": "Add calculator",
-            "switchMode": {
-                "grid": "Change to grid",
-                "free-drag": "Change to free-drag"
-            },
-            "hide": "Hide calculators",
-            "copyImageMultiple": "Copy multiple as image"
+    "tab": {
+      "copyImage": {
+        "error": "An error occurred: failed to copy image to clipboard.",
+        "multiple": {
+          "submit": "Copy as image",
+          "title": "Select tabs to copy as image..."
         },
-        "tab": {
-            "defaultName": "Tab",
-            "copyName": "Copy of {{name}}",
-            "menu": {
-                "editName": "Edit name",
-                "split": "Split",
-                "copy": "Copy",
-                "copyImage": "Copy as image",
-                "minify": "Minify",
-                "expand": "Expand",
-                "delete": "Delete tab"
-            },
-            "distanceForm": {
-                "point1": "Point 1",
-                "point2": "Point 2",
-                "penalties": {
-                    "label": "Mission Penalty",
-                    "custom": "Custom penalty",
-                    "0": {
-                        "name": "No penalty",
-                        "description": "Add to mission / Goblin Fort / Relic"
-                    },
-                    "5": {
-                        "name": "Goblin Tower",
-                        "description": "Raid a goblin tower"
-                    },
-                    "10": {
-                        "name": "Support",
-                        "description": "Send on watch / support mission"
-                    },
-                    "16": {
-                        "name": "Raid",
-                        "description": "Raid an enemy tower"
-                    },
-                    "20": {
-                        "name": "Conquer",
-                        "description": "Conquer an enemy tower / portal"
-                    }
-                },
-                "speed": "Warlord Speed",
-                "distance": "Distance",
-                "time": "Time"
-            },
-            "minified": {
-                "distance": "{{distance}} units",
-                "distance_unknown": "Distance unknown",
-                "time": "{{time}} (@ {{speed}} speed)",
-                "time_unknown": "Time unknown"
-            },
-            "copyImage": {
-                "multiple": {
-                    "title": "Select tabs to copy as image...",
-                    "submit": "Copy as image"
-                },
-                "success": "Successfully copied image to clipboard.",
-                "error": "An error occurred: failed to copy image to clipboard."
-            }
-        }
+        "success": "Successfully copied image to clipboard."
+      },
+      "copyName": "Copy of {{name}}",
+      "defaultName": "Tab",
+      "distanceForm": {
+        "distance": "Distance",
+        "penalties": {
+          "0": {
+            "description": "Add to mission / Goblin Fort / Relic",
+            "name": "No penalty"
+          },
+          "10": {
+            "description": "Send on watch / support mission",
+            "name": "Support"
+          },
+          "16": {
+            "description": "Raid an enemy tower",
+            "name": "Raid"
+          },
+          "20": {
+            "description": "Conquer an enemy tower / portal",
+            "name": "Conquer"
+          },
+          "5": {
+            "description": "Raid a goblin tower",
+            "name": "Goblin Tower"
+          },
+          "custom": "Custom penalty",
+          "label": "Mission Penalty"
+        },
+        "point1": "Point 1",
+        "point2": "Point 2",
+        "speed": "Warlord Speed",
+        "time": "Time"
+      },
+      "menu": {
+        "copy": "Copy",
+        "copyImage": "Copy as image",
+        "delete": "Delete tab",
+        "editName": "Edit name",
+        "expand": "Expand",
+        "minify": "Minify",
+        "split": "Split"
+      },
+      "minified": {
+        "distance": "{{distance}} units",
+        "distance_unknown": "Distance unknown",
+        "time": "{{time}} (@ {{speed}} speed)",
+        "time_unknown": "Time unknown"
+      }
     }
+  },
+  "website": {
+    "about": {
+      "button": "About",
+      "developer": "This project was developed by {{developer}}.<0 />You can find my website <1>here</1>.<0 />Find me on Discord as <2>{{discord}}</2>.",
+      "openSource": "This project is open source.<0 />For suggestions, contributions, and bug reports, please visit the project's <1 />.",
+      "title": "The Eternal Anvil project"
+    },
+    "donations": {
+      "button": "Help keep the website running",
+      "content": "If you wish to help with the website upkeep costs, or show appreciation for my work, you can leave a donation here!",
+      "disclaimer": "Donations are in no way required. Take care of yourself first.",
+      "title": "Thank you for using the Eternal Anvil!"
+    },
+    "footer": {
+      "copyright": "{{year}} ©{{developer}} - All rights reserved."
+    },
+    "header": {
+      "subtitle": "Arkheim Toolkit"
+    }
+  }
 }
