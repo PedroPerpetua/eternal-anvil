@@ -28,7 +28,7 @@ function About() {
             backgroundColor: 'white',
             padding: '25px',
             borderRadius: '5px',
-            width: 'min(600px, 90vw)',
+            width: 'min(700px, 90vw)',
             maxHeight: '90dvh',
             overflowY: 'auto',
           }}
@@ -39,52 +39,56 @@ function About() {
                 <Typography variant="h6">
                   { t('website.about.title') }
                 </Typography>
-                <Stack>
-                  <Typography textAlign="justify">
-                    <Trans
-                      i18nKey="website.about.openSource"
-                      components={[
-                        <br />,
-                        <Link
-                          href="https://github.com/PedroPerpetua/eternal-anvil"
-                          target="_blank"
-                          rel="noopener"
-                        >
-                          <GitHubIcon fontSize="inherit" sx={{ marginRight: '1px' }} />
-                          Github
-                        </Link>,
-                      ]}
-                    />
-                  </Typography>
-                </Stack>
+                <Typography textAlign="justify">
+                  <Trans
+                    i18nKey="website.about.openSource"
+                    components={[
+                      <br />,
+                      <Link
+                        href="https://github.com/PedroPerpetua/eternal-anvil"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        <GitHubIcon fontSize="inherit" sx={{ marginRight: '1px' }} />
+                        Github
+                      </Link>,
+                    ]}
+                  />
+                </Typography>
                 <Divider />
-                <Stack>
-                  <Typography textAlign="justify">
-                    <Trans
-                      i18nKey="website.about.developer"
-                      values={{
-                        developer: 'Pedro Perpétua',
-                        discord: 'warriorpp',
-                      }}
-                      components={[
-                        <br />,
-                        <Link
-                          href="https://www.pedroperpetua.com"
-                          target="_blank"
-                          rel="noopener"
-                        />,
-                        <Typography component="i" />,
-                      ]}
-                    />
-                  </Typography>
-                </Stack>
+                <Typography textAlign="justify">
+                  <Trans
+                    i18nKey="website.about.developer"
+                    values={{
+                      developer: 'Pedro Perpétua',
+                      discord: 'warriorpp',
+                    }}
+                    components={[
+                      <br />,
+                      <Link href="https://www.pedroperpetua.com" target="_blank" rel="noopener" />,
+                      <Typography component="i" />,
+                    ]}
+                  />
+                </Typography>
+                <Divider />
+                <Typography textAlign="justify">
+                  <Trans
+                    i18nKey="website.about.travianDisclaimer"
+                    components={[
+                      <Link href="https://arkheim.com" target="_blank" rel="noopener" />,
+                      <br />,
+                      <Link href="https://www.traviangames.com/" target="_blank" rel="noopener" />,
+                      <br />,
+                    ]}
+                  />
+                </Typography>
               </Stack>
             </Grid>
-            <Grid xs={12} sm={4} display="flex" justifyContent="center">
+            <Grid xs={12} sm={4}>
               <img
                 src={AboutImage}
                 alt="pedro-perpetua"
-                style={{ width: '100%', maxWidth: '150px' }}
+                style={{ width: '100%' }}
               />
             </Grid>
           </Grid>

@@ -74,7 +74,8 @@
       "button": "About",
       "developer": "This project was developed by {{developer}}.<0 />You can find my website <1>here</1>.<0 />Find me on Discord as <2>{{discord}}</2>.",
       "openSource": "This project is open source.<0 />For suggestions, contributions, and bug reports, please visit the project's <1 />.",
-      "title": "The Eternal Anvil project"
+      "title": "The Eternal Anvil project",
+      "travianDisclaimer": "Images and game elements belong to <0>Arkheim</0>.<1 />All their rights belong to <2>Travian Games GmbH</2>.<3 />Arkheim and Travian Games GmbH are not responsible for the contents on this website nor have any affiliation with it."
     },
     "donations": {
       "button": "Help keep the website running",
@@ -83,7 +84,7 @@
       "title": "Thank you for using the Eternal Anvil!"
     },
     "footer": {
-      "copyright": "{{year}} ©{{developer}} - All rights reserved."
+      "copyright": "{{year}} ©{{developer}}"
     },
     "header": {
       "subtitle": "Arkheim Toolkit"

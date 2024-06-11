@@ -74,7 +74,8 @@
       "button": "Sobre",
       "developer": "Este projeto foi desenvolvido por {{developer}}.<0 />Podes encontrar o meu website <1>aqui</1>.<0 />Encontra-me no discord como <2>{{discord}}</2>.",
       "openSource": "Este projeto é open source.<0 />Para sugestões, contribuições, e reporte de bugs, por favor visita o <1 /> do projeto.",
-      "title": "O projeto Eternal Anvil"
+      "title": "O projeto Eternal Anvil",
+      "travianDisclaimer": "Imagens e elementos do jogo pertencem a <0>Arkheim</0>.<1 />Todos os direitos dos mesmos reservados a <2>Travian Games GmbH</2>.<3 />Arkheim e Travian Games GmbH não é responsável pelos conteúdos deste website e não têm qualquer afiliação com os mesmos."
     },
     "donations": {
       "button": "Ajuda a manter este website de pé",
@@ -83,7 +84,7 @@
       "title": "Obrigado por usar a Eternal Anvil!"
     },
     "footer": {
-      "copyright": "{{year}} ©{{developer}} - Todos os direitos reservados."
+      "copyright": "{{year}} ©{{developer}}"
     },
     "header": {
       "subtitle": "Kit de Ferramentas Arkheim"
