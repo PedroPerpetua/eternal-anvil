@@ -9,6 +9,7 @@
     "airbnb/hooks",
     "plugin:@typescript-eslint/recommended"
   ],
+  "ignorePatterns": ["dist/**"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -20,31 +21,86 @@
     "react"
   ],
   "rules": {
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "import/extensions": [
       "error",
       {
         "json": "always",
+        "png": "always",
         "svg": "always",
         "ts": "never",
         "tsx": "never"
       }
     ],
-    "import/newline-after-import": [
+    "import/order": [
       "error",
       {
-        "count": 2
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "distinctGroup": false,
+        "groups": [
+          [
+            "builtin",
+            "external"
+          ],
+          [
+            "parent",
+            "sibling"
+          ],
+          "index"
+        ],
+        "newlines-between": "always",
+        "pathGroups": [
+          {
+            "group": "builtin",
+            "pattern": "react",
+            "position": "before"
+          },
+          {
+            "group": "index",
+            "pattern": "@**/**/*.css",
+            "position": "before"
+          },
+          {
+            "group": "index",
+            "pattern": "**/*.css",
+            "position": "after"
+          },
+          {
+            "group": "index",
+            "pattern": "./**/*.css",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "react"
+        ],
+        "warnOnUnassignedImports": true
       }
     ],
-    "max-len": [
-      "error",
-      80
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
     ],
-    "no-multiple-empty-lines": [
+    "no-underscore-dangle": "off",
+    "object-curly-newline": [
       "error",
       {
-        "max": 2,
-        "maxBOF": 0,
-        "maxEOF": 1
+        "ImportDeclaration": {
+          "minProperties": 5,
+          "multiline": true
+        },
+        "ObjectPattern": {
+          "multiline": true
+        }
       }
     ],
     "quotes": [
@@ -68,7 +124,9 @@
         ]
       }
     ],
+    "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
+    "react/require-default-props": "off",
     "react/style-prop-object": "off"
   },
   "settings": {

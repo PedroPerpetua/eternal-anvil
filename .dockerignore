@@ -1,3 +1,4 @@
+# From .gitignore
 node_modules
 dist
 
@@ -9,3 +10,8 @@ dist
 !.yarn/versions
 
 .vscode
+
+# Additional files
+.github
+.gitignore
+README.md

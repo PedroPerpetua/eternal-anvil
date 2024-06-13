@@ -1,0 +1,93 @@
+{
+  "calculators": {
+    "button": "Show Calculators",
+    "menu": {
+      "add": "Add calculator",
+      "copyImageMultiple": "Copy multiple as image",
+      "hide": "Hide calculators",
+      "switchMode": {
+        "free-drag": "Change to free-drag",
+        "grid": "Change to grid"
+      }
+    },
+    "tab": {
+      "copyImage": {
+        "error": "An error occurred: failed to copy image to clipboard.",
+        "multiple": {
+          "submit": "Copy as image",
+          "title": "Select tabs to copy as image..."
+        },
+        "success": "Successfully copied image to clipboard."
+      },
+      "copyName": "Copy of {{name}}",
+      "defaultName": "Tab",
+      "distanceForm": {
+        "distance": "Distance",
+        "penalties": {
+          "0": {
+            "description": "Add to mission / Goblin Fort / Relic",
+            "name": "No penalty"
+          },
+          "10": {
+            "description": "Send on watch / support mission",
+            "name": "Support"
+          },
+          "16": {
+            "description": "Raid an enemy tower",
+            "name": "Raid"
+          },
+          "20": {
+            "description": "Conquer an enemy tower / portal",
+            "name": "Conquer"
+          },
+          "5": {
+            "description": "Raid a goblin tower",
+            "name": "Goblin Tower"
+          },
+          "custom": "Custom penalty",
+          "label": "Mission Penalty"
+        },
+        "point1": "Point 1",
+        "point2": "Point 2",
+        "speed": "Warlord Speed",
+        "time": "Time"
+      },
+      "menu": {
+        "copy": "Copy",
+        "copyImage": "Copy as image",
+        "delete": "Delete tab",
+        "editName": "Edit name",
+        "expand": "Expand",
+        "minify": "Minify",
+        "split": "Split"
+      },
+      "minified": {
+        "distance": "{{distance}} units",
+        "distance_unknown": "Distance unknown",
+        "time": "{{time}} (@ {{speed}} speed)",
+        "time_unknown": "Time unknown"
+      }
+    }
+  },
+  "website": {
+    "about": {
+      "button": "About",
+      "developer": "This project was developed by {{developer}}.<0 />You can find my website <1>here</1>.<0 />Find me on Discord as <2>{{discord}}</2>.",
+      "openSource": "This project is open source.<0 />For suggestions, contributions, and bug reports, please visit the project's <1 />.",
+      "title": "The Eternal Anvil project",
+      "travianDisclaimer": "Images and game elements belong to <0>Arkheim</0>.<1 />All their rights belong to <2>Travian Games GmbH</2>.<3 />Arkheim and Travian Games GmbH are not responsible for the contents on this website nor have any affiliation with it."
+    },
+    "donations": {
+      "button": "Help keep the website running",
+      "content": "If you wish to help with the website upkeep costs, or show appreciation for my work, you can leave a donation here!",
+      "disclaimer": "Donations are in no way required. Take care of yourself first.",
+      "title": "Thank you for using the Eternal Anvil!"
+    },
+    "footer": {
+      "copyright": "{{year}} ©{{developer}}"
+    },
+    "header": {
+      "subtitle": "Arkheim Toolkit"
+    }
+  }
+}

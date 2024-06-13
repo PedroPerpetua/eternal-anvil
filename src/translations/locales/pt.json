@@ -1,0 +1,93 @@
+{
+  "calculators": {
+    "button": "Mostrar Calculadoras",
+    "menu": {
+      "add": "Adicionar calculadora",
+      "copyImageMultiple": "Copiar múltiplas como imagem",
+      "hide": "Esconder calculadoras",
+      "switchMode": {
+        "free-drag": "Mudar para arrasto-livre",
+        "grid": "Mudar para grelha"
+      }
+    },
+    "tab": {
+      "copyImage": {
+        "error": "Ocorreu um erro: falha ao copiar imagem para a área de transferência.",
+        "multiple": {
+          "submit": "Copiar como imagem",
+          "title": "Selecione as abas para copiar como imagem..."
+        },
+        "success": "Imagem copiada para a área de transferência com sucesso."
+      },
+      "copyName": "Cópia de {{name}}",
+      "defaultName": "Aba",
+      "distanceForm": {
+        "distance": "Distância",
+        "penalties": {
+          "0": {
+            "description": "Adicionar a missão / Forte Goblin / Relíquia",
+            "name": "Sem penalidade"
+          },
+          "10": {
+            "description": "Missão de enviar de vigia / apoiar",
+            "name": "Apoiar"
+          },
+          "16": {
+            "description": "Assaltar uma torre inimiga",
+            "name": "Assaltar"
+          },
+          "20": {
+            "description": "Conquistar uma torre / portal inimiga",
+            "name": "Conquistar"
+          },
+          "5": {
+            "description": "Assaltar uma torre goblin",
+            "name": "Torre goblin"
+          },
+          "custom": "Penalidade personalizada",
+          "label": "Penalidade da missão"
+        },
+        "point1": "Ponto 1",
+        "point2": "Ponto 2",
+        "speed": "Velocidade do General",
+        "time": "Tempo"
+      },
+      "menu": {
+        "copy": "Copiar",
+        "copyImage": "Copiar como imagem",
+        "delete": "Apagar aba",
+        "editName": "Editar nome",
+        "expand": "Expandir",
+        "minify": "Minificar",
+        "split": "Dividir"
+      },
+      "minified": {
+        "distance": "{{distance}} unidades",
+        "distance_unknown": "Distância desconhecida",
+        "time": "{{time}} (@ {{speed}} velocidade)",
+        "time_unknown": "Tempo desconhecido"
+      }
+    }
+  },
+  "website": {
+    "about": {
+      "button": "Sobre",
+      "developer": "Este projeto foi desenvolvido por {{developer}}.<0 />Podes encontrar o meu website <1>aqui</1>.<0 />Encontra-me no discord como <2>{{discord}}</2>.",
+      "openSource": "Este projeto é open source.<0 />Para sugestões, contribuições, e reporte de bugs, por favor visita o <1 /> do projeto.",
+      "title": "O projeto Eternal Anvil",
+      "travianDisclaimer": "Imagens e elementos do jogo pertencem a <0>Arkheim</0>.<1 />Todos os direitos dos mesmos reservados a <2>Travian Games GmbH</2>.<3 />Arkheim e Travian Games GmbH não é responsável pelos conteúdos deste website e não têm qualquer afiliação com os mesmos."
+    },
+    "donations": {
+      "button": "Ajuda a manter este website de pé",
+      "content": "Se desejas ajudar com os custos de manutenção do website, ou mostrar apreciação pelo meu trabalho, podes deixar um donativo aqui!",
+      "disclaimer": "Donativos não são de maneira nenhuma obrigatórios. Toma conta de ti próprio(a) primeiro.",
+      "title": "Obrigado por usar a Eternal Anvil!"
+    },
+    "footer": {
+      "copyright": "{{year}} ©{{developer}}"
+    },
+    "header": {
+      "subtitle": "Kit de Ferramentas Arkheim"
+    }
+  }
+}
