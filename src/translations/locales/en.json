@@ -14,8 +14,10 @@
       "copyImage": {
         "error": "An error occurred: failed to copy image to clipboard.",
         "multiple": {
+          "description": "Select tabs to copy as image...",
           "submit": "Copy as image",
-          "title": "Select tabs to copy as image..."
+          "title": "Screenshot title",
+          "title_placeholder": "Optional title for the screenshot..."
         },
         "success": "Successfully copied image to clipboard."
       },
