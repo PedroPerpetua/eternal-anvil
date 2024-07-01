@@ -22,6 +22,7 @@ function SingleCoordinateInput({ value, onChange, label }: SingleCoordinateInput
         },
         InputLabelProps: { shrink: true },
         sx: { width: '65px' },
+        onFocus: (e) => e.target.select(),
       }}
     />
   );

@@ -29,6 +29,7 @@ function SimpleNumberField({
 
   return (
     <TextField
+      autoComplete="off"
       {...textFieldProps}
       type="number"
       value={Number.isFinite(value) ? value : ''}
@@ -40,11 +41,6 @@ function SimpleNumberField({
         className: 'disable-number-spin',
         ...textFieldProps.inputProps,
       }}
-      onFocus={(e) => {
-        e.target.select();
-        if (textFieldProps.onFocus) textFieldProps.onFocus(e);
-      }}
-      autoComplete="off"
       data-no-dnd
     />
   );
