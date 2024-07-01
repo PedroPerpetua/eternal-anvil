@@ -51,6 +51,7 @@ function CalculatorScreenshotDisplay({ tabId }: CalculatorScreenshotDisplayProps
 function ScreenshotOverlay() {
   const { t } = useTranslation();
   const takeScreenshotFlag = useAppSelector(calculatorsSelectors.getTakeScreenshotFlag);
+  const screenshotTitle = useAppSelector(calculatorsSelectors.getScreenshotTitle);
   const tabsOnScreenshot = useAppSelector(calculatorsSelectors.getTabsOnScreenshot);
   const cols = Math.ceil(Math.sqrt(tabsOnScreenshot.length));
 
@@ -116,6 +117,15 @@ function ScreenshotOverlay() {
         }}
       >
         <Grid container columns={cols} spacing={1}>
+          {
+            screenshotTitle && (
+              <Grid xs={cols}>
+                <Typography variant="h6" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
+                  { screenshotTitle }
+                </Typography>
+              </Grid>
+            )
+          }
           {
             tabsOnScreenshot.map((tabId) => (
               <Grid key={tabId}>

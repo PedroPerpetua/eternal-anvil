@@ -22,6 +22,7 @@ function SingleCoordinateInput({ value, onChange, label }: SingleCoordinateInput
         },
         InputLabelProps: { shrink: true },
         sx: { width: '65px' },
+        onFocus: (e) => e.target.select(),
       }}
     />
   );
@@ -34,7 +35,7 @@ type CoordinateInputProps = {
 
 function CoordinateInput({ value, onChange }: CoordinateInputProps) {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="center">
+    <Stack direction="row" alignItems="center" justifyContent="center" data-no-dnd>
       <Typography>(</Typography>
       <SingleCoordinateInput value={value[0]} onChange={(v) => onChange([v, value[1]])} label="X" />
       <Typography>|</Typography>

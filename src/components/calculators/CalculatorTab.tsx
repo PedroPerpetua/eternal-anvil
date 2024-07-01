@@ -216,7 +216,11 @@ function TabButton({ tabId }: TabButtonProps) {
                 />
               )
               : (
-                <Typography noWrap sx={{ minWidth: '80px', width: active ? undefined : '80px' }}>
+                <Typography
+                  noWrap
+                  onDoubleClick={() => setEditingName(true)}
+                  sx={{ minWidth: '80px', width: active ? undefined : '80px' }}
+                >
                   { tab.name }
                 </Typography>
               )

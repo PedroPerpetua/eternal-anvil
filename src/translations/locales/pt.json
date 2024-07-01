@@ -14,8 +14,10 @@
       "copyImage": {
         "error": "Ocorreu um erro: falha ao copiar imagem para a área de transferência.",
         "multiple": {
+          "description": "Selecione as abas para copiar como imagem...",
           "submit": "Copiar como imagem",
-          "title": "Selecione as abas para copiar como imagem..."
+          "title": "Título para screenshot",
+          "title_placeholder": "Título opcional para o screenshot..."
         },
         "success": "Imagem copiada para a área de transferência com sucesso."
       },

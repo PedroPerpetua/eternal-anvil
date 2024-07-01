@@ -56,9 +56,15 @@ function OverlayMenu() {
         <Fade in={open}>
           <Stack spacing={1}>
             <MenuButton
-              Icon={AddIcon}
-              label={t('calculators.menu.add')}
-              onClick={() => dispatch(calculatorsActions.createCalculator())}
+              Icon={VisibilityOffIcon}
+              label={t('calculators.menu.hide')}
+              onClick={() => dispatch(calculatorsActions.setShow(false))}
+              open={open}
+            />
+            <MenuButton
+              Icon={ShareIcon}
+              label={t('calculators.menu.copyImageMultiple')}
+              onClick={() => dispatch(calculatorsActions.setShowSelectMultiple(true))}
               open={open}
             />
             {
@@ -77,15 +83,9 @@ function OverlayMenu() {
               )
             }
             <MenuButton
-              Icon={VisibilityOffIcon}
-              label={t('calculators.menu.hide')}
-              onClick={() => dispatch(calculatorsActions.setShow(false))}
-              open={open}
-            />
-            <MenuButton
-              Icon={ShareIcon}
-              label={t('calculators.menu.copyImageMultiple')}
-              onClick={() => dispatch(calculatorsActions.setShowSelectMultiple(true))}
+              Icon={AddIcon}
+              label={t('calculators.menu.add')}
+              onClick={() => dispatch(calculatorsActions.createCalculator())}
               open={open}
             />
           </Stack>

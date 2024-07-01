@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box, Button, Checkbox, Divider, List, ListItem, ListItemButton, ListItemText, Modal, Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import type { EntityId } from '@reduxjs/toolkit';
@@ -14,11 +15,13 @@ function SelectForScreenshotModal() {
   const dispatch = useAppDispatch();
   const tabList = useAppSelector(calculatorsSelectors.getTabList);
   const open = useAppSelector(calculatorsSelectors.getShowSelectMultiple);
+  const [title, setTitle] = useState('');
   const [selected, setSelected] = useState<EntityId[]>([]);
 
   const handleClose = () => {
     dispatch(calculatorsActions.setShowSelectMultiple(false));
     setSelected([]);
+    setTitle('');
   };
 
   const handleSelect = (tabId: EntityId) => {
@@ -32,11 +35,16 @@ function SelectForScreenshotModal() {
     <Modal open={open} onClose={() => handleClose()}>
       <Box
         className="center-screen"
-        sx={{ padding: '25px', borderRadius: '5px', backgroundColor: 'white' }}
+        sx={{
+          padding: '25px',
+          borderRadius: '5px',
+          backgroundColor: 'white',
+          width: 'min(90vw, 400px)',
+        }}
       >
         <Stack>
           <Typography>
-            { t('calculators.tab.copyImage.multiple.title') }
+            { t('calculators.tab.copyImage.multiple.description') }
           </Typography>
           {
             tabList.map((calculatorTabList, i) => (
@@ -66,9 +74,16 @@ function SelectForScreenshotModal() {
               </React.Fragment>
             ))
           }
+          <TextField
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            label={t('calculators.tab.copyImage.multiple.title')}
+            placeholder={t('calculators.tab.copyImage.multiple.title_placeholder')}
+            InputLabelProps={{ shrink: true }}
+          />
           <Button
             onClick={() => {
-              dispatch(calculatorsActions.screenshotMultipleTabs({ tabIds: selected }));
+              dispatch(calculatorsActions.screenshotMultipleTabs({ tabIds: selected, title }));
               handleClose();
             }}
           >

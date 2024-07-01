@@ -143,6 +143,7 @@ const calculatorsSlice = createSlice({
     show: false,
     displayMode: 'grid' as DisplayMode,
     screenshots: {
+      titleForScreenshot: '',
       tabsOnScreenshot: [] as EntityId[],
       takeScreenshotFlag: 0, // We use this to signal component effects to take a screenshot
       showSelectMultiple: false,
@@ -282,11 +283,16 @@ const calculatorsSlice = createSlice({
     // Screenshots
     screenshotTab: (state, action: PayloadAction<{ tabId: EntityId }>) => {
       const { tabId } = action.payload;
+      state.screenshots.titleForScreenshot = '';
       state.screenshots.tabsOnScreenshot = [tabId];
       state.screenshots.takeScreenshotFlag += 1;
     },
-    screenshotMultipleTabs: (state, action: PayloadAction<{ tabIds: EntityId[] }>) => {
-      const { tabIds } = action.payload;
+    screenshotMultipleTabs: (
+      state,
+      action: PayloadAction<{ tabIds: EntityId[], title: string }>,
+    ) => {
+      const { tabIds, title } = action.payload;
+      state.screenshots.titleForScreenshot = title;
       state.screenshots.tabsOnScreenshot = tabIds;
       state.screenshots.takeScreenshotFlag += 1;
     },
@@ -409,6 +415,7 @@ export const calculatorsSelectors = {
         },
       )),
   ),
+  getScreenshotTitle: (state: RootState) => state.calculators.screenshots.titleForScreenshot,
   getTabsOnScreenshot: (state: RootState) => state.calculators.screenshots.tabsOnScreenshot,
   getTakeScreenshotFlag: (state: RootState) => state.calculators.screenshots.takeScreenshotFlag,
   getShowSelectMultiple: (state: RootState) => state.calculators.screenshots.showSelectMultiple,
