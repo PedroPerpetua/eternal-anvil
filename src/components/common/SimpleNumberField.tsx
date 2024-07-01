@@ -40,7 +40,12 @@ function SimpleNumberField({
         className: 'disable-number-spin',
         ...textFieldProps.inputProps,
       }}
+      onFocus={(e) => {
+        e.target.select();
+        if (textFieldProps.onFocus) textFieldProps.onFocus(e);
+      }}
       autoComplete="off"
+      data-no-dnd
     />
   );
 }

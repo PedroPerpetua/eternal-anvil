@@ -34,7 +34,7 @@ type CoordinateInputProps = {
 
 function CoordinateInput({ value, onChange }: CoordinateInputProps) {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="center">
+    <Stack direction="row" alignItems="center" justifyContent="center" data-no-dnd="true">
       <Typography>(</Typography>
       <SingleCoordinateInput value={value[0]} onChange={(v) => onChange([v, value[1]])} label="X" />
       <Typography>|</Typography>

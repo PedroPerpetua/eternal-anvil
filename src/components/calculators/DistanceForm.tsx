@@ -57,7 +57,7 @@ function DistanceForm({ tabId }: DistanceFormProps) {
         maxValue={350}
         textFieldProps={{ label: t('calculators.tab.distanceForm.speed') }}
       />
-      <Stack spacing={1}>
+      <Stack spacing={1} sx={{ userSelect: 'text' }} data-no-dnd>
         <Stack direction="row" justifyContent="space-between">
           <Typography color={distance !== null ? undefined : 'gray'}>
             { t('calculators.tab.distanceForm.distance') }
