@@ -1,0 +1,2003 @@
+openapi: 3.0.3
+info:
+  title: Eternal Anvil (Backend)
+  version: v0.0.1
+  description: The backend server for the Eternal Anvil.
+paths:
+  /ping/:
+    get:
+      operationId: ping_retrieve
+      description: View that simply replies with a 'pong'.
+      tags:
+      - Core
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingRetrieveErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                - pong
+          description: ''
+  /realm-manager/accounts/:
+    get:
+      operationId: realm_manager_accounts_list
+      description: Endpoint to list Accounts.
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsListErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListCreateAccount'
+          description: ''
+    post:
+      operationId: realm_manager_accounts_create
+      description: Endpoint to create Accounts.
+      tags:
+      - Realm Manager - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListCreateAccount'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ListCreateAccount'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ListCreateAccount'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsCreateErrorResponse400'
+          description: ''
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCreateAccount'
+          description: ''
+  /realm-manager/accounts/{id}/:
+    get:
+      operationId: realm_manager_accounts_retrieve
+      description: Endpoint to retrieve an Account.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsRetrieveErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetails'
+          description: ''
+    put:
+      operationId: realm_manager_accounts_update
+      description: Endpoint to update an Account's owner. Only the owner can call
+        this endpoint.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDetails'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AccountDetails'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AccountDetails'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsUpdateErrorResponse400'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - client_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - permission_denied
+                        detail:
+                          enum:
+                          - You must be the account owner to perform this operation.
+                        attr:
+                          enum:
+                          - user
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Not Owner
+    delete:
+      operationId: realm_manager_accounts_destroy
+      description: Endpoint to delete Accounts. Only the owner can call this endpoint.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsDestroyErrorResponse400'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - client_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - permission_denied
+                        detail:
+                          enum:
+                          - You must be the account owner to perform this operation.
+                        attr:
+                          enum:
+                          - user
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Not Owner
+  /realm-manager/accounts/{id}/leave/:
+    delete:
+      operationId: realm_manager_accounts_leave_destroy
+      description: Endpoint to leave the Account.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsLeaveDestroyErrorResponse400'
+          description: ''
+        '204':
+          description: No response body
+  /realm-manager/accounts/{id}/remove/{user_id}/:
+    delete:
+      operationId: realm_manager_accounts_remove_destroy
+      description: Endpoint to remove a User from the Account. Only the owner can
+        use this endpoint.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      - in: path
+        name: user_id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsRemoveDestroyErrorResponse400'
+          description: ''
+        '204':
+          description: No response body
+  /realm-manager/accounts/join/:
+    post:
+      operationId: realm_manager_accounts_join_create
+      description: Endpoint to join existing Accounts.
+      tags:
+      - Realm Manager - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinAccount'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/JoinAccount'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/JoinAccount'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsJoinCreateErrorResponse400'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - validation_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - multi_account
+                        detail:
+                          enum:
+                          - User is already present in this game world.
+                        attr:
+                          enum:
+                          - user
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Multi Account
+  /realm-manager/game-worlds/:
+    get:
+      operationId: realm_manager_game_worlds_list
+      description: Endpoint to list Game Worlds.
+      tags:
+      - Realm Manager - Game Worlds
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerGameWorldsListErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ListGameWorld'
+          description: ''
+  /users/change_password:
+    post:
+      operationId: users_change_password_create
+      description: Endpoint to change a user's password.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserChangePassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserChangePassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserChangePassword'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersChangePasswordCreateErrorResponse400'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - client_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - authentication_failed
+                        detail:
+                          enum:
+                          - Wrong password.
+                        attr:
+                          enum:
+                          - null
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Wrong password
+  /users/login/:
+    post:
+      operationId: users_login_create
+      description: Endpoint to login a user and obtain a pair of `(access_token, refresh_token)`.
+      tags:
+      - User Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersLoginCreateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /users/login/refresh/:
+    post:
+      operationId: users_login_refresh_create
+      description: Endpoint to refresh the user's `access_token` and `refresh_token`,
+        from a valid `refresh_token`.
+      tags:
+      - User Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersLoginRefreshCreateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /users/logout/:
+    post:
+      operationId: users_logout_create
+      description: |-
+        Endpoint to logout the user, by blacklisting it's `access_token` and `refresh_token`, from a valid
+        `refresh_token`.
+      tags:
+      - User Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+        required: true
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersLogoutCreateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBlacklist'
+          description: ''
+  /users/profile/:
+    get:
+      operationId: users_profile_retrieve
+      description: Endpoint to retrieve a user's details.
+      tags:
+      - Users
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersProfileRetrieveErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    put:
+      operationId: users_profile_update
+      description: Endpoint to fully override a user's details.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserProfile'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersProfileUpdateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+    patch:
+      operationId: users_profile_partial_update
+      description: Endpoint to partially update a user's details.
+      tags:
+      - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserProfile'
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersProfilePartialUpdateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+          description: ''
+  /users/register/:
+    post:
+      operationId: users_register_create
+      description: Endpoint to register users.
+      tags:
+      - User Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersRegisterCreateErrorResponse400'
+          description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - client_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - permission_denied
+                        detail:
+                          enum:
+                          - Registration is disabled.
+                        attr:
+                          enum:
+                          - null
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Registration is disabled
+  /users/whoami:
+    get:
+      operationId: users_whoami_retrieve
+      description: Endpoint to retrieve the `USERNAME_FIELD` (usually `username` or
+        `email`) of the currently logged in user.
+      tags:
+      - Users
+      security:
+      - jwtAuth: []
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersWhoamiRetrieveErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserWhoami'
+          description: ''
+components:
+  schemas:
+    AccountDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        owner:
+          type: string
+          format: uuid
+        game_world:
+          type: string
+          format: uuid
+          readOnly: true
+        race:
+          allOf:
+          - $ref: '#/components/schemas/RaceEnum'
+          readOnly: true
+        economy:
+          allOf:
+          - $ref: '#/components/schemas/EconomyEnum'
+          readOnly: true
+      required:
+      - economy
+      - game_world
+      - id
+      - name
+      - owner
+      - race
+    ClientErrorEnum:
+      enum:
+      - client_error
+      type: string
+      description: '* `client_error` - Client Error'
+    CodeEnum:
+      enum:
+      - parse_error
+      type: string
+      description: '* `parse_error` - Parse Error'
+    EconomyEnum:
+      enum:
+      - MULTI
+      - WOOD
+      - IRON
+      - CROP
+      type: string
+      description: |-
+        * `MULTI` - Multi Resource
+        * `WOOD` - Single Wood
+        * `IRON` - Single Iron
+        * `CROP` - Single Crop
+    JoinAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required:
+      - id
+    ListCreateAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        game_world:
+          type: string
+          format: uuid
+        race:
+          $ref: '#/components/schemas/RaceEnum'
+        economy:
+          $ref: '#/components/schemas/EconomyEnum'
+      required:
+      - economy
+      - game_world
+      - id
+      - name
+      - race
+    ListGameWorld:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 255
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+      required:
+      - code
+      - end
+      - id
+      - name
+      - start
+    ParseError:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/CodeEnum'
+        detail:
+          type: string
+        attr:
+          type: string
+          nullable: true
+      required:
+      - attr
+      - code
+      - detail
+    ParseErrorResponse:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ClientErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParseError'
+      required:
+      - errors
+      - type
+    PatchedUserProfile:
+      type: object
+      description: Serializer to handle user's details.
+      properties:
+        username:
+          type: string
+          maxLength: 255
+    PingRetrieveErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RaceEnum:
+      enum:
+      - ELF
+      - DWARF
+      type: string
+      description: |-
+        * `ELF` - Elf
+        * `DWARF` - Dwarf
+    RealmManagerAccountsCreateEconomyErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - economy
+          type: string
+          description: '* `economy` - economy'
+        code:
+          enum:
+          - invalid_choice
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid_choice` - invalid_choice
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateNameErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateGameWorldErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateRaceErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateEconomyErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsCreateNonFieldErrorsErrorComponent'
+          name: '#/components/schemas/RealmManagerAccountsCreateNameErrorComponent'
+          game_world: '#/components/schemas/RealmManagerAccountsCreateGameWorldErrorComponent'
+          race: '#/components/schemas/RealmManagerAccountsCreateRaceErrorComponent'
+          economy: '#/components/schemas/RealmManagerAccountsCreateEconomyErrorComponent'
+    RealmManagerAccountsCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/RealmManagerAccountsCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsCreateGameWorldErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - game_world
+          type: string
+          description: '* `game_world` - game_world'
+        code:
+          enum:
+          - does_not_exist
+          - incorrect_type
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `does_not_exist` - does_not_exist
+            * `incorrect_type` - incorrect_type
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsCreateNameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - name
+          type: string
+          description: '* `name` - name'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsCreateRaceErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - race
+          type: string
+          description: '* `race` - race'
+        code:
+          enum:
+          - invalid_choice
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid_choice` - invalid_choice
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealmManagerAccountsCreateError'
+      required:
+      - errors
+      - type
+    RealmManagerAccountsDestroyErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsJoinCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateIdErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent'
+          id: '#/components/schemas/RealmManagerAccountsJoinCreateIdErrorComponent'
+    RealmManagerAccountsJoinCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/RealmManagerAccountsJoinCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsJoinCreateIdErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - id
+          type: string
+          description: '* `id` - id'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsJoinCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealmManagerAccountsJoinCreateError'
+      required:
+      - errors
+      - type
+    RealmManagerAccountsLeaveDestroyErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsListErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsRemoveDestroyErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsRetrieveErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsUpdateError:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsUpdateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsUpdateOwnerErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsUpdateNonFieldErrorsErrorComponent'
+          owner: '#/components/schemas/RealmManagerAccountsUpdateOwnerErrorComponent'
+    RealmManagerAccountsUpdateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsUpdateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/RealmManagerAccountsUpdateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsUpdateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsUpdateOwnerErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - owner
+          type: string
+          description: '* `owner` - owner'
+        code:
+          enum:
+          - does_not_exist
+          - incorrect_type
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `does_not_exist` - does_not_exist
+            * `incorrect_type` - incorrect_type
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsUpdateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealmManagerAccountsUpdateError'
+      required:
+      - errors
+      - type
+    RealmManagerGameWorldsListErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    TokenBlacklist:
+      type: object
+      properties:
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - refresh
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    UserChangePassword:
+      type: object
+      description: Serializer for change password requests.
+      properties:
+        password:
+          type: string
+        new_password:
+          type: string
+      required:
+      - new_password
+      - password
+    UserProfile:
+      type: object
+      description: Serializer to handle user's details.
+      properties:
+        username:
+          type: string
+          maxLength: 255
+      required:
+      - username
+    UserRegister:
+      type: object
+      description: Serializer for creating users.
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - id
+      - password
+      - username
+    UserWhoami:
+      type: object
+      description: Serializer for retrieving the current user's `USERNAME_FIELD` data
+        (usually username or email).
+      properties:
+        username:
+          type: string
+          maxLength: 255
+      required:
+      - username
+    UsersChangePasswordCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersChangePasswordCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersChangePasswordCreatePasswordErrorComponent'
+      - $ref: '#/components/schemas/UsersChangePasswordCreateNewPasswordErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersChangePasswordCreateNonFieldErrorsErrorComponent'
+          password: '#/components/schemas/UsersChangePasswordCreatePasswordErrorComponent'
+          new_password: '#/components/schemas/UsersChangePasswordCreateNewPasswordErrorComponent'
+    UsersChangePasswordCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersChangePasswordCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersChangePasswordCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersChangePasswordCreateNewPasswordErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - new_password
+          type: string
+          description: '* `new_password` - new_password'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersChangePasswordCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersChangePasswordCreatePasswordErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - password
+          type: string
+          description: '* `password` - password'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersChangePasswordCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersChangePasswordCreateError'
+      required:
+      - errors
+      - type
+    UsersLoginCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginCreateUsernameErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginCreatePasswordErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersLoginCreateNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersLoginCreateUsernameErrorComponent'
+          password: '#/components/schemas/UsersLoginCreatePasswordErrorComponent'
+    UsersLoginCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersLoginCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersLoginCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - no_active_account
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `no_active_account` - no_active_account
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginCreatePasswordErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - password
+          type: string
+          description: '* `password` - password'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginCreateUsernameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - username
+          type: string
+          description: '* `username` - username'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersLoginCreateError'
+      required:
+      - errors
+      - type
+    UsersLoginRefreshCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginRefreshCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginRefreshCreateRefreshErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersLoginRefreshCreateNonFieldErrorsErrorComponent'
+          refresh: '#/components/schemas/UsersLoginRefreshCreateRefreshErrorComponent'
+    UsersLoginRefreshCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginRefreshCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersLoginRefreshCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersLoginRefreshCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginRefreshCreateRefreshErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - refresh
+          type: string
+          description: '* `refresh` - refresh'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginRefreshCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersLoginRefreshCreateError'
+      required:
+      - errors
+      - type
+    UsersLogoutCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLogoutCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLogoutCreateRefreshErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersLogoutCreateNonFieldErrorsErrorComponent'
+          refresh: '#/components/schemas/UsersLogoutCreateRefreshErrorComponent'
+    UsersLogoutCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLogoutCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersLogoutCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersLogoutCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLogoutCreateRefreshErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - refresh
+          type: string
+          description: '* `refresh` - refresh'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLogoutCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersLogoutCreateError'
+      required:
+      - errors
+      - type
+    UsersProfilePartialUpdateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersProfilePartialUpdateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersProfilePartialUpdateUsernameErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersProfilePartialUpdateNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersProfilePartialUpdateUsernameErrorComponent'
+    UsersProfilePartialUpdateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersProfilePartialUpdateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersProfilePartialUpdateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersProfilePartialUpdateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersProfilePartialUpdateUsernameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - username
+          type: string
+          description: '* `username` - username'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          - unique
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+            * `unique` - unique
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersProfilePartialUpdateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersProfilePartialUpdateError'
+      required:
+      - errors
+      - type
+    UsersProfileRetrieveErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersProfileUpdateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersProfileUpdateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersProfileUpdateUsernameErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersProfileUpdateNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersProfileUpdateUsernameErrorComponent'
+    UsersProfileUpdateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersProfileUpdateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersProfileUpdateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersProfileUpdateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersProfileUpdateUsernameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - username
+          type: string
+          description: '* `username` - username'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          - unique
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+            * `unique` - unique
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersProfileUpdateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersProfileUpdateError'
+      required:
+      - errors
+      - type
+    UsersRegisterCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersRegisterCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersRegisterCreateUsernameErrorComponent'
+      - $ref: '#/components/schemas/UsersRegisterCreatePasswordErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersRegisterCreateNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersRegisterCreateUsernameErrorComponent'
+          password: '#/components/schemas/UsersRegisterCreatePasswordErrorComponent'
+    UsersRegisterCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersRegisterCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersRegisterCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersRegisterCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersRegisterCreatePasswordErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - password
+          type: string
+          description: '* `password` - password'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersRegisterCreateUsernameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - username
+          type: string
+          description: '* `username` - username'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          - unique
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+            * `unique` - unique
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersRegisterCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersRegisterCreateError'
+      required:
+      - errors
+      - type
+    UsersWhoamiRetrieveErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    ValidationErrorEnum:
+      enum:
+      - validation_error
+      type: string
+      description: '* `validation_error` - Validation Error'
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
