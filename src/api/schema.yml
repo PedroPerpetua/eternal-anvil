@@ -453,6 +453,41 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenObtainPair'
           description: ''
+  /users/login/discord/:
+    post:
+      operationId: users_login_discord_create
+      description: View for Discord OAuth2. Logs the user in using the OAuth code
+        provided by Discord login.
+      tags:
+      - User Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscordLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DiscordLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DiscordLogin'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersLoginDiscordCreateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscordLogin'
+          description: ''
   /users/login/refresh/:
     post:
       operationId: users_login_refresh_create
@@ -727,6 +762,26 @@ components:
       - parse_error
       type: string
       description: '* `parse_error` - Parse Error'
+    DiscordLogin:
+      type: object
+      description: |-
+        Serializer for Discord OAuth2 logins. Very similar to the
+        `rest_framework_simplejwt.serializers.TokenObtainSerializer`.
+      properties:
+        code:
+          type: string
+          writeOnly: true
+          maxLength: 255
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - code
+      - refresh
     EconomyEnum:
       enum:
       - MULTI
@@ -1518,6 +1573,90 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UsersLoginCreateError'
+      required:
+      - errors
+      - type
+    UsersLoginDiscordCreateCodeErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - code
+          type: string
+          description: '* `code` - code'
+        code:
+          enum:
+          - blank
+          - invalid
+          - max_length
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `max_length` - max_length
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginDiscordCreateError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginDiscordCreateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginDiscordCreateCodeErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersLoginDiscordCreateNonFieldErrorsErrorComponent'
+          code: '#/components/schemas/UsersLoginDiscordCreateCodeErrorComponent'
+    UsersLoginDiscordCreateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginDiscordCreateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersLoginDiscordCreateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersLoginDiscordCreateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginDiscordCreateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersLoginDiscordCreateError'
       required:
       - errors
       - type

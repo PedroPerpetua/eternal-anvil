@@ -13,11 +13,13 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  DiscordLogin,
   TokenBlacklist,
   TokenObtainPair,
   TokenRefresh,
   UserRegister,
   UsersLoginCreateErrorResponse400,
+  UsersLoginDiscordCreateErrorResponse400,
   UsersLoginRefreshCreateErrorResponse400,
   UsersLogoutCreateErrorResponse400,
   UsersRegisterCreate403,
@@ -94,6 +96,50 @@ export const useUsersLoginCreate = <TError = UsersLoginCreateErrorResponse400,
   TContext
   > => {
   const mutationOptions = getUsersLoginCreateMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+/**
+ * View for Discord OAuth2. Logs the user in using the OAuth code provided by Discord login.
+ */
+export const usersLoginDiscordCreate = (
+  discordLogin: NonReadonly<DiscordLogin>,
+  options?: SecondParameter<typeof queryInstance>,
+) => queryInstance<DiscordLogin>(
+  { url: '/users/login/discord/',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    data: discordLogin },
+  options,
+);
+
+export const getUsersLoginDiscordCreateMutationOptions = <TError = UsersLoginDiscordCreateErrorResponse400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: NonReadonly<DiscordLogin> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: NonReadonly<DiscordLogin> }, TContext> => {
+  const { mutation: mutationOptions, request: requestOptions } = options ?? {};
+
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, { data: NonReadonly<DiscordLogin> }> = (props) => {
+    const { data } = props ?? {};
+
+    return usersLoginDiscordCreate(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UsersLoginDiscordCreateMutationResult = NonNullable<Awaited<ReturnType<typeof usersLoginDiscordCreate>>>;
+export type UsersLoginDiscordCreateMutationBody = NonReadonly<DiscordLogin>;
+export type UsersLoginDiscordCreateMutationError = UsersLoginDiscordCreateErrorResponse400;
+
+export const useUsersLoginDiscordCreate = <TError = UsersLoginDiscordCreateErrorResponse400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: NonReadonly<DiscordLogin> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationResult<
+  Awaited<ReturnType<typeof usersLoginDiscordCreate>>,
+  TError,
+  { data: NonReadonly<DiscordLogin> },
+  TContext
+  > => {
+  const mutationOptions = getUsersLoginDiscordCreateMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

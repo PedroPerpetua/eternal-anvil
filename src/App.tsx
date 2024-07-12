@@ -1,24 +1,23 @@
-import { Stack } from '@mui/material';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 
-import CalculatorsOverlay from './components/calculators/CalculatorsOverlay';
-import ShowCalculatorsButton from './components/calculators/ShowCalculatorsButton';
-import About from './components/website/About';
-import Donations from './components/website/Donations';
+import ProtectedRoutes from './components/website/ProtectedRoutes';
 import WebsiteLayout from './components/website/WebsiteLayout';
+import LoginPage from './pages/LoginPage';
+import RealmManagerPage from './pages/RealmManagerPage';
+import RootPage from './pages/RootPage';
+
+const router = createBrowserRouter(createRoutesFromElements(
+  <Route element={<WebsiteLayout />}>
+    <Route path="/" element={<RootPage />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route element={<ProtectedRoutes />}>
+      <Route path="/realm-manager" element={<RealmManagerPage />} />
+    </Route>
+  </Route>,
+));
 
 function App() {
-  return (
-    <>
-      <WebsiteLayout>
-        <Stack spacing={1}>
-          <ShowCalculatorsButton />
-          <About />
-          <Donations />
-        </Stack>
-      </WebsiteLayout>
-      <CalculatorsOverlay />
-    </>
-  );
+  return (<RouterProvider router={router} />);
 }
 
 export default App;

@@ -1,30 +1,30 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import type { AxiosRequestConfig } from 'axios';
+import { applyAuthTokenInterceptor } from 'axios-jwt';
 
-import { clearAuthToken, getAuthToken } from './authToken';
+import type { TokenRefresh } from './models';
 import i18n from '../translations/i18n';
 
 const SERVER_URL = import.meta.env.VITE_API_URL;
 
 const axiosInstance = axios.create({ baseURL: new URL(SERVER_URL).toString() });
 
-// On request, add the token and language
+// Apply the language on the instance
 axiosInstance.interceptors.request.use((config) => {
-  const token = getAuthToken();
-  if (token) config.headers.setAuthorization(`Token ${token}`);
   const { language } = i18n;
   if (language) config.headers.set('Accept-Language', language);
   return config;
 });
 
-// On an authentication failed, remove the token
-axiosInstance.interceptors.response.use((response) => response, (error) => {
-  if (isAxiosError(error)) {
-    const status = error.response?.status;
-    if (status === 401) clearAuthToken();
-  }
-  return Promise.reject(error);
-});
+// Apply the JWT refresh
+applyAuthTokenInterceptor(axiosInstance, { requestRefresh: async (refreshToken) => {
+  const res = await axios.post<TokenRefresh>(
+    '/users/login/refresh/',
+    { refresh: refreshToken },
+    { baseURL: SERVER_URL },
+  );
+  return { accessToken: res.data.access, refreshToken: res.data.refresh };
+} });
 
 export const queryInstance = <T>(
   config: AxiosRequestConfig,

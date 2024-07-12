@@ -14,7 +14,10 @@ const GameButton = styled(Button)(({ selected = false }: GameButtonExtraProps) =
   fontWeight: 900,
   backgroundColor: selected ? teal.light : teal.main,
   '&:hover': { backgroundColor: teal.dark },
-  '&.Mui-disabled': { backgroundColor: teal.dark },
+  '&.Mui-disabled': {
+    backgroundColor: teal.dark,
+    color: `${teal.contrastText}99`,
+  },
   textShadow: '1px 1px 1px black',
   border: '1px solid',
   borderColor: gold.light,
