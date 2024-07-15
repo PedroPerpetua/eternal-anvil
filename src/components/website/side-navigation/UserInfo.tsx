@@ -4,8 +4,8 @@ import { clearAuthTokens, getRefreshToken } from 'axios-jwt';
 import { t } from 'i18next';
 
 import { useAuthContext } from '../../../api/AuthContext';
-import { usePingRetrieve } from '../../../api/queries/core/core';
-import { useUsersLogoutCreate } from '../../../api/queries/user-authentication/user-authentication';
+import { useHealthcheck } from '../../../api/queries/core';
+import { useUsersLogout } from '../../../api/queries/user-authentication';
 import DiscordLogo from '../../../assets/discord.png';
 import { gameColors } from '../../../theme';
 import CustomIcon from '../../common/CustomIcon';
@@ -16,9 +16,9 @@ const DISCORD_OAUTH_URL = import.meta.env.VITE_DISCORD_OAUTH_URL;
 const { teal } = gameColors;
 
 function UserInfo() {
-  const { isError, isLoading: isLoadingPing } = usePingRetrieve();
+  const { isError, isLoading: isLoadingPing } = useHealthcheck();
   const { userInfo, refreshUser, isLoading } = useAuthContext();
-  const { mutate: logout } = useUsersLogoutCreate({ mutation: {
+  const { mutate: logout } = useUsersLogout({ mutation: {
     onSuccess: async () => {
       clearAuthTokens();
       await refreshUser();

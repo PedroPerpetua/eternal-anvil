@@ -6,8 +6,9 @@ info:
 paths:
   /ping/:
     get:
-      operationId: ping_retrieve
+      operationId: healthcheck
       description: View that simply replies with a 'pong'.
+      summary: Healthcheck
       tags:
       - Core
       security:
@@ -18,7 +19,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PingRetrieveErrorResponse400'
+                $ref: '#/components/schemas/HealthcheckErrorResponse400'
           description: ''
         '200':
           content:
@@ -32,6 +33,7 @@ paths:
     get:
       operationId: realm_manager_accounts_list
       description: Endpoint to list Accounts.
+      summary: Get account list
       tags:
       - Realm Manager - Accounts
       security:
@@ -54,19 +56,20 @@ paths:
     post:
       operationId: realm_manager_accounts_create
       description: Endpoint to create Accounts.
+      summary: Create account
       tags:
       - Realm Manager - Accounts
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ListCreateAccount'
+              $ref: '#/components/schemas/ListCreateAccountRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/ListCreateAccount'
+              $ref: '#/components/schemas/ListCreateAccountRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/ListCreateAccount'
+              $ref: '#/components/schemas/ListCreateAccountRequest'
         required: true
       security:
       - jwtAuth: []
@@ -87,6 +90,7 @@ paths:
     get:
       operationId: realm_manager_accounts_retrieve
       description: Endpoint to retrieve an Account.
+      summary: Get account details
       parameters:
       - in: path
         name: id
@@ -115,6 +119,7 @@ paths:
       operationId: realm_manager_accounts_update
       description: Endpoint to update an Account's owner. Only the owner can call
         this endpoint.
+      summary: Update account details
       parameters:
       - in: path
         name: id
@@ -128,13 +133,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AccountDetails'
+              $ref: '#/components/schemas/AccountDetailsRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/AccountDetails'
+              $ref: '#/components/schemas/AccountDetailsRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/AccountDetails'
+              $ref: '#/components/schemas/AccountDetailsRequest'
         required: true
       security:
       - jwtAuth: []
@@ -144,6 +149,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RealmManagerAccountsUpdateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetails'
           description: ''
         '403':
           content:
@@ -179,6 +190,7 @@ paths:
     delete:
       operationId: realm_manager_accounts_destroy
       description: Endpoint to delete Accounts. Only the owner can call this endpoint.
+      summary: Delete account
       parameters:
       - in: path
         name: id
@@ -197,6 +209,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/RealmManagerAccountsDestroyErrorResponse400'
           description: ''
+        '204':
+          description: Account deleted successfully
         '403':
           content:
             application/json:
@@ -230,8 +244,9 @@ paths:
           description: Not Owner
   /realm-manager/accounts/{id}/leave/:
     delete:
-      operationId: realm_manager_accounts_leave_destroy
+      operationId: realm_manager_accounts_leave
       description: Endpoint to leave the Account.
+      summary: Leave account
       parameters:
       - in: path
         name: id
@@ -248,15 +263,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RealmManagerAccountsLeaveDestroyErrorResponse400'
+                $ref: '#/components/schemas/RealmManagerAccountsLeaveErrorResponse400'
           description: ''
         '204':
-          description: No response body
+          description: Left account successfully
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - validation_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - failed_remove_owner
+                        detail:
+                          enum:
+                          - The owner of the account cannot be removed.
+                        attr:
+                          enum:
+                          - owner
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Is Owner
   /realm-manager/accounts/{id}/remove/{user_id}/:
     delete:
-      operationId: realm_manager_accounts_remove_destroy
+      operationId: realm_manager_accounts_remove_user
       description: Endpoint to remove a User from the Account. Only the owner can
         use this endpoint.
+      summary: Remove user from account
       parameters:
       - in: path
         name: id
@@ -279,27 +326,59 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RealmManagerAccountsRemoveDestroyErrorResponse400'
+                $ref: '#/components/schemas/RealmManagerAccountsRemoveUserErrorResponse400'
           description: ''
         '204':
-          description: No response body
+          description: User removed from the account successfully
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - client_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - permission_denied
+                        detail:
+                          enum:
+                          - You must be the account owner to perform this operation.
+                        attr:
+                          enum:
+                          - user
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Not Owner
   /realm-manager/accounts/join/:
     post:
-      operationId: realm_manager_accounts_join_create
+      operationId: realm_manager_accounts_join
       description: Endpoint to join existing Accounts.
+      summary: Join account
       tags:
       - Realm Manager - Accounts
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JoinAccount'
+              $ref: '#/components/schemas/JoinAccountRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/JoinAccount'
+              $ref: '#/components/schemas/JoinAccountRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/JoinAccount'
+              $ref: '#/components/schemas/JoinAccountRequest'
         required: true
       security:
       - jwtAuth: []
@@ -308,7 +387,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RealmManagerAccountsJoinCreateErrorResponse400'
+                $ref: '#/components/schemas/RealmManagerAccountsJoinErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinAccount'
           description: ''
         '403':
           content:
@@ -364,23 +449,24 @@ paths:
                 items:
                   $ref: '#/components/schemas/ListGameWorld'
           description: ''
-  /users/change_password:
+  /users/change_password/:
     post:
-      operationId: users_change_password_create
+      operationId: users_change_password
       description: Endpoint to change a user's password.
+      summary: Change user's password
       tags:
       - Users
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserChangePassword'
+              $ref: '#/components/schemas/UserChangePasswordRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserChangePassword'
+              $ref: '#/components/schemas/UserChangePasswordRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserChangePassword'
+              $ref: '#/components/schemas/UserChangePasswordRequest'
         required: true
       security:
       - jwtAuth: []
@@ -389,7 +475,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersChangePasswordCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersChangePasswordErrorResponse400'
           description: ''
         '401':
           content:
@@ -424,28 +510,29 @@ paths:
           description: Wrong password
   /users/login/:
     post:
-      operationId: users_login_create
+      operationId: users_login
       description: Endpoint to login a user and obtain a pair of `(access_token, refresh_token)`.
+      summary: Login user
       tags:
       - User Authentication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/TokenObtainPairRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/TokenObtainPairRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenObtainPair'
+              $ref: '#/components/schemas/TokenObtainPairRequest'
         required: true
       responses:
         '400':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersLoginCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersLoginErrorResponse400'
           description: ''
         '200':
           content:
@@ -464,13 +551,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DiscordLogin'
+              $ref: '#/components/schemas/DiscordLoginRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/DiscordLogin'
+              $ref: '#/components/schemas/DiscordLoginRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/DiscordLogin'
+              $ref: '#/components/schemas/DiscordLoginRequest'
         required: true
       security:
       - jwtAuth: []
@@ -490,29 +577,32 @@ paths:
           description: ''
   /users/login/refresh/:
     post:
-      operationId: users_login_refresh_create
-      description: Endpoint to refresh the user's `access_token` and `refresh_token`,
-        from a valid `refresh_token`.
+      operationId: users_login_refresh
+      description: |-
+        Endpoint to refresh the user's `access_token` and `refresh_token`, from a valid `refresh_token`.
+
+        This will also return a new refresh token and invalidate the old one.
+      summary: Refresh access token
       tags:
       - User Authentication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenRefresh'
+              $ref: '#/components/schemas/TokenRefreshRequest'
         required: true
       responses:
         '400':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersLoginRefreshCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersLoginRefreshErrorResponse400'
           description: ''
         '200':
           content:
@@ -522,41 +612,38 @@ paths:
           description: ''
   /users/logout/:
     post:
-      operationId: users_logout_create
-      description: |-
-        Endpoint to logout the user, by blacklisting it's `access_token` and `refresh_token`, from a valid
-        `refresh_token`.
+      operationId: users_logout
+      description: Endpoint to logout the user, by blacklisting it's `access_token`
+        and `refresh_token`, from a valid `refresh_token`.
+      summary: Logout user
       tags:
       - User Authentication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenBlacklist'
+              $ref: '#/components/schemas/TokenBlacklistRequest'
         required: true
       responses:
         '400':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersLogoutCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersLogoutErrorResponse400'
           description: ''
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenBlacklist'
-          description: ''
+          description: No response body
   /users/profile/:
     get:
       operationId: users_profile_retrieve
-      description: Endpoint to retrieve a user's details.
+      description: Endpoint to retrieve the current user's details.
+      summary: Get user details
       tags:
       - Users
       security:
@@ -576,20 +663,21 @@ paths:
           description: ''
     put:
       operationId: users_profile_update
-      description: Endpoint to fully override a user's details.
+      description: Endpoint to partially update the current user's details.
+      summary: Update user details
       tags:
       - Users
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserProfile'
+              $ref: '#/components/schemas/UserProfileRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserProfile'
+              $ref: '#/components/schemas/UserProfileRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserProfile'
+              $ref: '#/components/schemas/UserProfileRequest'
         required: true
       security:
       - jwtAuth: []
@@ -608,20 +696,21 @@ paths:
           description: ''
     patch:
       operationId: users_profile_partial_update
-      description: Endpoint to partially update a user's details.
+      description: Endpoint to fully override the current user's details.
+      summary: Patch user details
       tags:
       - Users
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedUserProfile'
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedUserProfile'
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedUserProfile'
+              $ref: '#/components/schemas/PatchedUserProfileRequest'
       security:
       - jwtAuth: []
       responses:
@@ -639,21 +728,22 @@ paths:
           description: ''
   /users/register/:
     post:
-      operationId: users_register_create
+      operationId: users_register
       description: Endpoint to register users.
+      summary: Register user
       tags:
       - User Authentication
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserRegister'
+              $ref: '#/components/schemas/UserRegisterRequest'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/UserRegister'
+              $ref: '#/components/schemas/UserRegisterRequest'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserRegister'
+              $ref: '#/components/schemas/UserRegisterRequest'
         required: true
       security:
       - jwtAuth: []
@@ -663,7 +753,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersRegisterCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersRegisterErrorResponse400'
           description: ''
         '403':
           content:
@@ -696,11 +786,11 @@ paths:
                 - type
                 - errors
           description: Registration is disabled
-  /users/whoami:
+  /users/whoami/:
     get:
-      operationId: users_whoami_retrieve
-      description: Endpoint to retrieve the `USERNAME_FIELD` (usually `username` or
-        `email`) of the currently logged in user.
+      operationId: users_whoami
+      description: Endpoint to retrieve the current logged in user.
+      summary: Get current user
       tags:
       - Users
       security:
@@ -710,7 +800,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersWhoamiRetrieveErrorResponse400'
+                $ref: '#/components/schemas/UsersWhoamiErrorResponse400'
           description: ''
         '200':
           content:
@@ -745,13 +835,28 @@ components:
           allOf:
           - $ref: '#/components/schemas/EconomyEnum'
           readOnly: true
+        players:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
       required:
       - economy
       - game_world
       - id
       - name
       - owner
+      - players
       - race
+    AccountDetailsRequest:
+      type: object
+      properties:
+        owner:
+          type: string
+          format: uuid
+      required:
+      - owner
     ClientErrorEnum:
       enum:
       - client_error
@@ -768,10 +873,6 @@ components:
         Serializer for Discord OAuth2 logins. Very similar to the
         `rest_framework_simplejwt.serializers.TokenObtainSerializer`.
       properties:
-        code:
-          type: string
-          writeOnly: true
-          maxLength: 255
         access:
           type: string
           readOnly: true
@@ -780,8 +881,20 @@ components:
           readOnly: true
       required:
       - access
-      - code
       - refresh
+    DiscordLoginRequest:
+      type: object
+      description: |-
+        Serializer for Discord OAuth2 logins. Very similar to the
+        `rest_framework_simplejwt.serializers.TokenObtainSerializer`.
+      properties:
+        code:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 255
+      required:
+      - code
     EconomyEnum:
       enum:
       - MULTI
@@ -794,7 +907,33 @@ components:
         * `WOOD` - Single Wood
         * `IRON` - Single Iron
         * `CROP` - Single Crop
+    GameWorld:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        code:
+          type: string
+          maxLength: 255
+      required:
+      - code
+      - id
+      - name
+    HealthcheckErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
     JoinAccount:
+      $ref: '#/components/schemas/AccountDetails'
+    JoinAccountRequest:
       type: object
       properties:
         id:
@@ -813,6 +952,25 @@ components:
           type: string
           maxLength: 255
         game_world:
+          $ref: '#/components/schemas/GameWorld'
+        race:
+          $ref: '#/components/schemas/RaceEnum'
+        economy:
+          $ref: '#/components/schemas/EconomyEnum'
+      required:
+      - economy
+      - game_world
+      - id
+      - name
+      - race
+    ListCreateAccountRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        game_world:
           type: string
           format: uuid
         race:
@@ -822,7 +980,6 @@ components:
       required:
       - economy
       - game_world
-      - id
       - name
       - race
     ListGameWorld:
@@ -876,20 +1033,14 @@ components:
       required:
       - errors
       - type
-    PatchedUserProfile:
+    PatchedUserProfileRequest:
       type: object
       description: Serializer to handle user's details.
       properties:
         username:
           type: string
+          minLength: 1
           maxLength: 255
-    PingRetrieveErrorResponse400:
-      oneOf:
-      - $ref: '#/components/schemas/ParseErrorResponse'
-      discriminator:
-        propertyName: type
-        mapping:
-          client_error: '#/components/schemas/ParseErrorResponse'
     RaceEnum:
       enum:
       - ELF
@@ -1069,25 +1220,25 @@ components:
         propertyName: type
         mapping:
           client_error: '#/components/schemas/ParseErrorResponse'
-    RealmManagerAccountsJoinCreateError:
+    RealmManagerAccountsJoinError:
       oneOf:
-      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateIdErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinIdErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent'
-          id: '#/components/schemas/RealmManagerAccountsJoinCreateIdErrorComponent'
-    RealmManagerAccountsJoinCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsJoinNonFieldErrorsErrorComponent'
+          id: '#/components/schemas/RealmManagerAccountsJoinIdErrorComponent'
+    RealmManagerAccountsJoinErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/RealmManagerAccountsJoinCreateValidationError'
+      - $ref: '#/components/schemas/RealmManagerAccountsJoinValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/RealmManagerAccountsJoinCreateValidationError'
+          validation_error: '#/components/schemas/RealmManagerAccountsJoinValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    RealmManagerAccountsJoinCreateIdErrorComponent:
+    RealmManagerAccountsJoinIdErrorComponent:
       type: object
       properties:
         attr:
@@ -1111,7 +1262,7 @@ components:
       - attr
       - code
       - detail
-    RealmManagerAccountsJoinCreateNonFieldErrorsErrorComponent:
+    RealmManagerAccountsJoinNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -1133,7 +1284,7 @@ components:
       - attr
       - code
       - detail
-    RealmManagerAccountsJoinCreateValidationError:
+    RealmManagerAccountsJoinValidationError:
       type: object
       properties:
         type:
@@ -1141,11 +1292,11 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/RealmManagerAccountsJoinCreateError'
+            $ref: '#/components/schemas/RealmManagerAccountsJoinError'
       required:
       - errors
       - type
-    RealmManagerAccountsLeaveDestroyErrorResponse400:
+    RealmManagerAccountsLeaveErrorResponse400:
       oneOf:
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
@@ -1159,7 +1310,7 @@ components:
         propertyName: type
         mapping:
           client_error: '#/components/schemas/ParseErrorResponse'
-    RealmManagerAccountsRemoveDestroyErrorResponse400:
+    RealmManagerAccountsRemoveUserErrorResponse400:
       oneOf:
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
@@ -1258,23 +1409,18 @@ components:
         propertyName: type
         mapping:
           client_error: '#/components/schemas/ParseErrorResponse'
-    TokenBlacklist:
+    TokenBlacklistRequest:
       type: object
       properties:
         refresh:
           type: string
           writeOnly: true
+          minLength: 1
       required:
       - refresh
     TokenObtainPair:
       type: object
       properties:
-        username:
-          type: string
-          writeOnly: true
-        password:
-          type: string
-          writeOnly: true
         access:
           type: string
           readOnly: true
@@ -1283,8 +1429,20 @@ components:
           readOnly: true
       required:
       - access
-      - password
       - refresh
+    TokenObtainPairRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+          minLength: 1
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+      required:
+      - password
       - username
     TokenRefresh:
       type: object
@@ -1297,14 +1455,24 @@ components:
       required:
       - access
       - refresh
-    UserChangePassword:
+    TokenRefreshRequest:
+      type: object
+      properties:
+        refresh:
+          type: string
+          minLength: 1
+      required:
+      - refresh
+    UserChangePasswordRequest:
       type: object
       description: Serializer for change password requests.
       properties:
         password:
           type: string
+          minLength: 1
         new_password:
           type: string
+          minLength: 1
       required:
       - new_password
       - password
@@ -1317,23 +1485,30 @@ components:
           maxLength: 255
       required:
       - username
-    UserRegister:
+    UserProfileRequest:
+      type: object
+      description: Serializer to handle user's details.
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - username
+    UserRegisterRequest:
       type: object
       description: Serializer for creating users.
       properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
         username:
           type: string
+          minLength: 1
           maxLength: 255
         password:
           type: string
           writeOnly: true
+          minLength: 1
           maxLength: 128
       required:
-      - id
       - password
       - username
     UserWhoami:
@@ -1346,27 +1521,27 @@ components:
           maxLength: 255
       required:
       - username
-    UsersChangePasswordCreateError:
+    UsersChangePasswordError:
       oneOf:
-      - $ref: '#/components/schemas/UsersChangePasswordCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersChangePasswordCreatePasswordErrorComponent'
-      - $ref: '#/components/schemas/UsersChangePasswordCreateNewPasswordErrorComponent'
+      - $ref: '#/components/schemas/UsersChangePasswordNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersChangePasswordPasswordErrorComponent'
+      - $ref: '#/components/schemas/UsersChangePasswordNewPasswordErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/UsersChangePasswordCreateNonFieldErrorsErrorComponent'
-          password: '#/components/schemas/UsersChangePasswordCreatePasswordErrorComponent'
-          new_password: '#/components/schemas/UsersChangePasswordCreateNewPasswordErrorComponent'
-    UsersChangePasswordCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/UsersChangePasswordNonFieldErrorsErrorComponent'
+          password: '#/components/schemas/UsersChangePasswordPasswordErrorComponent'
+          new_password: '#/components/schemas/UsersChangePasswordNewPasswordErrorComponent'
+    UsersChangePasswordErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/UsersChangePasswordCreateValidationError'
+      - $ref: '#/components/schemas/UsersChangePasswordValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/UsersChangePasswordCreateValidationError'
+          validation_error: '#/components/schemas/UsersChangePasswordValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    UsersChangePasswordCreateNewPasswordErrorComponent:
+    UsersChangePasswordNewPasswordErrorComponent:
       type: object
       properties:
         attr:
@@ -1396,7 +1571,7 @@ components:
       - attr
       - code
       - detail
-    UsersChangePasswordCreateNonFieldErrorsErrorComponent:
+    UsersChangePasswordNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -1418,7 +1593,7 @@ components:
       - attr
       - code
       - detail
-    UsersChangePasswordCreatePasswordErrorComponent:
+    UsersChangePasswordPasswordErrorComponent:
       type: object
       properties:
         attr:
@@ -1448,7 +1623,7 @@ components:
       - attr
       - code
       - detail
-    UsersChangePasswordCreateValidationError:
+    UsersChangePasswordValidationError:
       type: object
       properties:
         type:
@@ -1456,123 +1631,7 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/UsersChangePasswordCreateError'
-      required:
-      - errors
-      - type
-    UsersLoginCreateError:
-      oneOf:
-      - $ref: '#/components/schemas/UsersLoginCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersLoginCreateUsernameErrorComponent'
-      - $ref: '#/components/schemas/UsersLoginCreatePasswordErrorComponent'
-      discriminator:
-        propertyName: attr
-        mapping:
-          non_field_errors: '#/components/schemas/UsersLoginCreateNonFieldErrorsErrorComponent'
-          username: '#/components/schemas/UsersLoginCreateUsernameErrorComponent'
-          password: '#/components/schemas/UsersLoginCreatePasswordErrorComponent'
-    UsersLoginCreateErrorResponse400:
-      oneOf:
-      - $ref: '#/components/schemas/UsersLoginCreateValidationError'
-      - $ref: '#/components/schemas/ParseErrorResponse'
-      discriminator:
-        propertyName: type
-        mapping:
-          validation_error: '#/components/schemas/UsersLoginCreateValidationError'
-          client_error: '#/components/schemas/ParseErrorResponse'
-    UsersLoginCreateNonFieldErrorsErrorComponent:
-      type: object
-      properties:
-        attr:
-          enum:
-          - non_field_errors
-          type: string
-          description: '* `non_field_errors` - non_field_errors'
-        code:
-          enum:
-          - invalid
-          - no_active_account
-          - 'null'
-          type: string
-          description: |-
-            * `invalid` - invalid
-            * `no_active_account` - no_active_account
-            * `null` - null
-        detail:
-          type: string
-      required:
-      - attr
-      - code
-      - detail
-    UsersLoginCreatePasswordErrorComponent:
-      type: object
-      properties:
-        attr:
-          enum:
-          - password
-          type: string
-          description: '* `password` - password'
-        code:
-          enum:
-          - blank
-          - invalid
-          - 'null'
-          - null_characters_not_allowed
-          - required
-          - surrogate_characters_not_allowed
-          type: string
-          description: |-
-            * `blank` - blank
-            * `invalid` - invalid
-            * `null` - null
-            * `null_characters_not_allowed` - null_characters_not_allowed
-            * `required` - required
-            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
-        detail:
-          type: string
-      required:
-      - attr
-      - code
-      - detail
-    UsersLoginCreateUsernameErrorComponent:
-      type: object
-      properties:
-        attr:
-          enum:
-          - username
-          type: string
-          description: '* `username` - username'
-        code:
-          enum:
-          - blank
-          - invalid
-          - 'null'
-          - null_characters_not_allowed
-          - required
-          - surrogate_characters_not_allowed
-          type: string
-          description: |-
-            * `blank` - blank
-            * `invalid` - invalid
-            * `null` - null
-            * `null_characters_not_allowed` - null_characters_not_allowed
-            * `required` - required
-            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
-        detail:
-          type: string
-      required:
-      - attr
-      - code
-      - detail
-    UsersLoginCreateValidationError:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/ValidationErrorEnum'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/UsersLoginCreateError'
+            $ref: '#/components/schemas/UsersChangePasswordError'
       required:
       - errors
       - type
@@ -1660,25 +1719,99 @@ components:
       required:
       - errors
       - type
-    UsersLoginRefreshCreateError:
+    UsersLoginError:
       oneOf:
-      - $ref: '#/components/schemas/UsersLoginRefreshCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersLoginRefreshCreateRefreshErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginUsernameErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginPasswordErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/UsersLoginRefreshCreateNonFieldErrorsErrorComponent'
-          refresh: '#/components/schemas/UsersLoginRefreshCreateRefreshErrorComponent'
-    UsersLoginRefreshCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/UsersLoginNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersLoginUsernameErrorComponent'
+          password: '#/components/schemas/UsersLoginPasswordErrorComponent'
+    UsersLoginErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/UsersLoginRefreshCreateValidationError'
+      - $ref: '#/components/schemas/UsersLoginValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/UsersLoginRefreshCreateValidationError'
+          validation_error: '#/components/schemas/UsersLoginValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    UsersLoginRefreshCreateNonFieldErrorsErrorComponent:
+    UsersLoginNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - no_active_account
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `no_active_account` - no_active_account
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginPasswordErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - password
+          type: string
+          description: '* `password` - password'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginRefreshError:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginRefreshNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLoginRefreshRefreshErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/UsersLoginRefreshNonFieldErrorsErrorComponent'
+          refresh: '#/components/schemas/UsersLoginRefreshRefreshErrorComponent'
+    UsersLoginRefreshErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/UsersLoginRefreshValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/UsersLoginRefreshValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    UsersLoginRefreshNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -1700,7 +1833,7 @@ components:
       - attr
       - code
       - detail
-    UsersLoginRefreshCreateRefreshErrorComponent:
+    UsersLoginRefreshRefreshErrorComponent:
       type: object
       properties:
         attr:
@@ -1730,7 +1863,7 @@ components:
       - attr
       - code
       - detail
-    UsersLoginRefreshCreateValidationError:
+    UsersLoginRefreshValidationError:
       type: object
       properties:
         type:
@@ -1738,29 +1871,71 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/UsersLoginRefreshCreateError'
+            $ref: '#/components/schemas/UsersLoginRefreshError'
       required:
       - errors
       - type
-    UsersLogoutCreateError:
+    UsersLoginUsernameErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - username
+          type: string
+          description: '* `username` - username'
+        code:
+          enum:
+          - blank
+          - invalid
+          - 'null'
+          - null_characters_not_allowed
+          - required
+          - surrogate_characters_not_allowed
+          type: string
+          description: |-
+            * `blank` - blank
+            * `invalid` - invalid
+            * `null` - null
+            * `null_characters_not_allowed` - null_characters_not_allowed
+            * `required` - required
+            * `surrogate_characters_not_allowed` - surrogate_characters_not_allowed
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    UsersLoginValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsersLoginError'
+      required:
+      - errors
+      - type
+    UsersLogoutError:
       oneOf:
-      - $ref: '#/components/schemas/UsersLogoutCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersLogoutCreateRefreshErrorComponent'
+      - $ref: '#/components/schemas/UsersLogoutNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersLogoutRefreshErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/UsersLogoutCreateNonFieldErrorsErrorComponent'
-          refresh: '#/components/schemas/UsersLogoutCreateRefreshErrorComponent'
-    UsersLogoutCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/UsersLogoutNonFieldErrorsErrorComponent'
+          refresh: '#/components/schemas/UsersLogoutRefreshErrorComponent'
+    UsersLogoutErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/UsersLogoutCreateValidationError'
+      - $ref: '#/components/schemas/UsersLogoutValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/UsersLogoutCreateValidationError'
+          validation_error: '#/components/schemas/UsersLogoutValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    UsersLogoutCreateNonFieldErrorsErrorComponent:
+    UsersLogoutNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -1782,7 +1957,7 @@ components:
       - attr
       - code
       - detail
-    UsersLogoutCreateRefreshErrorComponent:
+    UsersLogoutRefreshErrorComponent:
       type: object
       properties:
         attr:
@@ -1812,7 +1987,7 @@ components:
       - attr
       - code
       - detail
-    UsersLogoutCreateValidationError:
+    UsersLogoutValidationError:
       type: object
       properties:
         type:
@@ -1820,7 +1995,7 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/UsersLogoutCreateError'
+            $ref: '#/components/schemas/UsersLogoutError'
       required:
       - errors
       - type
@@ -2003,27 +2178,27 @@ components:
       required:
       - errors
       - type
-    UsersRegisterCreateError:
+    UsersRegisterError:
       oneOf:
-      - $ref: '#/components/schemas/UsersRegisterCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersRegisterCreateUsernameErrorComponent'
-      - $ref: '#/components/schemas/UsersRegisterCreatePasswordErrorComponent'
+      - $ref: '#/components/schemas/UsersRegisterNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersRegisterUsernameErrorComponent'
+      - $ref: '#/components/schemas/UsersRegisterPasswordErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/UsersRegisterCreateNonFieldErrorsErrorComponent'
-          username: '#/components/schemas/UsersRegisterCreateUsernameErrorComponent'
-          password: '#/components/schemas/UsersRegisterCreatePasswordErrorComponent'
-    UsersRegisterCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/UsersRegisterNonFieldErrorsErrorComponent'
+          username: '#/components/schemas/UsersRegisterUsernameErrorComponent'
+          password: '#/components/schemas/UsersRegisterPasswordErrorComponent'
+    UsersRegisterErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/UsersRegisterCreateValidationError'
+      - $ref: '#/components/schemas/UsersRegisterValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/UsersRegisterCreateValidationError'
+          validation_error: '#/components/schemas/UsersRegisterValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    UsersRegisterCreateNonFieldErrorsErrorComponent:
+    UsersRegisterNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -2045,7 +2220,7 @@ components:
       - attr
       - code
       - detail
-    UsersRegisterCreatePasswordErrorComponent:
+    UsersRegisterPasswordErrorComponent:
       type: object
       properties:
         attr:
@@ -2077,7 +2252,7 @@ components:
       - attr
       - code
       - detail
-    UsersRegisterCreateUsernameErrorComponent:
+    UsersRegisterUsernameErrorComponent:
       type: object
       properties:
         attr:
@@ -2111,7 +2286,7 @@ components:
       - attr
       - code
       - detail
-    UsersRegisterCreateValidationError:
+    UsersRegisterValidationError:
       type: object
       properties:
         type:
@@ -2119,11 +2294,11 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/UsersRegisterCreateError'
+            $ref: '#/components/schemas/UsersRegisterError'
       required:
       - errors
       - type
-    UsersWhoamiRetrieveErrorResponse400:
+    UsersWhoamiErrorResponse400:
       oneOf:
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:

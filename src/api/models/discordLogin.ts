@@ -12,7 +12,5 @@
  */
 export interface DiscordLogin {
   readonly access: string;
-  /** @maxLength 255 */
-  code: string;
   readonly refresh: string;
 }

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
 import { useAuthContext } from '../api/AuthContext';
-import { useUsersLoginDiscordCreate } from '../api/queries/user-authentication/user-authentication';
+import { useUsersLoginDiscordCreate } from '../api/queries/user-authentication';
 
 function LoginCallbackPage() {
   const { t } = useTranslation();

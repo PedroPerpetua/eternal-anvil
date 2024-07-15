@@ -5,7 +5,6 @@
  * The backend server for the Eternal Anvil.
  * OpenAPI spec version: v0.0.1
  */
+import type { AccountDetails } from './accountDetails';
 
-export interface JoinAccount {
-  id: string;
-}
+export type JoinAccount = AccountDetails;

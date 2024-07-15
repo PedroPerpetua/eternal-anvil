@@ -6,11 +6,12 @@
  * OpenAPI spec version: v0.0.1
  */
 import type { EconomyEnum } from './economyEnum';
+import type { GameWorld } from './gameWorld';
 import type { RaceEnum } from './raceEnum';
 
 export interface ListCreateAccount {
   economy: EconomyEnum;
-  game_world: string;
+  game_world: GameWorld;
   readonly id: string;
   /** @maxLength 255 */
   name: string;

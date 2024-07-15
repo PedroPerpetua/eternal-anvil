@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { UserProfile } from './models';
-import { useUsersProfileRetrieve } from './queries/users/users';
+import { useUsersProfileRetrieve } from './queries/users';
 
 type AuthContextValue = {
   userInfo: UserProfile | null,

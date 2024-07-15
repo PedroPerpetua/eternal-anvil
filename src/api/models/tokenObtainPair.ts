@@ -8,7 +8,5 @@
 
 export interface TokenObtainPair {
   readonly access: string;
-  password: string;
   readonly refresh: string;
-  username: string;
 }

@@ -14,5 +14,6 @@ export interface AccountDetails {
   readonly id: string;
   readonly name: string;
   owner: string;
+  readonly players: readonly string[];
   readonly race: RaceEnum;
 }

@@ -1,7 +1,7 @@
 module.exports = {
   api: {
     output: {
-      mode: 'tags-split',
+      mode: 'tags',
       target: 'src/api/queries',
       schemas: 'src/api/models',
       client: 'react-query',
