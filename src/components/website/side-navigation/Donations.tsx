@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Modal, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import PrimaryGameButton from '../common/styled/PrimaryGameButton';
+import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
 
 function Donations() {
   const { t } = useTranslation();

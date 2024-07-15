@@ -1,5 +1,5 @@
 function RealmManagerPage() {
-  return (<div>hello world</div>);
+  return null;
 }
 
 export default RealmManagerPage;

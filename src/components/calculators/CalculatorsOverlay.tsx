@@ -37,7 +37,7 @@ function CalculatorsOverlay() {
     <>
       <DndProvider>
         <Modal open onClose={() => dispatch(calculatorsActions.setShow(false))}>
-          { /* This div receives the modal ref and allows using ESX to close */ }
+          { /* This div receives the modal ref and allows using ESC to close */ }
           <div>
             <Box
               sx={{

@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 
-export const backgroundColor = '#9e8357';
+import RouterLink from './components/common/RouterLink';
 
 export const gameColors = {
   teal: {
@@ -24,6 +24,21 @@ const theme = createTheme({
     },
     secondary: {
       main: '#4D4351',
+    },
+    background: {
+      default: '#9e8357',
+    },
+  },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: RouterLink,
+      },
+    },
+    MuiButton: {
+      defaultProps: {
+        LinkComponent: RouterLink,
+      },
     },
   },
 });

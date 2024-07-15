@@ -6,8 +6,8 @@ import {
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { Trans, useTranslation } from 'react-i18next';
 
-import AboutImage from '../../assets/about-me.png';
-import PrimaryGameButton from '../common/styled/PrimaryGameButton';
+import AboutImage from '../../../assets/about-me.png';
+import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
 
 function About() {
   const { t } = useTranslation();

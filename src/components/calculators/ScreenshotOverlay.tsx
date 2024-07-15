@@ -12,7 +12,6 @@ import MiniDisplay from './MiniDisplay';
 import { calculatorGridWidth, calculatorWidth, ellipsizeText } from './utils';
 import { useAppSelector } from '../../store';
 import { calculatorsSelectors } from '../../store/calculators';
-import { backgroundColor } from '../../theme';
 
 type CalculatorScreenshotDisplayProps = {
   tabId: EntityId,
@@ -110,7 +109,7 @@ function ScreenshotOverlay() {
       <Box
         ref={screenshotRef}
         sx={{
-          backgroundColor,
+          backgroundColor: 'background.default',
           padding: '25px',
           display: 'none',
           width: calculatorGridWidth(cols, 8, 25),

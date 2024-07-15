@@ -4,11 +4,11 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { gameColors } from '../../theme';
-import FlagIcon from '../../translations/FlagIcon';
-import { supportedLngs } from '../../translations/i18n';
-import { languageNameFromCode } from '../../translations/utils';
-import PrimaryGameButton from '../common/styled/PrimaryGameButton';
+import { gameColors } from '../../../theme';
+import FlagIcon from '../../../translations/FlagIcon';
+import { supportedLngs } from '../../../translations/i18n';
+import { languageNameFromCode } from '../../../translations/utils';
+import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
 
 function LanguageSelector() {
   const theme = useTheme();
@@ -23,24 +23,25 @@ function LanguageSelector() {
     <>
       <PrimaryGameButton
         ref={anchorRef}
-        startIcon={isMobile ? null : flagEl}
+        startIcon={flagEl}
         onClick={() => setOpen(true)}
-        sx={{ minWidth: isMobile ? undefined : '150px' }}
       >
-        { isMobile ? flagEl : languageNameFromCode(i18n.language) }
+        { languageNameFromCode(i18n.language) }
       </PrimaryGameButton>
       <Menu
         open={open}
         onClose={() => setOpen(false)}
         anchorEl={anchorRef.current}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={
+          isMobile
+            ? { vertical: 'top', horizontal: 'center' }
+            : { vertical: 'bottom', horizontal: 'right' }
+        }
+        transformOrigin={
+          isMobile
+            ? { vertical: 'bottom', horizontal: 'center' }
+            : { vertical: 'bottom', horizontal: 'left' }
+        }
         slotProps={{
           paper: {
             sx: {
@@ -53,6 +54,10 @@ function LanguageSelector() {
             },
           },
         }}
+        MenuListProps={{
+          sx: isMobile ? { width: anchorRef.current && anchorRef.current.offsetWidth } : undefined,
+        }}
+        marginThreshold={0}
       >
         {
           supportedLngs.map((lngCode) => (

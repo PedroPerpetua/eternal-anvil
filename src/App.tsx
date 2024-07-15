@@ -2,16 +2,18 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 
 import ProtectedRoutes from './components/website/ProtectedRoutes';
 import WebsiteLayout from './components/website/WebsiteLayout';
-import LoginPage from './pages/LoginPage';
-import RealmManagerPage from './pages/RealmManagerPage';
+import LoginCallbackPage from './pages/LoginCallbackPage';
+import RealmManagerPage from './pages/realm-manager/RealmManagerPage';
 import RootPage from './pages/RootPage';
 
 const router = createBrowserRouter(createRoutesFromElements(
   <Route element={<WebsiteLayout />}>
     <Route path="/" element={<RootPage />} />
-    <Route path="/login" element={<LoginPage />} />
+    <Route path="/login-callback" element={<LoginCallbackPage />} />
     <Route element={<ProtectedRoutes />}>
-      <Route path="/realm-manager" element={<RealmManagerPage />} />
+      <Route path="/realm-manager">
+        <Route path="" element={<RealmManagerPage />} />
+      </Route>
     </Route>
   </Route>,
 ));

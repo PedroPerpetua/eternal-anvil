@@ -1,4 +1,16 @@
 {
+  "auth": {
+    "discordLogin": "Login with Discord",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again later.",
+    "success": "Login successful! Redirecting...",
+    "back": "Back to homepage",
+    "serverUnavailable": "Server unavailable"
+  },
+  "realmManager": {
+    "route": "Realm Manager"
+  },
   "calculators": {
     "button": "Show Calculators",
     "menu": {
@@ -80,16 +92,11 @@
       "travianDisclaimer": "Images and game elements belong to <0>Arkheim</0>.<1 />All their rights belong to <2>Travian Games GmbH</2>.<3 />Arkheim and Travian Games GmbH are not responsible for the contents on this website nor have any affiliation with it."
     },
     "donations": {
-      "button": "Help keep the website running",
+      "button": "Donate",
       "content": "If you wish to help with the website upkeep costs, or show appreciation for my work, you can leave a donation here!",
       "disclaimer": "Donations are in no way required. Take care of yourself first.",
       "title": "Thank you for using the Eternal Anvil!"
     },
-    "footer": {
-      "copyright": "{{year}} ©{{developer}}"
-    },
-    "header": {
-      "subtitle": "Arkheim Toolkit"
-    }
+    "footer": "{{year}} ©{{developer}}"
   }
 }

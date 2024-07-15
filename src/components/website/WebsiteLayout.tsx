@@ -1,22 +1,22 @@
 import { Stack, Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
-import Footer from './Footer';
-import Header from './Header';
-import { backgroundColor } from '../../theme';
+import SideNavigation from './side-navigation/SideNavigation';
+import Tools from './Tools';
+import CalculatorsOverlay from '../calculators/CalculatorsOverlay';
 
 function WebsiteLayout() {
   return (
-    <Stack sx={{ backgroundColor, height: '100dvh' }}>
-      <Header />
-      <Container
-        maxWidth="xl"
-        sx={{ minHeight: '100%', padding: '25px' }}
-      >
-        <Outlet />
-      </Container>
-      <Footer />
-    </Stack>
+    <>
+      <Stack sx={{ backgroundColor: 'background.default', height: '100dvh' }}>
+        <SideNavigation />
+        <Container component="main" sx={{ flexGrow: 1, minHeight: '100%', padding: '25px' }}>
+          <Outlet />
+        </Container>
+      </Stack>
+      <Tools />
+      <CalculatorsOverlay />
+    </>
   );
 }
 
