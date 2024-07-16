@@ -6,11 +6,10 @@
  * OpenAPI spec version: v0.0.1
  */
 
-/**
- * Serializer to handle user's details.
- */
-export interface UserProfile {
-  readonly id: string;
-  /** @maxLength 255 */
+export interface UserRequest {
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
   username: string;
 }

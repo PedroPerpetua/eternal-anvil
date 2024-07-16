@@ -824,8 +824,8 @@ components:
           type: string
           format: uuid
         game_world:
-          type: string
-          format: uuid
+          allOf:
+          - $ref: '#/components/schemas/GameWorld'
           readOnly: true
         race:
           allOf:
@@ -838,8 +838,7 @@ components:
         players:
           type: array
           items:
-            type: string
-            format: uuid
+            $ref: '#/components/schemas/User'
           readOnly: true
       required:
       - economy
@@ -924,6 +923,20 @@ components:
       - code
       - id
       - name
+    GameWorldRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        code:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - code
+      - name
     HealthcheckErrorResponse400:
       oneOf:
       - $ref: '#/components/schemas/ParseErrorResponse'
@@ -957,11 +970,17 @@ components:
           $ref: '#/components/schemas/RaceEnum'
         economy:
           $ref: '#/components/schemas/EconomyEnum'
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          readOnly: true
       required:
       - economy
       - game_world
       - id
       - name
+      - players
       - race
     ListCreateAccountRequest:
       type: object
@@ -1463,6 +1482,19 @@ components:
           minLength: 1
       required:
       - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - username
     UserChangePasswordRequest:
       type: object
       description: Serializer for change password requests.
@@ -1480,10 +1512,15 @@ components:
       type: object
       description: Serializer to handle user's details.
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
         username:
           type: string
           maxLength: 255
       required:
+      - id
       - username
     UserProfileRequest:
       type: object
@@ -1510,6 +1547,15 @@ components:
           maxLength: 128
       required:
       - password
+      - username
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
       - username
     UserWhoami:
       type: object

@@ -8,6 +8,7 @@
 import type { EconomyEnum } from './economyEnum';
 import type { GameWorld } from './gameWorld';
 import type { RaceEnum } from './raceEnum';
+import type { User } from './user';
 
 export interface ListCreateAccount {
   economy: EconomyEnum;
@@ -15,5 +16,6 @@ export interface ListCreateAccount {
   readonly id: string;
   /** @maxLength 255 */
   name: string;
+  readonly players: readonly User[];
   race: RaceEnum;
 }

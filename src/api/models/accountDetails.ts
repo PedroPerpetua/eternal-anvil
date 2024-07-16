@@ -6,14 +6,16 @@
  * OpenAPI spec version: v0.0.1
  */
 import type { EconomyEnum } from './economyEnum';
+import type { GameWorld } from './gameWorld';
 import type { RaceEnum } from './raceEnum';
+import type { User } from './user';
 
 export interface AccountDetails {
   readonly economy: EconomyEnum;
-  readonly game_world: string;
+  readonly game_world: GameWorld;
   readonly id: string;
   readonly name: string;
   owner: string;
-  readonly players: readonly string[];
+  readonly players: readonly User[];
   readonly race: RaceEnum;
 }
