@@ -8,15 +8,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import DrawerContent from './DrawerContent';
 import WebsiteIcon from '../../../assets/icon.png';
-import { gameColors } from '../../../theme';
 import CustomIcon from '../../common/CustomIcon';
-
-const { teal, gold } = gameColors;
 
 const commonPaperProps = {
   width: '250px',
   backgroundColor: 'primary.main',
-  color: teal.contrastText,
+  color: 'primary.contrastText',
 };
 
 function MobileDrawer() {
@@ -31,7 +28,7 @@ function MobileDrawer() {
   return (
     <>
       <AppBar position="static">
-        <Toolbar sx={{ color: teal.contrastText }}>
+        <Toolbar sx={{ color: 'primary.contrastText' }}>
           <IconButton edge="start" onClick={() => setOpen(true)} color="inherit">
             <MenuIcon />
           </IconButton>
@@ -80,9 +77,9 @@ function DesktopDrawer() {
           margin: '2vh',
           borderRadius: '5px',
           border: '1px solid',
-          borderColor: gold.light,
+          borderColor: 'secondary.light',
           outline: '1px solid',
-          outlineColor: gold.dark,
+          outlineColor: 'secondary.dark',
         },
       }}
     >
@@ -93,7 +90,7 @@ function DesktopDrawer() {
 
 function SideNavigation() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   return isMobile ? (<MobileDrawer />) : (<DesktopDrawer />);
 }
 

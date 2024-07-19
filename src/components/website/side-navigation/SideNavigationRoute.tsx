@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 
 import { useAuthContext } from '../../../api/AuthContext';
-import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
+import GameButton from '../../common/styled/GameButton';
 
 export type SideNavigationRouteProps = {
   route: string,
@@ -15,15 +15,16 @@ function SideNavigationRoute({ route, label, requiresAuth = false }: SideNavigat
   if (requiresAuth && !userInfo) return null;
   const selected = pathname.startsWith(`/${route}`);
   return (
-    <PrimaryGameButton
+    <GameButton
       href={route}
+      disableElevation={!selected}
       sx={{
         backgroundColor: selected ? 'primary.dark' : undefined,
         borderColor: selected ? undefined : 'primary.main',
       }}
     >
       { label }
-    </PrimaryGameButton>
+    </GameButton>
   );
 }
 

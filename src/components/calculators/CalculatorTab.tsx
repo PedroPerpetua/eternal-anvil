@@ -22,10 +22,13 @@ import XIcon from '../../assets/x-icon.png';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
 import type { CalculatorTab as CalculatorTabType } from '../../store/calculators';
-import { gameColors } from '../../theme';
-import CustomIcon from '../common/CustomIcon';
+import CustomIcon, { CustomIconProps } from '../common/CustomIcon';
 import MiniIconButton from '../common/styled/MiniIconButton';
-import TealMiniIconButton from '../common/styled/TealMiniIconButton';
+import type { MiniIconButtonProps } from '../common/styled/MiniIconButton';
+
+function XIconWrapper(props: Omit<CustomIconProps, 'src'>) {
+  return (<CustomIcon src={XIcon} {...props} size={16} />);
+}
 
 type CalculatorTabProps = {
   tabId: EntityId
@@ -39,6 +42,23 @@ function CalculatorTab({ tabId }: CalculatorTabProps) {
 type TabButtonProps = {
   tabId: EntityId,
 };
+
+type MenuOptionProps = MiniIconButtonProps & {
+  text: string,
+  disabled?: boolean,
+  onClick: () => void,
+};
+
+function MenuOption({ text, disabled, onClick, ...props }: MenuOptionProps) {
+  return (
+    <MenuItem disabled={disabled} onClick={onClick}>
+      <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
+        <Typography>{ text }</Typography>
+        <MiniIconButton color="teal" {...props} />
+      </Stack>
+    </MenuItem>
+  );
+}
 
 function TabButton({ tabId }: TabButtonProps) {
   const { t } = useTranslation();
@@ -94,66 +114,43 @@ function TabButton({ tabId }: TabButtonProps) {
         disableEnforceFocus
         disableRestoreFocus
       >
-        <MenuItem
+        <MenuOption
+          text={t('calculators.tab.menu.editName')}
+          IconComponent={EditIcon}
           disabled={editingName}
           onClick={() => { setShowMenu(false); setEditingName(true); }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ t('calculators.tab.menu.editName') }</Typography>
-            <TealMiniIconButton Icon={EditIcon} />
-          </Stack>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setShowMenu(false);
-            dispatch(calculatorsActions.splitTab({ tabId }));
-          }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ t('calculators.tab.menu.split') }</Typography>
-            <TealMiniIconButton Icon={SplitscreenIcon} sx={{ rotate: '90deg' }} />
-          </Stack>
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            setShowMenu(false);
-            dispatch(calculatorsActions.copyTab({ tabId }));
-          }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ t('calculators.tab.menu.copy') }</Typography>
-            <TealMiniIconButton Icon={ContentCopyIcon} />
-          </Stack>
-        </MenuItem>
-        <MenuItem
+        />
+        <MenuOption
+          text={t('calculators.tab.menu.split')}
+          IconComponent={SplitscreenIcon}
+          onClick={() => { setShowMenu(false); dispatch(calculatorsActions.splitTab({ tabId })); }}
+          sx={{ rotate: '90deg' }}
+        />
+        <MenuOption
+          text={t('calculators.tab.menu.copy')}
+          IconComponent={ContentCopyIcon}
+          onClick={() => { setShowMenu(false); dispatch(calculatorsActions.copyTab({ tabId })); }}
+        />
+        <MenuOption
+          text={t('calculators.tab.menu.copyImage')}
+          IconComponent={ShareIcon}
           onClick={() => {
             setShowMenu(false);
             dispatch(calculatorsActions.screenshotTab({ tabId }));
           }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ t('calculators.tab.menu.copyImage') }</Typography>
-            <TealMiniIconButton Icon={ShareIcon} />
-          </Stack>
-        </MenuItem>
-        <MenuItem onClick={() => { setShowMenu(false); update({ mini: !tab.mini }); }}>
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>
-              { t(`calculators.tab.menu.${tab.mini ? 'expand' : 'minify'}`) }
-            </Typography>
-            <TealMiniIconButton Icon={tab.mini ? FullScreenIcon : FullscreenExitIcon} size={24} />
-          </Stack>
-        </MenuItem>
-        <MenuItem
+        />
+        <MenuOption
+          text={t(`calculators.tab.menu.${tab.mini ? 'expand' : 'minify'}`)}
+          IconComponent={tab.mini ? FullScreenIcon : FullscreenExitIcon}
+          onClick={() => { setShowMenu(false); update({ mini: !tab.mini }); }}
+          iconSize={24}
+        />
+        <MenuOption
+          text={t('calculators.tab.menu.delete')}
+          IconComponent={XIconWrapper}
           onClick={() => { setShowMenu(false); dispatch(calculatorsActions.deleteTab({ tabId })); }}
-        >
-          <Stack direction="row" spacing={2} justifyContent="space-between" width="100%">
-            <Typography>{ t('calculators.tab.menu.delete') }</Typography>
-            <MiniIconButton primary="red" secondary="red">
-              <CustomIcon src={XIcon} tintColor={gameColors.goldIcon} size={16} />
-            </MiniIconButton>
-          </Stack>
-        </MenuItem>
+          color="error"
+        />
       </Menu>
       <Box
         {...attributes}
@@ -230,10 +227,15 @@ function TabButton({ tabId }: TabButtonProps) {
             <Stack direction="row" spacing={0.5}>
               {
                 editingName && (
-                  <TealMiniIconButton Icon={DoneIcon} onClick={() => handleSaveName()} />
+                  <MiniIconButton color="teal" IconComponent={DoneIcon} onClick={() => handleSaveName()} />
                 )
               }
-              <TealMiniIconButton Icon={MenuIcon} onClick={() => setShowMenu(true)} size={18} />
+              <MiniIconButton
+                color="teal"
+                IconComponent={MenuIcon}
+                onClick={() => setShowMenu(true)}
+                iconSize={18}
+              />
             </Stack>
           )
         }

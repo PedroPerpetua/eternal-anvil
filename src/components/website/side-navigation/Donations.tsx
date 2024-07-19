@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Modal, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
+import GameButton from '../../common/styled/GameButton';
 
 function Donations() {
   const { t } = useTranslation();
@@ -10,9 +10,9 @@ function Donations() {
 
   return (
     <>
-      <PrimaryGameButton onClick={() => setOpen(true)}>
+      <GameButton onClick={() => setOpen(true)}>
         { t('website.donations.button') }
-      </PrimaryGameButton>
+      </GameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{

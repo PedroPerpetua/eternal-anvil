@@ -48,7 +48,11 @@ function MiniDisplay({ tabId }: MiniDisplayProps) {
         </Stack>
       </Box>
       <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-        { distance !== null && <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} /> }
+        {
+          distance !== null && (
+            <CustomIcon src={penalty.iconSrc} sx={{ color: penalty.iconColor }} />
+          )
+        }
         <Typography sx={{ textAlign: 'center' }}>
           {
             distance === null

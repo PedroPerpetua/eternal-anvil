@@ -5,8 +5,7 @@ import {
 } from '@mui/material';
 import type { SvgIcon } from '@mui/material';
 
-import PrimaryFabGameButton from './PrimaryFabGameButton';
-import { gameColors } from '../../../theme';
+import FabGameButton from './FabGameButton';
 
 type SpeedDialOpenContextType = {
   open: boolean,
@@ -36,7 +35,7 @@ function SpeedDialMenuButton({
   const { open, setOpen } = useContext(SpeedDialOpenContext);
   return (
     <Tooltip open={!isMobile && open} title={<Typography>{ label }</Typography>} placement="left">
-      <PrimaryFabGameButton
+      <FabGameButton
         color="primary"
         size={isMobile ? 'small' : 'medium'}
         onClick={() => {
@@ -45,8 +44,8 @@ function SpeedDialMenuButton({
         }}
         variant="circular"
       >
-        <IconComponent htmlColor={gameColors.goldIcon} />
-      </PrimaryFabGameButton>
+        <IconComponent htmlColor={theme.palette.secondary.icon} />
+      </FabGameButton>
     </Tooltip>
   );
 }
@@ -56,6 +55,7 @@ type SpeedDialProps = PropsWithChildren<{
 }>;
 
 function SpeedDial({ IconComponent, children }: SpeedDialProps) {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const ctxValue = useMemo(() => ({ open, setOpen }), [open]);
   return (
@@ -68,9 +68,9 @@ function SpeedDial({ IconComponent, children }: SpeedDialProps) {
             </SpeedDialOpenContext.Provider>
           </Stack>
         </Fade>
-        <PrimaryFabGameButton size="large" onClick={() => setOpen((curr) => !curr)}>
-          <IconComponent htmlColor={gameColors.goldIcon} />
-        </PrimaryFabGameButton>
+        <FabGameButton color="primary" size="large" onClick={() => setOpen((curr) => !curr)}>
+          <IconComponent htmlColor={theme.palette.secondary.icon} />
+        </FabGameButton>
       </Stack>
     </Box>
   );

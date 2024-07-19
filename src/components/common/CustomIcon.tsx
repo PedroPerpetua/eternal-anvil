@@ -1,17 +1,16 @@
-import { Icon, Theme } from '@mui/material';
-import type { SxProps } from '@mui/material';
+import { Icon } from '@mui/material';
+import type { IconProps } from '@mui/material';
 
 import useTintedImage from './useTintedImage';
 
-type CustomIconProps = {
+export type CustomIconProps = Omit<IconProps, 'fontSize'> & {
   src: string,
-  tintColor?: string,
-  size?: 'huge' | 'large' | 'medium' | 'small' | number | [number, number],
-  sx?: SxProps<Theme>
+  size?: 'huge' | 'large' | 'medium' | 'small' | number | [number, number]
 };
 
-function CustomIcon({ src, tintColor, size = 'medium', sx }: CustomIconProps) {
-  const image = useTintedImage(src, tintColor);
+function CustomIcon({ src, size = 'medium', sx, ...props }: CustomIconProps) {
+  // @ts-ignore - it does exist
+  const image = useTintedImage(src, sx?.color);
   let imgSize;
   if (typeof size === 'number') imgSize = [size, size];
   else if (typeof size === 'string') {
@@ -36,6 +35,7 @@ function CustomIcon({ src, tintColor, size = 'medium', sx }: CustomIconProps) {
 
   return (
     <Icon
+      {...props}
       fontSize={(size === 'large' || size === 'medium' || size === 'small') ? size : undefined}
       sx={{
         fontSize: Math.max(...imgSize),

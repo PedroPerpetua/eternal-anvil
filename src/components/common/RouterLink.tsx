@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { LinkProps as MUILinkProps } from '@mui/material';
+import type { LinkProps as MUILinkProps } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 /**

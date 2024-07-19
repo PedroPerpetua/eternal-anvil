@@ -4,11 +4,10 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
-import { gameColors } from '../../../theme';
 import FlagIcon from '../../../translations/FlagIcon';
 import { supportedLngs } from '../../../translations/i18n';
 import { languageNameFromCode } from '../../../translations/utils';
-import PrimaryGameButton from '../../common/styled/PrimaryGameButton';
+import GameButton from '../../common/styled/GameButton';
 
 function LanguageSelector() {
   const theme = useTheme();
@@ -21,13 +20,13 @@ function LanguageSelector() {
 
   return (
     <>
-      <PrimaryGameButton
+      <GameButton
         ref={anchorRef}
         startIcon={flagEl}
         onClick={() => setOpen(true)}
       >
         { languageNameFromCode(i18n.language) }
-      </PrimaryGameButton>
+      </GameButton>
       <Menu
         open={open}
         onClose={() => setOpen(false)}
@@ -46,11 +45,11 @@ function LanguageSelector() {
           paper: {
             sx: {
               backgroundColor: 'primary.main',
-              color: gameColors.teal.contrastText,
+              color: 'primary.contrastText',
               border: '1px solid',
-              borderColor: gameColors.gold.light,
+              borderColor: 'secondary.light',
               outline: '1px solid',
-              outlineColor: gameColors.gold.dark,
+              outlineColor: 'secondary.dark',
             },
           },
         }}

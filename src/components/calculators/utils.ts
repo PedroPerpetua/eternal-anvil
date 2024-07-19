@@ -6,7 +6,7 @@ import CustomPenaltyIcon from '../../assets/penalty-icons/custom-icon.png';
 import GTIcon from '../../assets/penalty-icons/gt-icon.png';
 import RaidIcon from '../../assets/penalty-icons/raid-icon.png';
 import SendOnWatchIcon from '../../assets/penalty-icons/send-on-watch-icon.png';
-import { gameColors } from '../../theme';
+import theme from '../../theme';
 
 type Penalty = {
   value: number,
@@ -22,7 +22,7 @@ export const penalties: Penalty[] = [
     nameTKey: 'calculators.tab.distanceForm.penalties.0.name',
     descriptionTKey: 'calculators.tab.distanceForm.penalties.0.description',
     iconSrc: AddWarlordIcon,
-    iconColor: gameColors.goldIcon,
+    iconColor: theme.palette.secondary.icon,
   },
   {
     value: 5,
@@ -35,21 +35,21 @@ export const penalties: Penalty[] = [
     nameTKey: 'calculators.tab.distanceForm.penalties.10.name',
     descriptionTKey: 'calculators.tab.distanceForm.penalties.10.description',
     iconSrc: SendOnWatchIcon,
-    iconColor: gameColors.goldIcon,
+    iconColor: theme.palette.secondary.icon,
   },
   {
     value: 16,
     nameTKey: 'calculators.tab.distanceForm.penalties.16.name',
     descriptionTKey: 'calculators.tab.distanceForm.penalties.16.description',
     iconSrc: RaidIcon,
-    iconColor: gameColors.goldIcon,
+    iconColor: theme.palette.secondary.icon,
   },
   {
     value: 20,
     nameTKey: 'calculators.tab.distanceForm.penalties.20.name',
     descriptionTKey: 'calculators.tab.distanceForm.penalties.20.description',
     iconSrc: ConquerIcon,
-    iconColor: gameColors.goldIcon,
+    iconColor: theme.palette.secondary.icon,
   },
 ];
 
@@ -58,7 +58,7 @@ export const customPenalty: Penalty = {
   nameTKey: 'calculators.tab.distanceForm.penalties.custom',
   descriptionTKey: '',
   iconSrc: CustomPenaltyIcon,
-  iconColor: gameColors.goldIcon,
+  iconColor: theme.palette.secondary.icon,
 };
 
 export function calculateDistance(

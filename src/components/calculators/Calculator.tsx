@@ -12,8 +12,7 @@ import useCalculatorsDisplayMode from './useCalculatorsDisplayMode';
 import { calculatorWidth } from './utils';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { calculatorsActions, calculatorsSelectors } from '../../store/calculators';
-import { gameColors } from '../../theme';
-import TealMiniIconButton from '../common/styled/TealMiniIconButton';
+import MiniIconButton from '../common/styled/MiniIconButton';
 
 type CalculatorProps = {
   calculatorId: EntityId
@@ -66,7 +65,7 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
               height: '10px',
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: gameColors.goldIcon,
+              backgroundColor: 'secondary.icon',
               border: '2px solid transparent',
               backgroundClip: 'content-box',
               borderRadius: '5px',
@@ -89,9 +88,10 @@ function CalculatorImpl({ calculatorId }: CalculatorProps) {
               justifyContent: 'center',
             }}
           >
-            <TealMiniIconButton
-              Icon={AddIcon}
-              size={24}
+            <MiniIconButton
+              color="teal"
+              IconComponent={AddIcon}
+              iconSize={24}
               onClick={() => dispatch(calculatorsActions.createTab({ calculatorId }))}
             />
           </Box>

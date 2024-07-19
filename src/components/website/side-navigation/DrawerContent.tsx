@@ -83,7 +83,7 @@ function DrawerContent({ withHeader }: DrawerContentProps) {
           component="footer"
           sx={{
             width: '100%',
-            backgroundColor: 'secondary.main',
+            backgroundColor: '#4d4351',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

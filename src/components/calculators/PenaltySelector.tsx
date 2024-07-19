@@ -32,7 +32,7 @@ function PenaltySelector({ label, value, onChange }: PenaltySelectorProps) {
           <Box component="li" {...props} key={v}>
             <Stack>
               <Stack direction="row" spacing={1}>
-                <CustomIcon src={penalty.iconSrc} tintColor={penalty.iconColor} />
+                <CustomIcon src={penalty.iconSrc} sx={{ color: penalty.iconColor }} />
                 <Typography variant="subtitle1">
                   (+
                   { penalty.value }
@@ -64,7 +64,7 @@ function PenaltySelector({ label, value, onChange }: PenaltySelectorProps) {
             InputLabelProps={{ shrink: true }}
             helperText={(
               <Stack direction="row" alignItems="center" spacing={1} component="span">
-                <CustomIcon size={24} src={penalty.iconSrc} tintColor={penalty.iconColor} />
+                <CustomIcon size={24} src={penalty.iconSrc} sx={{ color: penalty.iconColor }} />
                 <Typography>
                   (+
                   { currVal }
