@@ -86,6 +86,37 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListCreateAccount'
           description: ''
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    enum:
+                    - validation_error
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          enum:
+                          - multi_account
+                        detail:
+                          enum:
+                          - User is already present in this game world.
+                        attr:
+                          enum:
+                          - user
+                      required:
+                      - code
+                      - detail
+                      - attr
+                required:
+                - type
+                - errors
+          description: Multi Account
   /realm-manager/accounts/{id}/:
     get:
       operationId: realm_manager_accounts_retrieve

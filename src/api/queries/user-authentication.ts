@@ -29,6 +29,7 @@ import type {
   UsersRegisterErrorResponse400,
 } from '../models';
 import { queryInstance } from '../queryInstance';
+import type { ErrorType, BodyType } from '../queryInstance';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
@@ -37,7 +38,7 @@ type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
  * @summary Login user
  */
 export const usersLogin = (
-  tokenObtainPairRequest: TokenObtainPairRequest,
+  tokenObtainPairRequest: BodyType<TokenObtainPairRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<TokenObtainPair>(
   { url: '/users/login/',
@@ -47,12 +48,12 @@ export const usersLogin = (
   options,
 );
 
-export const getUsersLoginMutationOptions = <TError = UsersLoginErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: TokenObtainPairRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: TokenObtainPairRequest }, TContext> => {
+export const getUsersLoginMutationOptions = <TError = ErrorType<UsersLoginErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: BodyType<TokenObtainPairRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: BodyType<TokenObtainPairRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLogin>>, { data: TokenObtainPairRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLogin>>, { data: BodyType<TokenObtainPairRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersLogin(data, requestOptions);
@@ -62,18 +63,18 @@ export const getUsersLoginMutationOptions = <TError = UsersLoginErrorResponse400
 };
 
 export type UsersLoginMutationResult = NonNullable<Awaited<ReturnType<typeof usersLogin>>>;
-export type UsersLoginMutationBody = TokenObtainPairRequest;
-export type UsersLoginMutationError = UsersLoginErrorResponse400;
+export type UsersLoginMutationBody = BodyType<TokenObtainPairRequest>;
+export type UsersLoginMutationError = ErrorType<UsersLoginErrorResponse400>;
 
 /**
  * @summary Login user
  */
-export const useUsersLogin = <TError = UsersLoginErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: TokenObtainPairRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersLogin = <TError = ErrorType<UsersLoginErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogin>>, TError, { data: BodyType<TokenObtainPairRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersLogin>>,
   TError,
-  { data: TokenObtainPairRequest },
+  { data: BodyType<TokenObtainPairRequest> },
   TContext
   > => {
   const mutationOptions = getUsersLoginMutationOptions(options);
@@ -85,7 +86,7 @@ export const useUsersLogin = <TError = UsersLoginErrorResponse400,
  * @summary Login with Discord
  */
 export const usersDiscordLogin = (
-  discordLoginRequest: DiscordLoginRequest,
+  discordLoginRequest: BodyType<DiscordLoginRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<DiscordLogin>(
   { url: '/users/login/discord/',
@@ -95,12 +96,12 @@ export const usersDiscordLogin = (
   options,
 );
 
-export const getUsersDiscordLoginMutationOptions = <TError = UsersDiscordLoginErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext> => {
+export const getUsersDiscordLoginMutationOptions = <TError = ErrorType<UsersDiscordLoginErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: BodyType<DiscordLoginRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: BodyType<DiscordLoginRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersDiscordLogin>>, { data: DiscordLoginRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersDiscordLogin>>, { data: BodyType<DiscordLoginRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersDiscordLogin(data, requestOptions);
@@ -110,18 +111,18 @@ export const getUsersDiscordLoginMutationOptions = <TError = UsersDiscordLoginEr
 };
 
 export type UsersDiscordLoginMutationResult = NonNullable<Awaited<ReturnType<typeof usersDiscordLogin>>>;
-export type UsersDiscordLoginMutationBody = DiscordLoginRequest;
-export type UsersDiscordLoginMutationError = UsersDiscordLoginErrorResponse400;
+export type UsersDiscordLoginMutationBody = BodyType<DiscordLoginRequest>;
+export type UsersDiscordLoginMutationError = ErrorType<UsersDiscordLoginErrorResponse400>;
 
 /**
  * @summary Login with Discord
  */
-export const useUsersDiscordLogin = <TError = UsersDiscordLoginErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersDiscordLogin = <TError = ErrorType<UsersDiscordLoginErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: BodyType<DiscordLoginRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersDiscordLogin>>,
   TError,
-  { data: DiscordLoginRequest },
+  { data: BodyType<DiscordLoginRequest> },
   TContext
   > => {
   const mutationOptions = getUsersDiscordLoginMutationOptions(options);
@@ -135,7 +136,7 @@ This will also return a new refresh token and invalidate the old one.
  * @summary Refresh access token
  */
 export const usersLoginRefresh = (
-  tokenRefreshRequest: TokenRefreshRequest,
+  tokenRefreshRequest: BodyType<TokenRefreshRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<TokenRefresh>(
   { url: '/users/login/refresh/',
@@ -145,12 +146,12 @@ export const usersLoginRefresh = (
   options,
 );
 
-export const getUsersLoginRefreshMutationOptions = <TError = UsersLoginRefreshErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: TokenRefreshRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: TokenRefreshRequest }, TContext> => {
+export const getUsersLoginRefreshMutationOptions = <TError = ErrorType<UsersLoginRefreshErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: BodyType<TokenRefreshRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: BodyType<TokenRefreshRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLoginRefresh>>, { data: TokenRefreshRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLoginRefresh>>, { data: BodyType<TokenRefreshRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersLoginRefresh(data, requestOptions);
@@ -160,18 +161,18 @@ export const getUsersLoginRefreshMutationOptions = <TError = UsersLoginRefreshEr
 };
 
 export type UsersLoginRefreshMutationResult = NonNullable<Awaited<ReturnType<typeof usersLoginRefresh>>>;
-export type UsersLoginRefreshMutationBody = TokenRefreshRequest;
-export type UsersLoginRefreshMutationError = UsersLoginRefreshErrorResponse400;
+export type UsersLoginRefreshMutationBody = BodyType<TokenRefreshRequest>;
+export type UsersLoginRefreshMutationError = ErrorType<UsersLoginRefreshErrorResponse400>;
 
 /**
  * @summary Refresh access token
  */
-export const useUsersLoginRefresh = <TError = UsersLoginRefreshErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: TokenRefreshRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersLoginRefresh = <TError = ErrorType<UsersLoginRefreshErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginRefresh>>, TError, { data: BodyType<TokenRefreshRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersLoginRefresh>>,
   TError,
-  { data: TokenRefreshRequest },
+  { data: BodyType<TokenRefreshRequest> },
   TContext
   > => {
   const mutationOptions = getUsersLoginRefreshMutationOptions(options);
@@ -183,7 +184,7 @@ export const useUsersLoginRefresh = <TError = UsersLoginRefreshErrorResponse400,
  * @summary Logout user
  */
 export const usersLogout = (
-  tokenBlacklistRequest: TokenBlacklistRequest,
+  tokenBlacklistRequest: BodyType<TokenBlacklistRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<void>(
   { url: '/users/logout/',
@@ -193,12 +194,12 @@ export const usersLogout = (
   options,
 );
 
-export const getUsersLogoutMutationOptions = <TError = UsersLogoutErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: TokenBlacklistRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: TokenBlacklistRequest }, TContext> => {
+export const getUsersLogoutMutationOptions = <TError = ErrorType<UsersLogoutErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: BodyType<TokenBlacklistRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: BodyType<TokenBlacklistRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLogout>>, { data: TokenBlacklistRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLogout>>, { data: BodyType<TokenBlacklistRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersLogout(data, requestOptions);
@@ -208,18 +209,18 @@ export const getUsersLogoutMutationOptions = <TError = UsersLogoutErrorResponse4
 };
 
 export type UsersLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof usersLogout>>>;
-export type UsersLogoutMutationBody = TokenBlacklistRequest;
-export type UsersLogoutMutationError = UsersLogoutErrorResponse400;
+export type UsersLogoutMutationBody = BodyType<TokenBlacklistRequest>;
+export type UsersLogoutMutationError = ErrorType<UsersLogoutErrorResponse400>;
 
 /**
  * @summary Logout user
  */
-export const useUsersLogout = <TError = UsersLogoutErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: TokenBlacklistRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersLogout = <TError = ErrorType<UsersLogoutErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLogout>>, TError, { data: BodyType<TokenBlacklistRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersLogout>>,
   TError,
-  { data: TokenBlacklistRequest },
+  { data: BodyType<TokenBlacklistRequest> },
   TContext
   > => {
   const mutationOptions = getUsersLogoutMutationOptions(options);
@@ -231,7 +232,7 @@ export const useUsersLogout = <TError = UsersLogoutErrorResponse400,
  * @summary Register user
  */
 export const usersRegister = (
-  userRegisterRequest: UserRegisterRequest,
+  userRegisterRequest: BodyType<UserRegisterRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<unknown>(
   { url: '/users/register/',
@@ -241,12 +242,12 @@ export const usersRegister = (
   options,
 );
 
-export const getUsersRegisterMutationOptions = <TError = UsersRegisterErrorResponse400 | UsersRegister403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: UserRegisterRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: UserRegisterRequest }, TContext> => {
+export const getUsersRegisterMutationOptions = <TError = ErrorType<UsersRegisterErrorResponse400 | UsersRegister403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: BodyType<UserRegisterRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: BodyType<UserRegisterRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersRegister>>, { data: UserRegisterRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersRegister>>, { data: BodyType<UserRegisterRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersRegister(data, requestOptions);
@@ -256,18 +257,18 @@ export const getUsersRegisterMutationOptions = <TError = UsersRegisterErrorRespo
 };
 
 export type UsersRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof usersRegister>>>;
-export type UsersRegisterMutationBody = UserRegisterRequest;
-export type UsersRegisterMutationError = UsersRegisterErrorResponse400 | UsersRegister403;
+export type UsersRegisterMutationBody = BodyType<UserRegisterRequest>;
+export type UsersRegisterMutationError = ErrorType<UsersRegisterErrorResponse400 | UsersRegister403>;
 
 /**
  * @summary Register user
  */
-export const useUsersRegister = <TError = UsersRegisterErrorResponse400 | UsersRegister403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: UserRegisterRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersRegister = <TError = ErrorType<UsersRegisterErrorResponse400 | UsersRegister403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersRegister>>, TError, { data: BodyType<UserRegisterRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersRegister>>,
   TError,
-  { data: UserRegisterRequest },
+  { data: BodyType<UserRegisterRequest> },
   TContext
   > => {
   const mutationOptions = getUsersRegisterMutationOptions(options);

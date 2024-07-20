@@ -25,6 +25,7 @@ import type {
   JoinAccountRequest,
   ListCreateAccount,
   ListCreateAccountRequest,
+  RealmManagerAccountsCreate403,
   RealmManagerAccountsCreateErrorResponse400,
   RealmManagerAccountsDestroy403,
   RealmManagerAccountsDestroyErrorResponse400,
@@ -40,6 +41,7 @@ import type {
   RealmManagerAccountsUpdateErrorResponse400,
 } from '../models';
 import { queryInstance } from '../queryInstance';
+import type { ErrorType, BodyType } from '../queryInstance';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
@@ -54,7 +56,7 @@ export const realmManagerAccountsList = (options?: SecondParameter<typeof queryI
 
 export const getRealmManagerAccountsListQueryKey = () => ['/realm-manager/accounts/'] as const;
 
-export const getRealmManagerAccountsListQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerAccountsList>>, TError = RealmManagerAccountsListErrorResponse400>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getRealmManagerAccountsListQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerAccountsList>>, TError = ErrorType<RealmManagerAccountsListErrorResponse400>>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -66,12 +68,12 @@ export const getRealmManagerAccountsListQueryOptions = <TData = Awaited<ReturnTy
 };
 
 export type RealmManagerAccountsListQueryResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsList>>>;
-export type RealmManagerAccountsListQueryError = RealmManagerAccountsListErrorResponse400;
+export type RealmManagerAccountsListQueryError = ErrorType<RealmManagerAccountsListErrorResponse400>;
 
 /**
  * @summary Get account list
  */
-export const useRealmManagerAccountsList = <TData = Awaited<ReturnType<typeof realmManagerAccountsList>>, TError = RealmManagerAccountsListErrorResponse400>(
+export const useRealmManagerAccountsList = <TData = Awaited<ReturnType<typeof realmManagerAccountsList>>, TError = ErrorType<RealmManagerAccountsListErrorResponse400>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -89,7 +91,7 @@ export const useRealmManagerAccountsList = <TData = Awaited<ReturnType<typeof re
  * @summary Create account
  */
 export const realmManagerAccountsCreate = (
-  listCreateAccountRequest: ListCreateAccountRequest,
+  listCreateAccountRequest: BodyType<ListCreateAccountRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<ListCreateAccount>(
   { url: '/realm-manager/accounts/',
@@ -99,12 +101,12 @@ export const realmManagerAccountsCreate = (
   options,
 );
 
-export const getRealmManagerAccountsCreateMutationOptions = <TError = RealmManagerAccountsCreateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: ListCreateAccountRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: ListCreateAccountRequest }, TContext> => {
+export const getRealmManagerAccountsCreateMutationOptions = <TError = ErrorType<RealmManagerAccountsCreateErrorResponse400 | RealmManagerAccountsCreate403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: BodyType<ListCreateAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: BodyType<ListCreateAccountRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, { data: ListCreateAccountRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, { data: BodyType<ListCreateAccountRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return realmManagerAccountsCreate(data, requestOptions);
@@ -114,18 +116,18 @@ export const getRealmManagerAccountsCreateMutationOptions = <TError = RealmManag
 };
 
 export type RealmManagerAccountsCreateMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsCreate>>>;
-export type RealmManagerAccountsCreateMutationBody = ListCreateAccountRequest;
-export type RealmManagerAccountsCreateMutationError = RealmManagerAccountsCreateErrorResponse400;
+export type RealmManagerAccountsCreateMutationBody = BodyType<ListCreateAccountRequest>;
+export type RealmManagerAccountsCreateMutationError = ErrorType<RealmManagerAccountsCreateErrorResponse400 | RealmManagerAccountsCreate403>;
 
 /**
  * @summary Create account
  */
-export const useRealmManagerAccountsCreate = <TError = RealmManagerAccountsCreateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: ListCreateAccountRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useRealmManagerAccountsCreate = <TError = ErrorType<RealmManagerAccountsCreateErrorResponse400 | RealmManagerAccountsCreate403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsCreate>>, TError, { data: BodyType<ListCreateAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsCreate>>,
   TError,
-  { data: ListCreateAccountRequest },
+  { data: BodyType<ListCreateAccountRequest> },
   TContext
   > => {
   const mutationOptions = getRealmManagerAccountsCreateMutationOptions(options);
@@ -147,7 +149,7 @@ export const realmManagerAccountsRetrieve = (
 
 export const getRealmManagerAccountsRetrieveQueryKey = (id: string) => [`/realm-manager/accounts/${id}/`] as const;
 
-export const getRealmManagerAccountsRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError = RealmManagerAccountsRetrieveErrorResponse400>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getRealmManagerAccountsRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError = ErrorType<RealmManagerAccountsRetrieveErrorResponse400>>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -159,12 +161,12 @@ export const getRealmManagerAccountsRetrieveQueryOptions = <TData = Awaited<Retu
 };
 
 export type RealmManagerAccountsRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>>;
-export type RealmManagerAccountsRetrieveQueryError = RealmManagerAccountsRetrieveErrorResponse400;
+export type RealmManagerAccountsRetrieveQueryError = ErrorType<RealmManagerAccountsRetrieveErrorResponse400>;
 
 /**
  * @summary Get account details
  */
-export const useRealmManagerAccountsRetrieve = <TData = Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError = RealmManagerAccountsRetrieveErrorResponse400>(
+export const useRealmManagerAccountsRetrieve = <TData = Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError = ErrorType<RealmManagerAccountsRetrieveErrorResponse400>>(
   id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerAccountsRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -183,7 +185,7 @@ export const useRealmManagerAccountsRetrieve = <TData = Awaited<ReturnType<typeo
  */
 export const realmManagerAccountsUpdate = (
   id: string,
-  accountDetailsRequest: AccountDetailsRequest,
+  accountDetailsRequest: BodyType<AccountDetailsRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<AccountDetails>(
   { url: `/realm-manager/accounts/${id}/`,
@@ -193,12 +195,12 @@ export const realmManagerAccountsUpdate = (
   options,
 );
 
-export const getRealmManagerAccountsUpdateMutationOptions = <TError = RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: AccountDetailsRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: AccountDetailsRequest }, TContext> => {
+export const getRealmManagerAccountsUpdateMutationOptions = <TError = ErrorType<RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: BodyType<AccountDetailsRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: BodyType<AccountDetailsRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, { id: string;data: AccountDetailsRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, { id: string;data: BodyType<AccountDetailsRequest> }> = (props) => {
     const { id, data } = props ?? {};
 
     return realmManagerAccountsUpdate(id, data, requestOptions);
@@ -208,18 +210,18 @@ export const getRealmManagerAccountsUpdateMutationOptions = <TError = RealmManag
 };
 
 export type RealmManagerAccountsUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>>;
-export type RealmManagerAccountsUpdateMutationBody = AccountDetailsRequest;
-export type RealmManagerAccountsUpdateMutationError = RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403;
+export type RealmManagerAccountsUpdateMutationBody = BodyType<AccountDetailsRequest>;
+export type RealmManagerAccountsUpdateMutationError = ErrorType<RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403>;
 
 /**
  * @summary Update account details
  */
-export const useRealmManagerAccountsUpdate = <TError = RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: AccountDetailsRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useRealmManagerAccountsUpdate = <TError = ErrorType<RealmManagerAccountsUpdateErrorResponse400 | RealmManagerAccountsUpdate403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsUpdate>>, TError, { id: string;data: BodyType<AccountDetailsRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsUpdate>>,
   TError,
-  { id: string;data: AccountDetailsRequest },
+  { id: string;data: BodyType<AccountDetailsRequest> },
   TContext
   > => {
   const mutationOptions = getRealmManagerAccountsUpdateMutationOptions(options);
@@ -238,7 +240,7 @@ export const realmManagerAccountsDestroy = (
   options,
 );
 
-export const getRealmManagerAccountsDestroyMutationOptions = <TError = RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403,
+export const getRealmManagerAccountsDestroyMutationOptions = <TError = ErrorType<RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsDestroy>>, TError, { id: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsDestroy>>, TError, { id: string }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
@@ -254,12 +256,12 @@ export const getRealmManagerAccountsDestroyMutationOptions = <TError = RealmMana
 
 export type RealmManagerAccountsDestroyMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsDestroy>>>;
 
-export type RealmManagerAccountsDestroyMutationError = RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403;
+export type RealmManagerAccountsDestroyMutationError = ErrorType<RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403>;
 
 /**
  * @summary Delete account
  */
-export const useRealmManagerAccountsDestroy = <TError = RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403,
+export const useRealmManagerAccountsDestroy = <TError = ErrorType<RealmManagerAccountsDestroyErrorResponse400 | RealmManagerAccountsDestroy403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsDestroy>>, TError, { id: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsDestroy>>,
@@ -283,7 +285,7 @@ export const realmManagerAccountsLeave = (
   options,
 );
 
-export const getRealmManagerAccountsLeaveMutationOptions = <TError = RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403,
+export const getRealmManagerAccountsLeaveMutationOptions = <TError = ErrorType<RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsLeave>>, TError, { id: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsLeave>>, TError, { id: string }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
@@ -299,12 +301,12 @@ export const getRealmManagerAccountsLeaveMutationOptions = <TError = RealmManage
 
 export type RealmManagerAccountsLeaveMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsLeave>>>;
 
-export type RealmManagerAccountsLeaveMutationError = RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403;
+export type RealmManagerAccountsLeaveMutationError = ErrorType<RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403>;
 
 /**
  * @summary Leave account
  */
-export const useRealmManagerAccountsLeave = <TError = RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403,
+export const useRealmManagerAccountsLeave = <TError = ErrorType<RealmManagerAccountsLeaveErrorResponse400 | RealmManagerAccountsLeave403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsLeave>>, TError, { id: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsLeave>>,
@@ -329,7 +331,7 @@ export const realmManagerAccountsRemoveUser = (
   options,
 );
 
-export const getRealmManagerAccountsRemoveUserMutationOptions = <TError = RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403,
+export const getRealmManagerAccountsRemoveUserMutationOptions = <TError = ErrorType<RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsRemoveUser>>, TError, { id: string;userId: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsRemoveUser>>, TError, { id: string;userId: string }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
@@ -345,12 +347,12 @@ export const getRealmManagerAccountsRemoveUserMutationOptions = <TError = RealmM
 
 export type RealmManagerAccountsRemoveUserMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsRemoveUser>>>;
 
-export type RealmManagerAccountsRemoveUserMutationError = RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403;
+export type RealmManagerAccountsRemoveUserMutationError = ErrorType<RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403>;
 
 /**
  * @summary Remove user from account
  */
-export const useRealmManagerAccountsRemoveUser = <TError = RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403,
+export const useRealmManagerAccountsRemoveUser = <TError = ErrorType<RealmManagerAccountsRemoveUserErrorResponse400 | RealmManagerAccountsRemoveUser403>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsRemoveUser>>, TError, { id: string;userId: string }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsRemoveUser>>,
@@ -367,7 +369,7 @@ export const useRealmManagerAccountsRemoveUser = <TError = RealmManagerAccountsR
  * @summary Join account
  */
 export const realmManagerAccountsJoin = (
-  joinAccountRequest: JoinAccountRequest,
+  joinAccountRequest: BodyType<JoinAccountRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<AccountDetails>(
   { url: '/realm-manager/accounts/join/',
@@ -377,12 +379,12 @@ export const realmManagerAccountsJoin = (
   options,
 );
 
-export const getRealmManagerAccountsJoinMutationOptions = <TError = RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: JoinAccountRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: JoinAccountRequest }, TContext> => {
+export const getRealmManagerAccountsJoinMutationOptions = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, { data: JoinAccountRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, { data: BodyType<JoinAccountRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return realmManagerAccountsJoin(data, requestOptions);
@@ -392,18 +394,18 @@ export const getRealmManagerAccountsJoinMutationOptions = <TError = RealmManager
 };
 
 export type RealmManagerAccountsJoinMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsJoin>>>;
-export type RealmManagerAccountsJoinMutationBody = JoinAccountRequest;
-export type RealmManagerAccountsJoinMutationError = RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403;
+export type RealmManagerAccountsJoinMutationBody = BodyType<JoinAccountRequest>;
+export type RealmManagerAccountsJoinMutationError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>;
 
 /**
  * @summary Join account
  */
-export const useRealmManagerAccountsJoin = <TError = RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: JoinAccountRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useRealmManagerAccountsJoin = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsJoin>>,
   TError,
-  { data: JoinAccountRequest },
+  { data: BodyType<JoinAccountRequest> },
   TContext
   > => {
   const mutationOptions = getRealmManagerAccountsJoinMutationOptions(options);

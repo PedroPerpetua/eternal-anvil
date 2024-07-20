@@ -18,6 +18,7 @@ import type {
   RealmManagerGameWorldsListErrorResponse400,
 } from '../models';
 import { queryInstance } from '../queryInstance';
+import type { ErrorType } from '../queryInstance';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
@@ -31,7 +32,7 @@ export const realmManagerGameWorldsList = (options?: SecondParameter<typeof quer
 
 export const getRealmManagerGameWorldsListQueryKey = () => ['/realm-manager/game-worlds/'] as const;
 
-export const getRealmManagerGameWorldsListQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError = RealmManagerGameWorldsListErrorResponse400>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getRealmManagerGameWorldsListQueryOptions = <TData = Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError = ErrorType<RealmManagerGameWorldsListErrorResponse400>>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -43,9 +44,9 @@ export const getRealmManagerGameWorldsListQueryOptions = <TData = Awaited<Return
 };
 
 export type RealmManagerGameWorldsListQueryResult = NonNullable<Awaited<ReturnType<typeof realmManagerGameWorldsList>>>;
-export type RealmManagerGameWorldsListQueryError = RealmManagerGameWorldsListErrorResponse400;
+export type RealmManagerGameWorldsListQueryError = ErrorType<RealmManagerGameWorldsListErrorResponse400>;
 
-export const useRealmManagerGameWorldsList = <TData = Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError = RealmManagerGameWorldsListErrorResponse400>(
+export const useRealmManagerGameWorldsList = <TData = Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError = ErrorType<RealmManagerGameWorldsListErrorResponse400>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof realmManagerGameWorldsList>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {

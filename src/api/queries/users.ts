@@ -33,6 +33,7 @@ import type {
   UsersWhoamiErrorResponse400,
 } from '../models';
 import { queryInstance } from '../queryInstance';
+import type { ErrorType, BodyType } from '../queryInstance';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
@@ -41,7 +42,7 @@ type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
  * @summary Change user's password
  */
 export const usersChangePassword = (
-  userChangePasswordRequest: UserChangePasswordRequest,
+  userChangePasswordRequest: BodyType<UserChangePasswordRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<unknown>(
   { url: '/users/change_password/',
@@ -51,12 +52,12 @@ export const usersChangePassword = (
   options,
 );
 
-export const getUsersChangePasswordMutationOptions = <TError = UsersChangePasswordErrorResponse400 | UsersChangePassword401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: UserChangePasswordRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: UserChangePasswordRequest }, TContext> => {
+export const getUsersChangePasswordMutationOptions = <TError = ErrorType<UsersChangePasswordErrorResponse400 | UsersChangePassword401>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: BodyType<UserChangePasswordRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: BodyType<UserChangePasswordRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersChangePassword>>, { data: UserChangePasswordRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersChangePassword>>, { data: BodyType<UserChangePasswordRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersChangePassword(data, requestOptions);
@@ -66,18 +67,18 @@ export const getUsersChangePasswordMutationOptions = <TError = UsersChangePasswo
 };
 
 export type UsersChangePasswordMutationResult = NonNullable<Awaited<ReturnType<typeof usersChangePassword>>>;
-export type UsersChangePasswordMutationBody = UserChangePasswordRequest;
-export type UsersChangePasswordMutationError = UsersChangePasswordErrorResponse400 | UsersChangePassword401;
+export type UsersChangePasswordMutationBody = BodyType<UserChangePasswordRequest>;
+export type UsersChangePasswordMutationError = ErrorType<UsersChangePasswordErrorResponse400 | UsersChangePassword401>;
 
 /**
  * @summary Change user's password
  */
-export const useUsersChangePassword = <TError = UsersChangePasswordErrorResponse400 | UsersChangePassword401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: UserChangePasswordRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersChangePassword = <TError = ErrorType<UsersChangePasswordErrorResponse400 | UsersChangePassword401>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersChangePassword>>, TError, { data: BodyType<UserChangePasswordRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersChangePassword>>,
   TError,
-  { data: UserChangePasswordRequest },
+  { data: BodyType<UserChangePasswordRequest> },
   TContext
   > => {
   const mutationOptions = getUsersChangePasswordMutationOptions(options);
@@ -95,7 +96,7 @@ export const usersProfileRetrieve = (options?: SecondParameter<typeof queryInsta
 
 export const getUsersProfileRetrieveQueryKey = () => ['/users/profile/'] as const;
 
-export const getUsersProfileRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof usersProfileRetrieve>>, TError = UsersProfileRetrieveErrorResponse400>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersProfileRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getUsersProfileRetrieveQueryOptions = <TData = Awaited<ReturnType<typeof usersProfileRetrieve>>, TError = ErrorType<UsersProfileRetrieveErrorResponse400>>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersProfileRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -107,12 +108,12 @@ export const getUsersProfileRetrieveQueryOptions = <TData = Awaited<ReturnType<t
 };
 
 export type UsersProfileRetrieveQueryResult = NonNullable<Awaited<ReturnType<typeof usersProfileRetrieve>>>;
-export type UsersProfileRetrieveQueryError = UsersProfileRetrieveErrorResponse400;
+export type UsersProfileRetrieveQueryError = ErrorType<UsersProfileRetrieveErrorResponse400>;
 
 /**
  * @summary Get user details
  */
-export const useUsersProfileRetrieve = <TData = Awaited<ReturnType<typeof usersProfileRetrieve>>, TError = UsersProfileRetrieveErrorResponse400>(
+export const useUsersProfileRetrieve = <TData = Awaited<ReturnType<typeof usersProfileRetrieve>>, TError = ErrorType<UsersProfileRetrieveErrorResponse400>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersProfileRetrieve>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
@@ -130,7 +131,7 @@ export const useUsersProfileRetrieve = <TData = Awaited<ReturnType<typeof usersP
  * @summary Update user details
  */
 export const usersProfileUpdate = (
-  userProfileRequest: UserProfileRequest,
+  userProfileRequest: BodyType<UserProfileRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<UserProfile>(
   { url: '/users/profile/',
@@ -140,12 +141,12 @@ export const usersProfileUpdate = (
   options,
 );
 
-export const getUsersProfileUpdateMutationOptions = <TError = UsersProfileUpdateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: UserProfileRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: UserProfileRequest }, TContext> => {
+export const getUsersProfileUpdateMutationOptions = <TError = ErrorType<UsersProfileUpdateErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: BodyType<UserProfileRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: BodyType<UserProfileRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersProfileUpdate>>, { data: UserProfileRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersProfileUpdate>>, { data: BodyType<UserProfileRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersProfileUpdate(data, requestOptions);
@@ -155,18 +156,18 @@ export const getUsersProfileUpdateMutationOptions = <TError = UsersProfileUpdate
 };
 
 export type UsersProfileUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof usersProfileUpdate>>>;
-export type UsersProfileUpdateMutationBody = UserProfileRequest;
-export type UsersProfileUpdateMutationError = UsersProfileUpdateErrorResponse400;
+export type UsersProfileUpdateMutationBody = BodyType<UserProfileRequest>;
+export type UsersProfileUpdateMutationError = ErrorType<UsersProfileUpdateErrorResponse400>;
 
 /**
  * @summary Update user details
  */
-export const useUsersProfileUpdate = <TError = UsersProfileUpdateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: UserProfileRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersProfileUpdate = <TError = ErrorType<UsersProfileUpdateErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfileUpdate>>, TError, { data: BodyType<UserProfileRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersProfileUpdate>>,
   TError,
-  { data: UserProfileRequest },
+  { data: BodyType<UserProfileRequest> },
   TContext
   > => {
   const mutationOptions = getUsersProfileUpdateMutationOptions(options);
@@ -178,7 +179,7 @@ export const useUsersProfileUpdate = <TError = UsersProfileUpdateErrorResponse40
  * @summary Patch user details
  */
 export const usersProfilePartialUpdate = (
-  patchedUserProfileRequest: PatchedUserProfileRequest,
+  patchedUserProfileRequest: BodyType<PatchedUserProfileRequest>,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<UserProfile>(
   { url: '/users/profile/',
@@ -188,12 +189,12 @@ export const usersProfilePartialUpdate = (
   options,
 );
 
-export const getUsersProfilePartialUpdateMutationOptions = <TError = UsersProfilePartialUpdateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: PatchedUserProfileRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: PatchedUserProfileRequest }, TContext> => {
+export const getUsersProfilePartialUpdateMutationOptions = <TError = ErrorType<UsersProfilePartialUpdateErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: BodyType<PatchedUserProfileRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: BodyType<PatchedUserProfileRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, { data: PatchedUserProfileRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, { data: BodyType<PatchedUserProfileRequest> }> = (props) => {
     const { data } = props ?? {};
 
     return usersProfilePartialUpdate(data, requestOptions);
@@ -203,18 +204,18 @@ export const getUsersProfilePartialUpdateMutationOptions = <TError = UsersProfil
 };
 
 export type UsersProfilePartialUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof usersProfilePartialUpdate>>>;
-export type UsersProfilePartialUpdateMutationBody = PatchedUserProfileRequest;
-export type UsersProfilePartialUpdateMutationError = UsersProfilePartialUpdateErrorResponse400;
+export type UsersProfilePartialUpdateMutationBody = BodyType<PatchedUserProfileRequest>;
+export type UsersProfilePartialUpdateMutationError = ErrorType<UsersProfilePartialUpdateErrorResponse400>;
 
 /**
  * @summary Patch user details
  */
-export const useUsersProfilePartialUpdate = <TError = UsersProfilePartialUpdateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: PatchedUserProfileRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+export const useUsersProfilePartialUpdate = <TError = ErrorType<UsersProfilePartialUpdateErrorResponse400>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersProfilePartialUpdate>>, TError, { data: BodyType<PatchedUserProfileRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof usersProfilePartialUpdate>>,
   TError,
-  { data: PatchedUserProfileRequest },
+  { data: BodyType<PatchedUserProfileRequest> },
   TContext
   > => {
   const mutationOptions = getUsersProfilePartialUpdateMutationOptions(options);
@@ -232,7 +233,7 @@ export const usersWhoami = (options?: SecondParameter<typeof queryInstance>, sig
 
 export const getUsersWhoamiQueryKey = () => ['/users/whoami/'] as const;
 
-export const getUsersWhoamiQueryOptions = <TData = Awaited<ReturnType<typeof usersWhoami>>, TError = UsersWhoamiErrorResponse400>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersWhoami>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getUsersWhoamiQueryOptions = <TData = Awaited<ReturnType<typeof usersWhoami>>, TError = ErrorType<UsersWhoamiErrorResponse400>>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersWhoami>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -244,12 +245,12 @@ export const getUsersWhoamiQueryOptions = <TData = Awaited<ReturnType<typeof use
 };
 
 export type UsersWhoamiQueryResult = NonNullable<Awaited<ReturnType<typeof usersWhoami>>>;
-export type UsersWhoamiQueryError = UsersWhoamiErrorResponse400;
+export type UsersWhoamiQueryError = ErrorType<UsersWhoamiErrorResponse400>;
 
 /**
  * @summary Get current user
  */
-export const useUsersWhoami = <TData = Awaited<ReturnType<typeof usersWhoami>>, TError = UsersWhoamiErrorResponse400>(
+export const useUsersWhoami = <TData = Awaited<ReturnType<typeof usersWhoami>>, TError = ErrorType<UsersWhoamiErrorResponse400>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof usersWhoami>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {

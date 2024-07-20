@@ -18,6 +18,7 @@ import type {
   HealthcheckErrorResponse400,
 } from '../models';
 import { queryInstance } from '../queryInstance';
+import type { ErrorType } from '../queryInstance';
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
@@ -32,7 +33,7 @@ export const healthcheck = (options?: SecondParameter<typeof queryInstance>, sig
 
 export const getHealthcheckQueryKey = () => ['/ping/'] as const;
 
-export const getHealthcheckQueryOptions = <TData = Awaited<ReturnType<typeof healthcheck>>, TError = HealthcheckErrorResponse400>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof healthcheck>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
+export const getHealthcheckQueryOptions = <TData = Awaited<ReturnType<typeof healthcheck>>, TError = ErrorType<HealthcheckErrorResponse400>>(options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof healthcheck>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
@@ -44,12 +45,12 @@ export const getHealthcheckQueryOptions = <TData = Awaited<ReturnType<typeof hea
 };
 
 export type HealthcheckQueryResult = NonNullable<Awaited<ReturnType<typeof healthcheck>>>;
-export type HealthcheckQueryError = HealthcheckErrorResponse400;
+export type HealthcheckQueryError = ErrorType<HealthcheckErrorResponse400>;
 
 /**
  * @summary Healthcheck
  */
-export const useHealthcheck = <TData = Awaited<ReturnType<typeof healthcheck>>, TError = HealthcheckErrorResponse400>(
+export const useHealthcheck = <TData = Awaited<ReturnType<typeof healthcheck>>, TError = ErrorType<HealthcheckErrorResponse400>>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof healthcheck>>, TError, TData>>, request?: SecondParameter<typeof queryInstance> },
 
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {

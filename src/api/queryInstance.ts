@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig, AxiosError } from 'axios';
 import { applyAuthTokenInterceptor } from 'axios-jwt';
 
 import type { TokenRefresh } from './models';
@@ -39,3 +39,7 @@ export const queryInstance = <T>(
 };
 
 export default queryInstance;
+
+export type ErrorType<Error> = AxiosError<Error>;
+
+export type BodyType<BodyData> = BodyData;
