@@ -457,6 +457,12 @@ paths:
                 - type
                 - errors
           description: Multi Account
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse404'
+          description: ''
   /realm-manager/game-worlds/:
     get:
       operationId: realm_manager_game_worlds_list
@@ -892,11 +898,6 @@ components:
       - client_error
       type: string
       description: '* `client_error` - Client Error'
-    CodeEnum:
-      enum:
-      - parse_error
-      type: string
-      description: '* `parse_error` - Parse Error'
     DiscordLogin:
       type: object
       description: |-
@@ -937,6 +938,37 @@ components:
         * `WOOD` - Single Wood
         * `IRON` - Single Iron
         * `CROP` - Single Crop
+    Error404:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode404Enum'
+        detail:
+          type: string
+        attr:
+          type: string
+          nullable: true
+      required:
+      - attr
+      - code
+      - detail
+    ErrorCode404Enum:
+      enum:
+      - not_found
+      type: string
+      description: '* `not_found` - Not Found'
+    ErrorResponse404:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ClientErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error404'
+      required:
+      - errors
+      - type
     GameWorld:
       type: object
       properties:
@@ -1072,7 +1104,7 @@ components:
       type: object
       properties:
         code:
-          $ref: '#/components/schemas/CodeEnum'
+          $ref: '#/components/schemas/ParseErrorCodeEnum'
         detail:
           type: string
         attr:
@@ -1082,6 +1114,11 @@ components:
       - attr
       - code
       - detail
+    ParseErrorCodeEnum:
+      enum:
+      - parse_error
+      type: string
+      description: '* `parse_error` - Parse Error'
     ParseErrorResponse:
       type: object
       properties:

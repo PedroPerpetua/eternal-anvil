@@ -5,11 +5,11 @@
  * The backend server for the Eternal Anvil.
  * OpenAPI spec version: v0.0.1
  */
-import type { ParseErrorCodeEnum } from './parseErrorCodeEnum';
+import type { ErrorCode404Enum } from './errorCode404Enum';
 
-export interface ParseError {
+export interface Error404 {
   /** @nullable */
   attr: string | null;
-  code: ParseErrorCodeEnum;
+  code: ErrorCode404Enum;
   detail: string;
 }

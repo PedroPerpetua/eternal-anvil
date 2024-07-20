@@ -7,11 +7,11 @@
  */
 
 /**
- * * `parse_error` - Parse Error
+ * * `not_found` - Not Found
  */
-export type CodeEnum = typeof CodeEnum[keyof typeof CodeEnum];
+export type ErrorCode404Enum = typeof ErrorCode404Enum[keyof typeof ErrorCode404Enum];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const CodeEnum = {
-  parse_error: 'parse_error',
+export const ErrorCode404Enum = {
+  not_found: 'not_found',
 } as const;

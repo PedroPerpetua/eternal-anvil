@@ -22,6 +22,7 @@ import type {
 import type {
   AccountDetails,
   AccountDetailsRequest,
+  ErrorResponse404,
   JoinAccountRequest,
   ListCreateAccount,
   ListCreateAccountRequest,
@@ -379,7 +380,7 @@ export const realmManagerAccountsJoin = (
   options,
 );
 
-export const getRealmManagerAccountsJoinMutationOptions = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>,
+export const getRealmManagerAccountsJoinMutationOptions = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403 | ErrorResponse404>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
@@ -395,12 +396,12 @@ export const getRealmManagerAccountsJoinMutationOptions = <TError = ErrorType<Re
 
 export type RealmManagerAccountsJoinMutationResult = NonNullable<Awaited<ReturnType<typeof realmManagerAccountsJoin>>>;
 export type RealmManagerAccountsJoinMutationBody = BodyType<JoinAccountRequest>;
-export type RealmManagerAccountsJoinMutationError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>;
+export type RealmManagerAccountsJoinMutationError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403 | ErrorResponse404>;
 
 /**
  * @summary Join account
  */
-export const useRealmManagerAccountsJoin = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403>,
+export const useRealmManagerAccountsJoin = <TError = ErrorType<RealmManagerAccountsJoinErrorResponse400 | RealmManagerAccountsJoin403 | ErrorResponse404>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof realmManagerAccountsJoin>>, TError, { data: BodyType<JoinAccountRequest> }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
   Awaited<ReturnType<typeof realmManagerAccountsJoin>>,
