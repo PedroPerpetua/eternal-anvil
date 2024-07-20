@@ -29,7 +29,7 @@ function AuthContextProvider({ children }: PropsWithChildren<object>) {
     userInfo: userInfo ?? null,
     isLoading,
     refreshUser: async () => {
-      queryClient.removeQueries({ queryKey });
+      queryClient.removeQueries({ queryKey, exact: true });
       await refetch();
     },
   }), [isLoading, queryClient, queryKey, refetch, userInfo]);

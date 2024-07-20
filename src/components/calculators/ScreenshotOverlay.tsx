@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
-import {
-  Alert, Box, Portal, Snackbar, Stack, Typography,
-} from '@mui/material';
-import type { AlertColor } from '@mui/material';
+import { useEffect, useRef } from 'react';
+import { Box, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import { EntityId } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { useScreenshot } from 'use-react-screenshot';
 
@@ -49,6 +47,7 @@ function CalculatorScreenshotDisplay({ tabId }: CalculatorScreenshotDisplayProps
  */
 function ScreenshotOverlay() {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const takeScreenshotFlag = useAppSelector(calculatorsSelectors.getTakeScreenshotFlag);
   const screenshotTitle = useAppSelector(calculatorsSelectors.getScreenshotTitle);
   const tabsOnScreenshot = useAppSelector(calculatorsSelectors.getTabsOnScreenshot);
@@ -60,10 +59,6 @@ function ScreenshotOverlay() {
     quality: 1.0,
   });
 
-  const [showSnackbar, setShowSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('info');
-
   useEffect(() => {
     if (image === null) return;
     const effect = async () => {
@@ -74,18 +69,14 @@ function ScreenshotOverlay() {
             [blob.type]: blob,
           }),
         ]);
-        setSnackbarSeverity('success');
-        setSnackbarMessage(t('calculators.tab.copyImage.success'));
+        enqueueSnackbar(t('calculators.tab.copyImage.success'), { variant: 'success' });
       } catch (e) {
-        setSnackbarSeverity('error');
-        setSnackbarMessage(t('calculators.tab.copyImage.error'));
+        enqueueSnackbar(t('calculators.tab.copyImage.error'), { variant: 'error' });
         console.error('Failed to copy image to clipboard', e);
-      } finally {
-        setShowSnackbar(true);
       }
     };
     effect();
-  }, [image, t, takeScreenshotFlag]);
+  }, [enqueueSnackbar, image, t, takeScreenshotFlag]);
 
   useEffect(() => {
     const effect = async () => {
@@ -105,51 +96,34 @@ function ScreenshotOverlay() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [takeScreenshotFlag]);
   return (
-    <>
-      <Box
-        ref={screenshotRef}
-        sx={{
-          backgroundColor: 'background.default',
-          padding: '25px',
-          display: 'none',
-          width: calculatorGridWidth(cols, 8, 25),
-        }}
-      >
-        <Grid container columns={cols} spacing={1}>
-          {
-            screenshotTitle && (
-              <Grid xs={cols}>
-                <Typography variant="h6" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
-                  { screenshotTitle }
-                </Typography>
-              </Grid>
-            )
-          }
-          {
-            tabsOnScreenshot.map((tabId) => (
-              <Grid key={tabId}>
-                <CalculatorScreenshotDisplay tabId={tabId} />
-              </Grid>
-            ))
-          }
-        </Grid>
-      </Box>
-      <Portal>
-        <Snackbar
-          open={showSnackbar}
-          onClose={() => setShowSnackbar(false)}
-          autoHideDuration={6000}
-        >
-          <Alert
-            onClose={() => setShowSnackbar(false)}
-            variant="filled"
-            severity={snackbarSeverity}
-          >
-            { snackbarMessage }
-          </Alert>
-        </Snackbar>
-      </Portal>
-    </>
+    <Box
+      ref={screenshotRef}
+      sx={{
+        backgroundColor: 'background.default',
+        padding: '25px',
+        display: 'none',
+        width: calculatorGridWidth(cols, 8, 25),
+      }}
+    >
+      <Grid container columns={cols} spacing={1}>
+        {
+          screenshotTitle && (
+            <Grid xs={cols}>
+              <Typography variant="h6" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
+                { screenshotTitle }
+              </Typography>
+            </Grid>
+          )
+        }
+        {
+          tabsOnScreenshot.map((tabId) => (
+            <Grid key={tabId}>
+              <CalculatorScreenshotDisplay tabId={tabId} />
+            </Grid>
+          ))
+        }
+      </Grid>
+    </Box>
   );
 }
 

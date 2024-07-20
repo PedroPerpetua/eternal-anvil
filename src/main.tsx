@@ -1,8 +1,9 @@
 import React from 'react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { SnackbarProvider } from 'notistack';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import AuthContextProvider from './api/AuthContext';
 import queryClient from './api/queryClient';
@@ -22,13 +23,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <CssBaseline />
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <AuthContextProvider>
-            <App />
-          </AuthContextProvider>
-        </QueryClientProvider>
-      </Provider>
+      <SnackbarProvider dense anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}>
+        <ReduxProvider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <AuthContextProvider>
+              <App />
+            </AuthContextProvider>
+          </QueryClientProvider>
+        </ReduxProvider>
+      </SnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>,
 );
