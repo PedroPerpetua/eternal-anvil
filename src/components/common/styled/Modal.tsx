@@ -1,10 +1,10 @@
-import { forwardRef } from 'react';
+import { forwardRef, PropsWithChildren } from 'react';
 import { Box, Modal as MUIModal, styled } from '@mui/material';
 import type { ModalProps as MUIModalProps, SxProps, Theme } from '@mui/material';
 
-type ModalProps = MUIModalProps & {
+type ModalProps = Omit<MUIModalProps, 'children'> & PropsWithChildren<{
   containerSx?: SxProps<Theme>
-};
+}>;
 
 const StyledContainer = styled(Box)({
   position: 'absolute',

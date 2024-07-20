@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
 import { useAuthContext } from '../api/AuthContext';
-import { useUsersLoginDiscordCreate } from '../api/queries/user-authentication';
+import { useUsersDiscordLogin } from '../api/queries/user-authentication';
 import Modal from '../components/common/styled/Modal';
 
 function LoginCallbackPage() {
@@ -14,7 +14,7 @@ function LoginCallbackPage() {
   const { userInfo, refreshUser } = useAuthContext();
 
   const code = searchParams.get('code');
-  const { data: tokens, mutate: discordLogin, isError } = useUsersLoginDiscordCreate({ mutation: {
+  const { data: tokens, mutate: discordLogin, isError } = useUsersDiscordLogin({ mutation: {
     onSuccess: ({ access, refresh }) => {
       setAuthTokens({ accessToken: access, refreshToken: refresh });
       refreshUser();

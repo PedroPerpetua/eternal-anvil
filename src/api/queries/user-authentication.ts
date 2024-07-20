@@ -21,7 +21,7 @@ import type {
   TokenRefresh,
   TokenRefreshRequest,
   UserRegisterRequest,
-  UsersLoginDiscordCreateErrorResponse400,
+  UsersDiscordLoginErrorResponse400,
   UsersLoginErrorResponse400,
   UsersLoginRefreshErrorResponse400,
   UsersLogoutErrorResponse400,
@@ -81,9 +81,10 @@ export const useUsersLogin = <TError = UsersLoginErrorResponse400,
   return useMutation(mutationOptions);
 };
 /**
- * View for Discord OAuth2. Logs the user in using the OAuth code provided by Discord login.
+ * Login with Discord OAUTH2 flow.
+ * @summary Login with Discord
  */
-export const usersLoginDiscordCreate = (
+export const usersDiscordLogin = (
   discordLoginRequest: DiscordLoginRequest,
   options?: SecondParameter<typeof queryInstance>,
 ) => queryInstance<DiscordLogin>(
@@ -94,33 +95,36 @@ export const usersLoginDiscordCreate = (
   options,
 );
 
-export const getUsersLoginDiscordCreateMutationOptions = <TError = UsersLoginDiscordCreateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
-  ): UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: DiscordLoginRequest }, TContext> => {
+export const getUsersDiscordLoginMutationOptions = <TError = UsersDiscordLoginErrorResponse400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+  ): UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext> => {
   const { mutation: mutationOptions, request: requestOptions } = options ?? {};
 
-  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, { data: DiscordLoginRequest }> = (props) => {
+  const mutationFn: MutationFunction<Awaited<ReturnType<typeof usersDiscordLogin>>, { data: DiscordLoginRequest }> = (props) => {
     const { data } = props ?? {};
 
-    return usersLoginDiscordCreate(data, requestOptions);
+    return usersDiscordLogin(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type UsersLoginDiscordCreateMutationResult = NonNullable<Awaited<ReturnType<typeof usersLoginDiscordCreate>>>;
-export type UsersLoginDiscordCreateMutationBody = DiscordLoginRequest;
-export type UsersLoginDiscordCreateMutationError = UsersLoginDiscordCreateErrorResponse400;
+export type UsersDiscordLoginMutationResult = NonNullable<Awaited<ReturnType<typeof usersDiscordLogin>>>;
+export type UsersDiscordLoginMutationBody = DiscordLoginRequest;
+export type UsersDiscordLoginMutationError = UsersDiscordLoginErrorResponse400;
 
-export const useUsersLoginDiscordCreate = <TError = UsersLoginDiscordCreateErrorResponse400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersLoginDiscordCreate>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
+/**
+ * @summary Login with Discord
+ */
+export const useUsersDiscordLogin = <TError = UsersDiscordLoginErrorResponse400,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof usersDiscordLogin>>, TError, { data: DiscordLoginRequest }, TContext>, request?: SecondParameter<typeof queryInstance> },
   ): UseMutationResult<
-  Awaited<ReturnType<typeof usersLoginDiscordCreate>>,
+  Awaited<ReturnType<typeof usersDiscordLogin>>,
   TError,
   { data: DiscordLoginRequest },
   TContext
   > => {
-  const mutationOptions = getUsersLoginDiscordCreateMutationOptions(options);
+  const mutationOptions = getUsersDiscordLoginMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

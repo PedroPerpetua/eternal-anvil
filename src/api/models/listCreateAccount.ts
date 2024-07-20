@@ -7,6 +7,7 @@
  */
 import type { EconomyEnum } from './economyEnum';
 import type { GameWorld } from './gameWorld';
+import type { ListCreateAccountRealm } from './listCreateAccountRealm';
 import type { RaceEnum } from './raceEnum';
 import type { User } from './user';
 
@@ -18,4 +19,6 @@ export interface ListCreateAccount {
   name: string;
   readonly players: readonly User[];
   race: RaceEnum;
+  /** @nullable */
+  readonly realm: ListCreateAccountRealm;
 }

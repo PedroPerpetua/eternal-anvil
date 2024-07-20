@@ -542,9 +542,9 @@ paths:
           description: ''
   /users/login/discord/:
     post:
-      operationId: users_login_discord_create
-      description: View for Discord OAuth2. Logs the user in using the OAuth code
-        provided by Discord login.
+      operationId: users_discord_login
+      description: Login with Discord OAUTH2 flow.
+      summary: Login with Discord
       tags:
       - User Authentication
       requestBody:
@@ -567,7 +567,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsersLoginDiscordCreateErrorResponse400'
+                $ref: '#/components/schemas/UsersDiscordLoginErrorResponse400'
           description: ''
         '200':
           content:
@@ -966,6 +966,11 @@ components:
           maxLength: 255
         game_world:
           $ref: '#/components/schemas/GameWorld'
+        realm:
+          allOf:
+          - $ref: '#/components/schemas/Realm'
+          readOnly: true
+          nullable: true
         race:
           $ref: '#/components/schemas/RaceEnum'
         economy:
@@ -982,6 +987,7 @@ components:
       - name
       - players
       - race
+      - realm
     ListCreateAccountRequest:
       type: object
       properties:
@@ -1020,7 +1026,12 @@ components:
         end:
           type: string
           format: date-time
+        account_name:
+          type: string
+          nullable: true
+          readOnly: true
       required:
+      - account_name
       - code
       - end
       - id
@@ -1068,6 +1079,19 @@ components:
       description: |-
         * `ELF` - Elf
         * `DWARF` - Dwarf
+    Realm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - id
+      - name
     RealmManagerAccountsCreateEconomyErrorComponent:
       type: object
       properties:
@@ -1428,6 +1452,15 @@ components:
         propertyName: type
         mapping:
           client_error: '#/components/schemas/ParseErrorResponse'
+    RealmRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+      required:
+      - name
     TokenBlacklistRequest:
       type: object
       properties:
@@ -1681,7 +1714,7 @@ components:
       required:
       - errors
       - type
-    UsersLoginDiscordCreateCodeErrorComponent:
+    UsersDiscordLoginCodeErrorComponent:
       type: object
       properties:
         attr:
@@ -1713,25 +1746,25 @@ components:
       - attr
       - code
       - detail
-    UsersLoginDiscordCreateError:
+    UsersDiscordLoginError:
       oneOf:
-      - $ref: '#/components/schemas/UsersLoginDiscordCreateNonFieldErrorsErrorComponent'
-      - $ref: '#/components/schemas/UsersLoginDiscordCreateCodeErrorComponent'
+      - $ref: '#/components/schemas/UsersDiscordLoginNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/UsersDiscordLoginCodeErrorComponent'
       discriminator:
         propertyName: attr
         mapping:
-          non_field_errors: '#/components/schemas/UsersLoginDiscordCreateNonFieldErrorsErrorComponent'
-          code: '#/components/schemas/UsersLoginDiscordCreateCodeErrorComponent'
-    UsersLoginDiscordCreateErrorResponse400:
+          non_field_errors: '#/components/schemas/UsersDiscordLoginNonFieldErrorsErrorComponent'
+          code: '#/components/schemas/UsersDiscordLoginCodeErrorComponent'
+    UsersDiscordLoginErrorResponse400:
       oneOf:
-      - $ref: '#/components/schemas/UsersLoginDiscordCreateValidationError'
+      - $ref: '#/components/schemas/UsersDiscordLoginValidationError'
       - $ref: '#/components/schemas/ParseErrorResponse'
       discriminator:
         propertyName: type
         mapping:
-          validation_error: '#/components/schemas/UsersLoginDiscordCreateValidationError'
+          validation_error: '#/components/schemas/UsersDiscordLoginValidationError'
           client_error: '#/components/schemas/ParseErrorResponse'
-    UsersLoginDiscordCreateNonFieldErrorsErrorComponent:
+    UsersDiscordLoginNonFieldErrorsErrorComponent:
       type: object
       properties:
         attr:
@@ -1753,7 +1786,7 @@ components:
       - attr
       - code
       - detail
-    UsersLoginDiscordCreateValidationError:
+    UsersDiscordLoginValidationError:
       type: object
       properties:
         type:
@@ -1761,7 +1794,7 @@ components:
         errors:
           type: array
           items:
-            $ref: '#/components/schemas/UsersLoginDiscordCreateError'
+            $ref: '#/components/schemas/UsersDiscordLoginError'
       required:
       - errors
       - type

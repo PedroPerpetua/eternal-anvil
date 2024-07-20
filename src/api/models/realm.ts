@@ -6,14 +6,8 @@
  * OpenAPI spec version: v0.0.1
  */
 
-export interface ListGameWorld {
-  /** @nullable */
-  readonly account_name: string | null;
-  /** @maxLength 255 */
-  code: string;
-  end: string;
+export interface Realm {
   readonly id: string;
   /** @maxLength 255 */
   name: string;
-  start: string;
 }
