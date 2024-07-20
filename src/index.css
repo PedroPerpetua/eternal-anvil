@@ -3,13 +3,6 @@ body {
   overflow: hidden;
 }
 
-.center-screen {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .clickable {
   cursor: pointer;
   -webkit-user-select: none;

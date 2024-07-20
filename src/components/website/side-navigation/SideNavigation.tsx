@@ -35,12 +35,8 @@ function MobileDrawer() {
           <Stack
             direction="row"
             onClick={() => navigate('/')}
-            sx={{
-              width: 'fit-content',
-              alignItems: 'center',
-              userSelect: 'none',
-              cursor: 'pointer',
-            }}
+            sx={{ width: 'fit-content', alignItems: 'center' }}
+            className="clickable"
           >
             <CustomIcon src={WebsiteIcon} size={50} sx={{ margin: '5px' }} />
             <Typography variant="h6" fontWeight="bolder">

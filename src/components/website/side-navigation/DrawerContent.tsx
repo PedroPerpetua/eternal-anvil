@@ -40,10 +40,9 @@ function DrawerContent({ withHeader }: DrawerContentProps) {
                 sx={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  userSelect: 'none',
-                  cursor: 'pointer',
                   height: '65px',
                 }}
+                className="clickable"
               >
                 <CustomIcon
                   src={WebsiteIcon}

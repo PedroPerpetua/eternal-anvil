@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
-import {
-  Box, Button, CircularProgress, Modal, Stack, Typography,
-} from '@mui/material';
+import { Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { setAuthTokens } from 'axios-jwt';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
 import { useAuthContext } from '../api/AuthContext';
 import { useUsersLoginDiscordCreate } from '../api/queries/user-authentication';
+import Modal from '../components/common/styled/Modal';
 
 function LoginCallbackPage() {
   const { t } = useTranslation();
@@ -52,22 +51,7 @@ function LoginCallbackPage() {
   }
   return (
     <Modal open>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: 'white',
-          padding: '25px',
-          borderRadius: '5px',
-          width: 'min(700px, 90vw)',
-          maxHeight: '90dvh',
-          overflowY: 'auto',
-        }}
-      >
-        { content }
-      </Box>
+      { content }
     </Modal>
   );
 }
