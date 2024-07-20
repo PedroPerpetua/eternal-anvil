@@ -1,5 +1,7 @@
+import AccountsList from '../../components/realm-manager/AccountsList';
+
 function RealmManagerPage() {
-  return null;
+  return (<AccountsList />);
 }
 
 export default RealmManagerPage;

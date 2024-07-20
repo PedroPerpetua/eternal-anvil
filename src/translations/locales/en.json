@@ -1,4 +1,9 @@
 {
+  "common": {
+    "errors": {
+      "default": "Something went wrong. Please try again later!"
+    }
+  },
   "auth": {
     "discordLogin": "Login with Discord",
     "logout": "Logout",
@@ -9,7 +14,40 @@
     "serverUnavailable": "Server unavailable"
   },
   "realmManager": {
-    "route": "Realm Manager"
+    "route": "Realm Manager",
+    "account": {
+      "create": {
+        "tab": "Create",
+        "form": {
+          "gameWorld": "Game World",
+          "gameWorld_required": "You must select a game world where you're not already part of an account.",
+          "name": "Account Name",
+          "name_required": "The account name cannot be empty.",
+          "race": "Race",
+          "economy": "Economy",
+          "submit": "Create Account",
+          "success": "Account created successfully!",
+          "errors": {
+            "multiAccount": "You already have an account on this game world!"
+          }
+        }
+      },
+      "join": {
+        "tab": "Join",
+        "description": "Join an existing account by pasting their Id here!",
+        "form": {
+          "account": "Account Id",
+          "account_valid": "Invalid account Id format.",
+          "account_required": "You must fill in the account Id that you want to join.",
+          "submit": "Join Account",
+          "success": "Account joined successfully!",
+          "errors": {
+            "multiAccount": "You already have an account on the game world this account belongs to!",
+            "notFound": "Account not found."
+          }
+        }
+      }
+    }
   },
   "calculators": {
     "button": "Show Calculators",
