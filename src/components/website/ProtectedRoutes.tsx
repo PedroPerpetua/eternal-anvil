@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { useAuthContext } from '../../api/AuthContext';
+import { useUsersProfileRetrieve } from '../../api/queries/users';
 
 function ProtectedRoutes() {
-  const { userInfo, isLoading } = useAuthContext();
+  const { data: userInfo, isLoading } = useUsersProfileRetrieve();
   if (isLoading) return null;
   if (!userInfo) return (<Navigate to="/" replace />);
   return (<Outlet />);

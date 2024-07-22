@@ -5,7 +5,6 @@ import { SnackbarProvider } from 'notistack';
 import ReactDOM from 'react-dom/client';
 import { Provider as ReduxProvider } from 'react-redux';
 
-import AuthContextProvider from './api/AuthContext';
 import queryClient from './api/queryClient';
 import App from './App';
 import store from './store';
@@ -26,9 +25,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <SnackbarProvider dense anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}>
         <ReduxProvider store={store}>
           <QueryClientProvider client={queryClient}>
-            <AuthContextProvider>
-              <App />
-            </AuthContextProvider>
+            <App />
           </QueryClientProvider>
         </ReduxProvider>
       </SnackbarProvider>

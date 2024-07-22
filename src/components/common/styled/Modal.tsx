@@ -19,8 +19,8 @@ const StyledContainer = styled(Box)({
   overflowY: 'auto',
 });
 
-const Modal = forwardRef<HTMLDivElement, ModalProps>(({ containerSx, children, ...props }) => (
-  <MUIModal {...props}>
+const Modal = forwardRef<HTMLDivElement, ModalProps>(({ containerSx, children, ...props }, ref) => (
+  <MUIModal ref={ref} {...props}>
     <StyledContainer sx={containerSx}>
       { children }
     </StyledContainer>

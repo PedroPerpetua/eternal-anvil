@@ -1,6 +1,5 @@
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 
-import AccountContext from './components/realm-manager/AccountContext';
 import ProtectedRoutes from './components/website/ProtectedRoutes';
 import WebsiteLayout from './components/website/WebsiteLayout';
 import LoginCallbackPage from './pages/LoginCallbackPage';
@@ -15,9 +14,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route element={<ProtectedRoutes />}>
       <Route path="/realm-manager">
         <Route path="" element={<RealmManagerPage />} />
-        <Route path=":accountId" element={<AccountContext />}>
-          <Route path="" element={<AccountOverviewPage />} />
-        </Route>
+        <Route path=":accountId" element={<AccountOverviewPage />} />
       </Route>
     </Route>
   </Route>,

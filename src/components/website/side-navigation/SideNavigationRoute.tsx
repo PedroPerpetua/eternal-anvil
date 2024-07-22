@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 
-import { useAuthContext } from '../../../api/AuthContext';
+import { useUsersProfileRetrieve } from '../../../api/queries/users';
 import GameButton from '../../common/styled/GameButton';
 
 export type SideNavigationRouteProps = {
@@ -10,7 +10,7 @@ export type SideNavigationRouteProps = {
 };
 
 function SideNavigationRoute({ route, label, requiresAuth = false }: SideNavigationRouteProps) {
-  const { userInfo } = useAuthContext();
+  const { data: userInfo } = useUsersProfileRetrieve();
   const { pathname } = useLocation();
   if (requiresAuth && !userInfo) return null;
   const selected = pathname.startsWith(`/${route}`);

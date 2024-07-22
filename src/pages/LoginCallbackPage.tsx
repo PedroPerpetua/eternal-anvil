@@ -4,14 +4,14 @@ import { setAuthTokens } from 'axios-jwt';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useSearchParams } from 'react-router-dom';
 
-import { useAuthContext } from '../api/AuthContext';
 import { useUsersDiscordLogin } from '../api/queries/user-authentication';
+import { useUsersProfileRetrieve } from '../api/queries/users';
 import Modal from '../components/common/styled/Modal';
 
 function LoginCallbackPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const { userInfo, refreshUser } = useAuthContext();
+  const { data: userInfo, refetch: refreshUser } = useUsersProfileRetrieve();
 
   const code = searchParams.get('code');
   const { data: tokens, mutate: discordLogin, isError } = useUsersDiscordLogin({ mutation: {
