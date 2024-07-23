@@ -11,12 +11,14 @@ import UserInfo from './UserInfo';
 import WebsiteIcon from '../../../assets/icon.png';
 import i18n from '../../../translations/i18n';
 import CustomIcon from '../../common/CustomIcon';
+import RealmManagerSideNavigation from '../../realm-manager/RealmManagerSideNavigation';
 
 const routes: SideNavigationRouteProps[] = [
   {
     route: 'realm-manager',
     label: i18n.t('realmManager.route'),
     requiresAuth: true,
+    children: <RealmManagerSideNavigation />,
   },
 ];
 
@@ -59,13 +61,15 @@ function DrawerContent({ withHeader }: DrawerContentProps) {
           )
         }
         {
-          routes.map(({ route, label, requiresAuth }) => (
+          routes.map(({ route, label, requiresAuth, children }) => (
             <SideNavigationRoute
               key={route}
               route={route}
               label={label}
               requiresAuth={requiresAuth}
-            />
+            >
+              { children }
+            </SideNavigationRoute>
           ))
         }
       </Stack>

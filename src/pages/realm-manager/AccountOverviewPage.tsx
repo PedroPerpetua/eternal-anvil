@@ -1,6 +1,6 @@
 import { Navigate, useParams } from 'react-router-dom';
 
-import AccountOverview from '../../components/realm-manager/AccountOverview';
+import AccountOverview from '../../components/realm-manager/account-overview/AccountOverview';
 
 type AccountOverviewParams = {
   accountId: string

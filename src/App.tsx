@@ -14,7 +14,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route element={<ProtectedRoutes />}>
       <Route path="/realm-manager">
         <Route path="" element={<RealmManagerPage />} />
-        <Route path=":accountId" element={<AccountOverviewPage />} />
+        <Route path=":accountId/:view?" element={<AccountOverviewPage />} />
       </Route>
     </Route>
   </Route>,
