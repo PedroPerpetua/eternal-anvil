@@ -7,11 +7,8 @@ import { t } from 'i18next';
 import { useHealthcheck } from '../../../api/queries/core';
 import { useUsersLogout } from '../../../api/queries/user-authentication';
 import { useUsersProfileRetrieve } from '../../../api/queries/users';
-import DiscordLogo from '../../../assets/discord.png';
-import CustomIcon from '../../common/CustomIcon';
 import GameButton from '../../common/styled/GameButton';
-
-const DISCORD_OAUTH_URL = import.meta.env.VITE_DISCORD_OAUTH_URL;
+import DiscordLoginButton from '../DiscordLoginButton';
 
 function UserInfo() {
   const queryClient = useQueryClient();
@@ -38,19 +35,7 @@ function UserInfo() {
       </Stack>
     );
   }
-  if (!userInfo) {
-    return (
-      <GameButton
-        color="discord"
-        startIcon={(<CustomIcon src={DiscordLogo} size="small" />)}
-        href={DISCORD_OAUTH_URL}
-        size="large"
-        sx={{ borderColor: 'white' }}
-      >
-        { t('auth.discordLogin') }
-      </GameButton>
-    );
-  }
+  if (!userInfo) return (<DiscordLoginButton />);
   return (
     <>
       <Typography variant="h6" textAlign="center">{ userInfo.username }</Typography>

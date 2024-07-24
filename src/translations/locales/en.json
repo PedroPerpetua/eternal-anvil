@@ -8,12 +8,25 @@
     }
   },
   "auth": {
-    "discordLogin": "Login with Discord",
+    "discordLogin": {
+      "label": "Login with Discord",
+      "loading": "Loading...",
+      "error": "An error occurred. Please try again later.",
+      "success": "Login successful! Redirecting...",
+      "back": "Back to homepage"
+    },
+    "login": {
+      "description": "Username / Password is not the default login system for the Eternal Anvil. Please login using Discord.",
+      "form": {
+        "username": "Username",
+        "username_required": "Username cannot be empty.",
+        "password": "Password",
+        "password_required": "Password cannot be empty.",
+        "submit": "Login"
+      },
+      "error": "Wrong username / password."
+    },
     "logout": "Logout",
-    "loading": "Loading...",
-    "error": "An error occurred. Please try again later.",
-    "success": "Login successful! Redirecting...",
-    "back": "Back to homepage",
     "serverUnavailable": "Server unavailable"
   },
   "realmManager": {

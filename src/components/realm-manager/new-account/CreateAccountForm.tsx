@@ -88,7 +88,7 @@ function CreateAccountForm() {
     <Box sx={{ paddingTop: '25px' }}>
       <FormContainer
         defaultValues={initialValues}
-        onSuccess={(data) => createAccount({ data: {
+        onSuccess={(data: CreateAccountFormValues) => createAccount({ data: {
           game_world: data.gameWorld,
           name: data.name,
           race: data.race,

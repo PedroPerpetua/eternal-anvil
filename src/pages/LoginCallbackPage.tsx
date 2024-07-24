@@ -26,28 +26,24 @@ function LoginCallbackPage() {
     discordLogin({ data: { code } });
   }, [code, discordLogin]);
 
-  if (userInfo) {
-    return (<Navigate to="/" replace />);
-  }
+  if (userInfo) return (<Navigate to="/" replace />);
 
   let content = (
     <Stack direction="row" spacing={2}>
       <CircularProgress />
-      <Typography variant="h6">{ t('auth.loading') }</Typography>
+      <Typography variant="h6">{ t('auth.discordLogin.loading') }</Typography>
     </Stack>
   );
   if (isError) {
     content = (
       <Stack spacing={1}>
-        <Typography variant="h6">{ t('auth.error') }</Typography>
-        <Button href="/" variant="contained" color="error">{ t('auth.back') }</Button>
+        <Typography variant="h6">{ t('auth.discordLogin.error') }</Typography>
+        <Button href="/" variant="contained" color="error">{ t('auth.discordLogin.back') }</Button>
       </Stack>
     );
   }
   if (tokens) {
-    content = (
-      <Typography variant="h6">{ t('auth.success') }</Typography>
-    );
+    content = (<Typography variant="h6">{ t('auth.discordLogin.success') }</Typography>);
   }
   return (
     <Modal open>

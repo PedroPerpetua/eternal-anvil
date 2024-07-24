@@ -78,7 +78,7 @@ function JoinAccountForm() {
     <Box sx={{ paddingTop: '25px' }}>
       <FormContainer
         defaultValues={initialValues}
-        onSuccess={(data) => joinAccount({ data: { id: data.account } })}
+        onSuccess={(data: JoinAccountFormValues) => joinAccount({ data: { id: data.account } })}
         resolver={yupResolver}
         disabled={isPending}
       >

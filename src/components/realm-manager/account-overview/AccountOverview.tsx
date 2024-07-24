@@ -14,7 +14,7 @@ function AccountOverview({ accountId }: AccountOverviewProps) {
   const { data: accountData, isLoading } = useRealmManagerAccountsRetrieve(accountId);
   if (isLoading) return (<Loading />);
   if (!accountData) return 'error';
-  if (view === undefined) return (<Navigate to={`/realm-manager/${accountId}/realm`} />);
+  if (view === undefined) return (<Navigate to={`/realm-manager/${accountId}/realm`} replace />);
   return (
     <Paper
       sx={{
