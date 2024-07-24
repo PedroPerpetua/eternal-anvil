@@ -26,7 +26,7 @@ function AccountTab() {
 
   return (
     <Tab value={value}>
-      <Grid container>
+      <Grid container spacing={2}>
         <Grid xs={12} md={6} display="flex" alignItems="center">
           <AccountData accountId={accountData.id} />
         </Grid>

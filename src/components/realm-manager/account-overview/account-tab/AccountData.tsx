@@ -45,7 +45,11 @@ function DeleteAccountButton({ accountId }: ActionButtonProps) {
   } });
   return (
     <>
-      <GameButton color="error" onClick={() => setOpen(true)} sx={{ width: '200px' }}>
+      <GameButton
+        color="error"
+        onClick={() => setOpen(true)}
+        sx={{ width: '200px', alignSelf: 'center' }}
+      >
         { t('realmManager.account.overview.accountTab.accountData.deleteAccount.label') }
       </GameButton>
       <Modal open={open} onClose={() => !isPending && setOpen(false)}>
@@ -102,7 +106,11 @@ function LeaveAccountButton({ accountId }: ActionButtonProps) {
   } });
   return (
     <>
-      <GameButton color="error" onClick={() => setOpen(true)} sx={{ width: '200px' }}>
+      <GameButton
+        color="error"
+        onClick={() => setOpen(true)}
+        sx={{ width: '200px', alignSelf: 'center' }}
+      >
         { t('realmManager.account.overview.accountTab.accountData.leaveAccount.label') }
       </GameButton>
       <Modal open={open} onClose={() => !isPending && setOpen(false)}>

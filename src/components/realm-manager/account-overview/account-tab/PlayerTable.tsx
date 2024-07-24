@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import {
   styled, useMediaQuery, useTheme, TableCell as MUITableCell, Table, TableHead, TableRow,
-  TableBody, Stack, Typography,
+  TableBody, Stack, Typography, Tooltip,
 } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
@@ -257,8 +257,18 @@ function PlayerTable({ accountId }: PlayerTableProps) {
             <TableRow key={player.id}>
               <TableCell>
                 <Stack direction="row" spacing={1} alignItems="center">
-                  { player.username }
-                  { player.id === accountData.owner && (<CrownIcon />) }
+                  <Typography>{ player.username }</Typography>
+                  {
+                    player.id === accountData.owner && (
+                      <Tooltip
+                        title={t('realmManager.account.overview.accountTab.playerTable.isOwner')}
+                      >
+                        <div>
+                          <CrownIcon />
+                        </div>
+                      </Tooltip>
+                    )
+                  }
                 </Stack>
               </TableCell>
               {

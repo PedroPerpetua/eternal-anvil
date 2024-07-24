@@ -91,6 +91,7 @@
           },
           "ownedBy": "Owned by: {{user}}",
           "playerTable": {
+            "isOwner": "Account Owner",
             "fields": {
               "player": "Player",
               "actions": "Actions"
