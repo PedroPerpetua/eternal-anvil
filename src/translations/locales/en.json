@@ -2,6 +2,9 @@
   "common": {
     "errors": {
       "default": "Something went wrong. Please try again later!"
+    },
+    "buttons": {
+      "cancel": "Cancel"
     }
   },
   "auth": {
@@ -44,6 +47,41 @@
           "errors": {
             "multiAccount": "You already have an account on the game world this account belongs to!",
             "notFound": "Account not found."
+          }
+        }
+      },
+      "overview": {
+        "accountTab": {
+          "label": "Account",
+          "accountId": {
+            "tooltip": "Copy account Id",
+            "success": "Account Id copied to your clipboard.",
+            "error": "Failed to copy account Id."
+          },
+          "ownedBy": "Owned by: {{user}}",
+          "playerTable": {
+            "fields": {
+              "player": "Player",
+              "actions": "Actions"
+            },
+            "actions": {
+              "kick": {
+                "label": "Kick",
+                "title": "Are you sure you want to kick {{user}} from this account?",
+                "message": "This will remove their access to this account and it's realm.",
+                "button": "Yes, kick {{user}}",
+                "success": "User kicked successfully.",
+                "error": "Failed to kick user."
+              },
+              "makeOwner": {
+                "label": "Make Owner",
+                "title": "Are you sure you want to make {{user}} the owner of this account?",
+                "message": "You'll lose the ability to kick other users, or manage the realm this account has joined.",
+                "button": "Yes, make {{user}} the owner",
+                "success": "Account updated successfully.",
+                "error": "Failed to update account."
+              }
+            }
           }
         }
       }

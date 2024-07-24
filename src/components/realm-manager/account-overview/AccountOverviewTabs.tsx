@@ -1,10 +1,11 @@
 import type { PropsWithChildren } from 'react';
+import { Box } from '@mui/material';
 import type { ButtonProps } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
 import GameButton from '../../common/styled/GameButton';
 
-type TabValue = 'realm' | 'account' | 'schedule';
+export type TabValue = 'realm' | 'account';
 
 type TabButtonProps = ButtonProps & {
   value: TabValue
@@ -30,5 +31,9 @@ type TabProps = PropsWithChildren<{
 export function Tab({ value, children }: TabProps) {
   const { view } = useParams();
   if (view !== value) return null;
-  return children;
+  return (
+    <Box sx={{ marginTop: '15px' }}>
+      { children }
+    </Box>
+  );
 }

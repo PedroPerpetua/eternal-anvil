@@ -1,7 +1,7 @@
 import { Paper, Stack } from '@mui/material';
 import { Navigate, useParams } from 'react-router-dom';
 
-import { TabButton } from './AccountOverviewTabs';
+import AccountTab from './account-tab/AccountTab';
 import { useRealmManagerAccountsRetrieve } from '../../../api/queries/realm-manager-accounts';
 import Loading from '../../website/Loading';
 
@@ -25,10 +25,9 @@ function AccountOverview({ accountId }: AccountOverviewProps) {
       }}
     >
       <Stack spacing={5} direction="row" justifyContent="center">
-        <TabButton value="realm">Realm</TabButton>
-        <TabButton value="account">Account</TabButton>
-        <TabButton value="schedule">Schedule</TabButton>
+        <AccountTab.Button />
       </Stack>
+      <AccountTab />
     </Paper>
   );
 }
