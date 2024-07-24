@@ -20,7 +20,15 @@ import Loading from '../../../website/Loading';
 
 const TableCell = styled(MUITableCell)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
+  paddingTop: '5px',
+  paddingBottom: '5px',
 }));
+
+const IconButton = styled(GameButton)({
+  minWidth: 'unset',
+  width: '48px',
+  maxWidth: '48px',
+});
 
 function CrownIcon({ sx, ...props }: Omit<CustomIconProps, 'src'>) {
   const theme = useTheme();
@@ -66,15 +74,14 @@ function KickPlayerActionButton({ accountId, player }: ActionButtonProps) {
 
   const buttonEl = isMobile
     ? (
-      <GameButton
+      <IconButton
         color="error"
         size="small"
         onClick={() => setOpen(true)}
         disabled={player.id === user?.id}
-        sx={{ minWidth: 'unset', width: '48px' }}
       >
         <PersonRemoveIcon />
-      </GameButton>
+      </IconButton>
     )
     : (
       <GameButton
@@ -154,15 +161,14 @@ function MakeOwnerActionButton({ accountId, player }: ActionButtonProps) {
 
   const buttonEl = isMobile
     ? (
-      <GameButton
+      <IconButton
         color="teal"
         size="small"
         onClick={() => setOpen(true)}
         disabled={player.id === user?.id}
-        sx={{ minWidth: 'unset', width: '48px' }}
       >
         <CrownIcon />
-      </GameButton>
+      </IconButton>
     )
     : (
       <GameButton
