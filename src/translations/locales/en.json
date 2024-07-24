@@ -66,10 +66,28 @@
       "overview": {
         "accountTab": {
           "label": "Account",
-          "accountId": {
-            "tooltip": "Copy account Id",
-            "success": "Account Id copied to your clipboard.",
-            "error": "Failed to copy account Id."
+          "accountData": {
+            "accountId": {
+              "tooltip": "Copy account Id",
+              "success": "Account Id copied to your clipboard.",
+              "error": "Failed to copy account Id."
+            },
+            "deleteAccount": {
+              "label": "Delete account",
+              "title": "Delete account",
+              "message": "<0>This action is permanent.</0> You're about to leave this account and delete all it's data. The other players on this account will also forcibly leave it. Are you sure you want to delete this account?\n\nAlternatively, you can give another player ownership and leave.",
+              "submit": "Delete account",
+              "success": "Account deleted successfully.",
+              "error": "Failed to delete account"
+            },
+            "leaveAccount": {
+              "label": "Leave account",
+              "title": "Leave account",
+              "message": "You'll leave this account and game world. Are you sure you want to leave this account?",
+              "submit": "Leave",
+              "success": "Left account successfully.",
+              "error": "Failed to leave account."
+            }
           },
           "ownedBy": "Owned by: {{user}}",
           "playerTable": {
@@ -82,7 +100,7 @@
                 "label": "Kick",
                 "title": "Are you sure you want to kick {{user}} from this account?",
                 "message": "This will remove their access to this account and it's realm.",
-                "button": "Yes, kick {{user}}",
+                "submit": "Yes, kick {{user}}",
                 "success": "User kicked successfully.",
                 "error": "Failed to kick user."
               },
@@ -90,7 +108,7 @@
                 "label": "Make Owner",
                 "title": "Are you sure you want to make {{user}} the owner of this account?",
                 "message": "You'll lose the ability to kick other users, or manage the realm this account has joined.",
-                "button": "Yes, make {{user}} the owner",
+                "submit": "Yes, make {{user}} the owner",
                 "success": "Account updated successfully.",
                 "error": "Failed to update account."
               }

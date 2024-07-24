@@ -40,10 +40,10 @@ function JoinAccountForm() {
       navigate(`/realm-manager/${id}`);
       enqueueSnackbar(t('realmManager.account.join.form.success'), { variant: 'success' });
     },
-    onError: (error) => {
+    onError: (e) => {
       let errored = false;
-      if (isAxiosError(error) && error.response) {
-        error.response.data.errors.forEach((err) => {
+      if (isAxiosError(e) && e.response) {
+        e.response.data.errors.forEach((err) => {
           if (err.code === 'multi_account') {
             enqueueSnackbar(
               t('realmManager.account.join.form.errors.multiAccount'),
@@ -61,7 +61,7 @@ function JoinAccountForm() {
         });
       }
       if (!errored) {
-        console.error('An unexpected error ocurred while joining an account', error);
+        console.error('An unexpected error ocurred while joining an account', e);
         enqueueSnackbar(t('common.errors.default'), { variant: 'error' });
       }
     },

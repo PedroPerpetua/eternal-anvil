@@ -53,7 +53,7 @@ function KickPlayerActionButton({ accountId, player }: ActionButtonProps) {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const { data: user } = useUsersProfileRetrieve();
-  const { refetch } = useRealmManagerAccountsRetrieve(accountId);
+  const { refetch } = useRealmManagerAccountsRetrieve(accountId, { query: { enabled: false } });
   const { mutate: kickUser, isPending } = useRealmManagerAccountsRemoveUser({ mutation: {
     onSuccess: async () => {
       await refetch();
@@ -121,7 +121,7 @@ function KickPlayerActionButton({ accountId, player }: ActionButtonProps) {
             >
               {
                 t(
-                  'realmManager.account.overview.accountTab.playerTable.actions.kick.button',
+                  'realmManager.account.overview.accountTab.playerTable.actions.kick.submit',
                   { user: player.username },
                 )
               }
@@ -140,7 +140,7 @@ function MakeOwnerActionButton({ accountId, player }: ActionButtonProps) {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const { data: user } = useUsersProfileRetrieve();
-  const { refetch } = useRealmManagerAccountsRetrieve(accountId);
+  const { refetch } = useRealmManagerAccountsRetrieve(accountId, { query: { enabled: false } });
   const { mutate: updateAccount, isPending } = useRealmManagerAccountsUpdate({ mutation: {
     onSuccess: async () => {
       await refetch();
@@ -209,7 +209,7 @@ function MakeOwnerActionButton({ accountId, player }: ActionButtonProps) {
             >
               {
                 t(
-                  'realmManager.account.overview.accountTab.playerTable.actions.makeOwner.button',
+                  'realmManager.account.overview.accountTab.playerTable.actions.makeOwner.submit',
                   { user: player.username },
                 )
               }

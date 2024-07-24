@@ -56,10 +56,10 @@ function CreateAccountForm() {
       navigate(`/realm-manager/${id}`);
       enqueueSnackbar(t('realmManager.account.create.form.success'), { variant: 'success' });
     },
-    onError: (error) => {
+    onError: (e) => {
       let errored = false;
-      if (isAxiosError(error) && error.response) {
-        error.response.data.errors.forEach((err) => {
+      if (isAxiosError(e) && e.response) {
+        e.response.data.errors.forEach((err) => {
           if (err.code === 'multi_account') {
             enqueueSnackbar(
               t('realmManager.account.create.form.errors.multiAccount'),
@@ -70,7 +70,7 @@ function CreateAccountForm() {
         });
       }
       if (!errored) {
-        console.error('An unexpected error ocurred while creating an account', error);
+        console.error('An unexpected error ocurred while creating an account', e);
         enqueueSnackbar(t('common.errors.default'), { variant: 'error' });
       }
     },
