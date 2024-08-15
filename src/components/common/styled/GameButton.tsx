@@ -4,7 +4,10 @@ type GameButtonExtraProps = {
   selected?: boolean,
 };
 
-const GameButton = styled(Button)<GameButtonExtraProps>(({ theme, color = 'primary', selected }) => ({
+const GameButton = styled(
+  Button,
+  { shouldForwardProp: (p) => p !== 'selected' },
+)<GameButtonExtraProps>(({ theme, color = 'primary', selected }) => ({
   letterSpacing: '0px',
   fontWeight: 900,
   textShadow: '1px 1px 1px black',

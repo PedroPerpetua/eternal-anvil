@@ -85,9 +85,7 @@
       "disclaimer": "Donativos não são de maneira nenhuma obrigatórios. Toma conta de ti próprio(a) primeiro.",
       "title": "Obrigado por usar a Eternal Anvil!"
     },
-    "footer": {
-      "copyright": "{{year}} ©{{developer}}"
-    },
+    "footer": "{{year}} ©{{developer}}",
     "header": {
       "subtitle": "Kit de Ferramentas Arkheim"
     }

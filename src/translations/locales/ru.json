@@ -85,9 +85,7 @@
       "disclaimer": "Пожертвования ни в коем случае не требуются. В первую очередь позаботьтесь о себе.",
       "title": "Спасибо за использование Eternal Anvil!"
     },
-    "footer": {
-      "copyright": "{{year}}© {{developer}}"
-    },
+    "footer": "{{year}}© {{developer}}",
     "header": {
       "subtitle": "Инструментарий Arkheim"
     }

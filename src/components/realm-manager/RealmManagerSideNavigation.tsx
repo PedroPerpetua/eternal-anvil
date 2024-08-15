@@ -13,6 +13,7 @@ function RealmManagerSideNavigation() {
       href={`/realm-manager/${acc.id}`}
       selected={accountId === acc.id}
       size="small"
+      sx={{ textTransform: 'none' }}
     >
       { `[${acc.game_world.code}] ${acc.name}` }
     </GameButton>

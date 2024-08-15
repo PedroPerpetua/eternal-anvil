@@ -7,7 +7,10 @@ type StyledMiniIconButtonProps = {
   buttonSize?: string | number
 };
 
-const StyledMiniIconButton = styled(Button)<StyledMiniIconButtonProps>(({ buttonSize = '24px' }) => ({
+const StyledMiniIconButton = styled(
+  Button,
+  { shouldForwardProp: (p) => p !== 'buttonSize' },
+)<StyledMiniIconButtonProps>(({ buttonSize = '24px' }) => ({
   borderRadius: '5px',
   minWidth: 'unset',
   width: buttonSize,
