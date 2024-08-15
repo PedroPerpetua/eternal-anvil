@@ -392,6 +392,125 @@ paths:
                 - type
                 - errors
           description: Not Owner
+  /realm-manager/accounts/{id}/schedule/:
+    get:
+      operationId: realm_manager_accounts_schedule_retrieve
+      description: |-
+        Endpoint to retrieve a Player's own schedule.
+
+        If a schedule doesn't exist, this will create a default (empty) one.
+      summary: Retrieve player schedule
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsScheduleRetrieveErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    put:
+      operationId: realm_manager_accounts_schedule_update
+      description: |-
+        Endpoint to update a Player's own schedule.
+
+        If a schedule doesn't exist, this will create a default (empty) one.
+      summary: Update player schedule
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
+    patch:
+      operationId: realm_manager_accounts_schedule_partial_update
+      description: |-
+        Endpoint to partially update a Player's own schedule.
+
+        If a schedule doesn't exist, this will create a default (empty) one.
+      summary: Partially update player schedule
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        required: true
+      tags:
+      - Realm Manager - Accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedScheduleRequest'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateErrorResponse400'
+          description: ''
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+          description: ''
   /realm-manager/accounts/join/:
     post:
       operationId: realm_manager_accounts_join
@@ -1131,6 +1250,51 @@ components:
       required:
       - errors
       - type
+    PatchedScheduleRequest:
+      type: object
+      properties:
+        monday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        tuesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        wednesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        thursday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        friday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        saturday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        sunday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
     PatchedUserProfileRequest:
       type: object
       description: Serializer to handle user's details.
@@ -1435,6 +1599,897 @@ components:
         propertyName: type
         mapping:
           client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsSchedulePartialUpdateError:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateMondayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateMondayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateTuesdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateTuesdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateWednesdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateWednesdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateThursdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateThursdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateFridayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateFridayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSaturdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSaturdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSundayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSundayINDEXErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateNonFieldErrorsErrorComponent'
+          monday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateMondayErrorComponent'
+          monday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateMondayINDEXErrorComponent'
+          tuesday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateTuesdayErrorComponent'
+          tuesday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateTuesdayINDEXErrorComponent'
+          wednesday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateWednesdayErrorComponent'
+          wednesday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateWednesdayINDEXErrorComponent'
+          thursday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateThursdayErrorComponent'
+          thursday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateThursdayINDEXErrorComponent'
+          friday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateFridayErrorComponent'
+          friday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateFridayINDEXErrorComponent'
+          saturday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSaturdayErrorComponent'
+          saturday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSaturdayINDEXErrorComponent'
+          sunday: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSundayErrorComponent'
+          sunday.INDEX: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateSundayINDEXErrorComponent'
+    RealmManagerAccountsSchedulePartialUpdateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsSchedulePartialUpdateFridayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - friday
+          type: string
+          description: '* `friday` - friday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateFridayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - friday.INDEX
+          type: string
+          description: '* `friday.INDEX` - friday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateMondayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - monday
+          type: string
+          description: '* `monday` - monday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateMondayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - monday.INDEX
+          type: string
+          description: '* `monday.INDEX` - monday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateSaturdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - saturday
+          type: string
+          description: '* `saturday` - saturday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateSaturdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - saturday.INDEX
+          type: string
+          description: '* `saturday.INDEX` - saturday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateSundayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - sunday
+          type: string
+          description: '* `sunday` - sunday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateSundayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - sunday.INDEX
+          type: string
+          description: '* `sunday.INDEX` - sunday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateThursdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - thursday
+          type: string
+          description: '* `thursday` - thursday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateThursdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - thursday.INDEX
+          type: string
+          description: '* `thursday.INDEX` - thursday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateTuesdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - tuesday
+          type: string
+          description: '* `tuesday` - tuesday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateTuesdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - tuesday.INDEX
+          type: string
+          description: '* `tuesday.INDEX` - tuesday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealmManagerAccountsSchedulePartialUpdateError'
+      required:
+      - errors
+      - type
+    RealmManagerAccountsSchedulePartialUpdateWednesdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - wednesday
+          type: string
+          description: '* `wednesday` - wednesday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsSchedulePartialUpdateWednesdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - wednesday.INDEX
+          type: string
+          description: '* `wednesday.INDEX` - wednesday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleRetrieveErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsScheduleUpdateError:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateNonFieldErrorsErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateMondayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateMondayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateTuesdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateTuesdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateWednesdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateWednesdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateThursdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateThursdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateFridayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateFridayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateSaturdayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateSaturdayINDEXErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateSundayErrorComponent'
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateSundayINDEXErrorComponent'
+      discriminator:
+        propertyName: attr
+        mapping:
+          non_field_errors: '#/components/schemas/RealmManagerAccountsScheduleUpdateNonFieldErrorsErrorComponent'
+          monday: '#/components/schemas/RealmManagerAccountsScheduleUpdateMondayErrorComponent'
+          monday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateMondayINDEXErrorComponent'
+          tuesday: '#/components/schemas/RealmManagerAccountsScheduleUpdateTuesdayErrorComponent'
+          tuesday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateTuesdayINDEXErrorComponent'
+          wednesday: '#/components/schemas/RealmManagerAccountsScheduleUpdateWednesdayErrorComponent'
+          wednesday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateWednesdayINDEXErrorComponent'
+          thursday: '#/components/schemas/RealmManagerAccountsScheduleUpdateThursdayErrorComponent'
+          thursday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateThursdayINDEXErrorComponent'
+          friday: '#/components/schemas/RealmManagerAccountsScheduleUpdateFridayErrorComponent'
+          friday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateFridayINDEXErrorComponent'
+          saturday: '#/components/schemas/RealmManagerAccountsScheduleUpdateSaturdayErrorComponent'
+          saturday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateSaturdayINDEXErrorComponent'
+          sunday: '#/components/schemas/RealmManagerAccountsScheduleUpdateSundayErrorComponent'
+          sunday.INDEX: '#/components/schemas/RealmManagerAccountsScheduleUpdateSundayINDEXErrorComponent'
+    RealmManagerAccountsScheduleUpdateErrorResponse400:
+      oneOf:
+      - $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateValidationError'
+      - $ref: '#/components/schemas/ParseErrorResponse'
+      discriminator:
+        propertyName: type
+        mapping:
+          validation_error: '#/components/schemas/RealmManagerAccountsScheduleUpdateValidationError'
+          client_error: '#/components/schemas/ParseErrorResponse'
+    RealmManagerAccountsScheduleUpdateFridayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - friday
+          type: string
+          description: '* `friday` - friday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateFridayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - friday.INDEX
+          type: string
+          description: '* `friday.INDEX` - friday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateMondayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - monday
+          type: string
+          description: '* `monday` - monday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateMondayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - monday.INDEX
+          type: string
+          description: '* `monday.INDEX` - monday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateNonFieldErrorsErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - non_field_errors
+          type: string
+          description: '* `non_field_errors` - non_field_errors'
+        code:
+          enum:
+          - invalid
+          - 'null'
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateSaturdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - saturday
+          type: string
+          description: '* `saturday` - saturday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateSaturdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - saturday.INDEX
+          type: string
+          description: '* `saturday.INDEX` - saturday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateSundayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - sunday
+          type: string
+          description: '* `sunday` - sunday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateSundayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - sunday.INDEX
+          type: string
+          description: '* `sunday.INDEX` - sunday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateThursdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - thursday
+          type: string
+          description: '* `thursday` - thursday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateThursdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - thursday.INDEX
+          type: string
+          description: '* `thursday.INDEX` - thursday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateTuesdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - tuesday
+          type: string
+          description: '* `tuesday` - tuesday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateTuesdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - tuesday.INDEX
+          type: string
+          description: '* `tuesday.INDEX` - tuesday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateValidationError:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ValidationErrorEnum'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RealmManagerAccountsScheduleUpdateError'
+      required:
+      - errors
+      - type
+    RealmManagerAccountsScheduleUpdateWednesdayErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - wednesday
+          type: string
+          description: '* `wednesday` - wednesday'
+        code:
+          enum:
+          - not_a_list
+          - 'null'
+          type: string
+          description: |-
+            * `not_a_list` - not_a_list
+            * `null` - null
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
+    RealmManagerAccountsScheduleUpdateWednesdayINDEXErrorComponent:
+      type: object
+      properties:
+        attr:
+          enum:
+          - wednesday.INDEX
+          type: string
+          description: '* `wednesday.INDEX` - wednesday.INDEX'
+        code:
+          enum:
+          - invalid
+          - max_string_length
+          - max_value
+          - min_value
+          - 'null'
+          - required
+          type: string
+          description: |-
+            * `invalid` - invalid
+            * `max_string_length` - max_string_length
+            * `max_value` - max_value
+            * `min_value` - min_value
+            * `null` - null
+            * `required` - required
+        detail:
+          type: string
+      required:
+      - attr
+      - code
+      - detail
     RealmManagerAccountsUpdateError:
       oneOf:
       - $ref: '#/components/schemas/RealmManagerAccountsUpdateNonFieldErrorsErrorComponent'
@@ -1529,6 +2584,96 @@ components:
           maxLength: 255
       required:
       - name
+    Schedule:
+      type: object
+      properties:
+        monday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        tuesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        wednesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        thursday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        friday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        saturday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        sunday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+    ScheduleRequest:
+      type: object
+      properties:
+        monday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        tuesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        wednesday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        thursday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        friday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        saturday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
+        sunday:
+          type: array
+          items:
+            type: integer
+            maximum: 288
+            minimum: 0
     TokenBlacklistRequest:
       type: object
       properties:
