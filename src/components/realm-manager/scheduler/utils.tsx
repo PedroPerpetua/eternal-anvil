@@ -1,3 +1,5 @@
+import type { Schedule as ApiSchedule } from '../../../api/models';
+
 export const intervalDuration = 30;
 export const dailyTicks = (60 / intervalDuration) * 24;
 export const borderCSS = '2px solid black';
@@ -91,8 +93,7 @@ function flipActive(daySchedule: number[], flipInterval: [number, number], setAc
 }
 
 export function applyDelta(value: SchedulerValue, start: [number, number], end: [number, number]) {
-  // @ts-ignore
-  const newValue: SchedulerValue = value.map((arr) => [...arr]);
+  const newValue = value.map((arr) => [...arr]) as SchedulerValue;
   const setActive = !isActive(value, start);
   // We basically want to apply the delta "as a square"
   // So we take the [day, time] corners
@@ -128,4 +129,34 @@ export function applyTimezone(value: SchedulerValue, timezoneDiff: number) {
     }
   }
   return newValue.map((arr) => fromBoolArray(arr)) as SchedulerValue;
+}
+
+export function toApiDTO(value: SchedulerValue): ApiSchedule {
+  // The api takes intervals of 5 minutes instead, so map it.
+  const adjustment = intervalDuration / 5;
+  // It also never considers the last "24 hour" one.
+  const adjusted = value.map((d) => d.filter((v) => v !== dailyTicks).map((v) => v * adjustment));
+  return {
+    monday: adjusted[0],
+    tuesday: adjusted[1],
+    wednesday: adjusted[2],
+    thursday: adjusted[3],
+    friday: adjusted[4],
+    saturday: adjusted[5],
+    sunday: adjusted[6],
+  };
+}
+
+export function fromApiDTO(value: ApiSchedule): SchedulerValue {
+  const schedule: SchedulerValue = [
+    value.monday ?? [],
+    value.tuesday ?? [],
+    value.wednesday ?? [],
+    value.thursday ?? [],
+    value.friday ?? [],
+    value.saturday ?? [],
+    value.sunday ?? [],
+  ];
+  // The api takes intervals of 5 minutes instead, so map it.
+  return schedule.map((arr) => arr.map((v) => v * (5 / intervalDuration))) as SchedulerValue;
 }

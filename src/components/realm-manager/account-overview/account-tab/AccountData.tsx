@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import ScheduleData from './ScheduleData';
 import {
   useRealmManagerAccountsDestroy,
   useRealmManagerAccountsLeave,
@@ -195,6 +196,7 @@ function AccountData({ accountId }: AccountDataProps) {
           ? (<DeleteAccountButton accountId={accountId} />)
           : (<LeaveAccountButton accountId={accountId} />)
       }
+      <ScheduleData accountId={accountId} />
     </Stack>
   );
 }

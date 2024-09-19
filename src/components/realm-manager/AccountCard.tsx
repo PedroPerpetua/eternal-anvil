@@ -12,8 +12,9 @@ type AccountCardProps = {
 };
 
 function AccountCard({ account }: AccountCardProps) {
-  const isElf = account.race === 'ELF';
   const navigate = useNavigate();
+  const isElf = account.race === 'ELF';
+
   return (
     <Box
       sx={{
