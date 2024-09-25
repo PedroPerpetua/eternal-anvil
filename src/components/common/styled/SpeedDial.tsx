@@ -59,7 +59,13 @@ function SpeedDial({ IconComponent, children }: SpeedDialProps) {
   const [open, setOpen] = useState(false);
   const ctxValue = useMemo(() => ({ open, setOpen }), [open]);
   return (
-    <Box sx={{ position: 'absolute', bottom: '10px', right: '10px' }}>
+    <Box
+      sx={{
+        position: 'absolute',
+        bottom: { xs: '10px', sm: '25px' },
+        right: { xs: '10px', sm: '25px' },
+      }}
+    >
       <Stack spacing={1} alignItems="center">
         <Fade in={open}>
           <Stack spacing={1}>

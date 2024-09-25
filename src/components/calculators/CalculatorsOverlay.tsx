@@ -1,6 +1,6 @@
 import { SortableContext } from '@dnd-kit/sortable';
 import { Box, Modal } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Grid2';
 
 import Calculator from './Calculator';
 import DndProvider from './DndProvider';
@@ -82,7 +82,7 @@ function CalculatorsOverlay() {
                         justifyContent="center"
                         width="100%"
                       >
-                        <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                        <Grid size={numOfCols} minHeight={adjustedOffset} />
                         <SortableContext items={calculatorIds}>
                           {
                             calculatorIds.map((id) => (
@@ -97,7 +97,7 @@ function CalculatorsOverlay() {
                             ))
                           }
                         </SortableContext>
-                        <Grid xs={numOfCols} minHeight={adjustedOffset} />
+                        <Grid size={numOfCols} minHeight={adjustedOffset} />
                       </Grid>
                     </Box>
                   )

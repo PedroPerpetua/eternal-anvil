@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Grid2';
 import { EntityId } from '@reduxjs/toolkit';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
@@ -108,7 +108,7 @@ function ScreenshotOverlay() {
       <Grid container columns={cols} spacing={1}>
         {
           screenshotTitle && (
-            <Grid xs={cols}>
+            <Grid size={cols}>
               <Typography variant="h6" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
                 { screenshotTitle }
               </Typography>

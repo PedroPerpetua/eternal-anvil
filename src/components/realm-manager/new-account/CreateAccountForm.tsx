@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
@@ -98,7 +98,7 @@ function CreateAccountForm() {
         disabled={isPending}
       >
         <Grid container spacing={1}>
-          <Grid xs={12}>
+          <Grid size={12}>
             <GameWorldInput
               name="gameWorld"
               label={t('realmManager.account.create.form.gameWorld')}
@@ -106,7 +106,7 @@ function CreateAccountForm() {
               disabled={isPending}
             />
           </Grid>
-          <Grid xs={12}>
+          <Grid size={12}>
             <TextFieldElement
               name="name"
               label={t('realmManager.account.create.form.name')}
@@ -114,7 +114,7 @@ function CreateAccountForm() {
               disabled={isPending}
             />
           </Grid>
-          <Grid xs={12} md={6} display="flex" justifyContent="center">
+          <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
             <ToggleButtonGroupElement
               name="race"
               label={t('realmManager.account.create.form.race')}
@@ -128,7 +128,7 @@ function CreateAccountForm() {
               disabled={isPending}
             />
           </Grid>
-          <Grid xs={12} md={6} display="flex" justifyContent="center">
+          <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent="center">
             <ToggleButtonGroupElement
               name="economy"
               label={t('realmManager.account.create.form.economy')}
@@ -144,7 +144,7 @@ function CreateAccountForm() {
               disabled={isPending}
             />
           </Grid>
-          <Grid xs={12} display="flex" justifyContent="center">
+          <Grid size={12} display="flex" justifyContent="center">
             <GameButton type="submit">
               { t('realmManager.account.create.form.submit') }
             </GameButton>

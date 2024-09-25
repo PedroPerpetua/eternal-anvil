@@ -19,9 +19,10 @@ function AccountOverview({ accountId }: AccountOverviewProps) {
     <Paper
       sx={{
         color: 'primary.contrastText',
-        minWidth: '100%',
+        width: '100%',
         minHeight: '100%',
         padding: '25px',
+        backgroundColor: '#4f4537',
       }}
     >
       <Stack spacing={5} direction="row" justifyContent="center">

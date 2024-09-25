@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Divider, Link, Stack, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Grid2';
 import { Trans, useTranslation } from 'react-i18next';
 
 import AboutImage from '../../../assets/about-me.png';
@@ -19,7 +19,7 @@ function About() {
       </GameButton>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Grid container justifyContent="space-between" alignItems="center">
-          <Grid xs={12} sm={8}>
+          <Grid size={{ xs: 12, sm: 8 }}>
             <Stack spacing={2}>
               <Typography variant="h6">
                 { t('website.about.title') }
@@ -69,7 +69,7 @@ function About() {
               </Typography>
             </Stack>
           </Grid>
-          <Grid xs={12} sm={4}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <img
               src={AboutImage}
               alt="pedro-perpetua"

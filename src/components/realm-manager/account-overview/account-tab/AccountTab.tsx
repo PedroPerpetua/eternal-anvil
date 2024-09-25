@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import Grid from '@mui/material/Grid2';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -27,10 +27,10 @@ function AccountTab() {
   return (
     <Tab value={value}>
       <Grid container spacing={2}>
-        <Grid xs={12} md={6} display="flex" alignItems="center">
+        <Grid size={{ xs: 12, md: 6 }} display="flex" alignItems="center">
           <AccountData accountId={accountData.id} />
         </Grid>
-        <Grid xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <PlayerTable accountId={accountData.id} />
         </Grid>
       </Grid>
