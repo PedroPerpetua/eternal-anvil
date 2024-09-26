@@ -27,10 +27,10 @@ function AccountTab() {
   return (
     <Tab value={value}>
       <Grid container spacing={2}>
-        <Grid size={{ xs: 12, md: 6 }} display="flex" alignItems="center">
+        <Grid size={{ xs: 12, md: 7 }} display="flex" alignItems="center">
           <AccountData accountId={accountData.id} />
         </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 5 }}>
           <PlayerTable accountId={accountData.id} />
         </Grid>
       </Grid>

@@ -29,18 +29,26 @@ function Scheduler({ value, onChange, backgroundPlaceholder, invertBackground }:
     return 0;
   };
 
+  const handleCellClick = (col: number, row: number) => {
+    if (startPoint !== null) return;
+    setStartPoint([col, row]);
+  };
+
+  const handleCellRelease = () => {
+    if (startPoint === null || hovering === null) return;
+    onChange(applyDelta(value, startPoint, hovering));
+    setStartPoint(null);
+    setHovering(null);
+  };
+
   return (
-    <Stack sx={{ height: '100%' }}>
+    <Stack sx={{ height: '100%', width: 'fit-content' }}>
       <SchedulerXLabels />
       <Stack direction="row">
         <SchedulerYLabels />
         <Stack
           direction="row"
           onMouseLeave={() => setHovering(null)}
-          onMouseDown={() => {
-            if (startPoint !== null || hovering === null) return;
-            setStartPoint(hovering);
-          }}
           onMouseUp={() => {
             if (startPoint === null) return;
             if (hovering) onChange(applyDelta(value, startPoint, hovering));
@@ -51,7 +59,6 @@ function Scheduler({ value, onChange, backgroundPlaceholder, invertBackground }:
             borderTop: borderCSS,
             height: `calc(${rowHeightCSS} * ${dailyTicks})`,
           }}
-          className="clickable"
         >
           {
             [...Array(7).keys()].map((dayIndex) => (
@@ -61,8 +68,26 @@ function Scheduler({ value, onChange, backgroundPlaceholder, invertBackground }:
                     <SchedulerBox
                       key={tickIndex}
                       level={cellLevel(dayIndex, tickIndex)}
+                      onMouseDown={() => handleCellClick(dayIndex, tickIndex)}
+                      onTouchStart={() => handleCellClick(dayIndex, tickIndex)}
                       onMouseEnter={() => setHovering([dayIndex, tickIndex])}
+                      onTouchMove={(e) => {
+                        // TODO: this is a bit clunky but kinda works. Could be improved.
+                        const x = e.targetTouches[0].clientX;
+                        const y = e.targetTouches[0].clientY;
+                        const cell = document.elementFromPoint(x, y);
+                        if (!cell) return;
+                        const col = cell?.getAttribute('data-col');
+                        const row = cell?.getAttribute('data-row');
+                        if (!col || !row) setHovering(null);
+                        else setHovering([Number(row), Number(col)]);
+                      }}
+                      onMouseUp={() => handleCellRelease()}
+                      onTouchEnd={() => handleCellRelease()}
                       thin={tickIndex % 2 === 0}
+                      className="clickable"
+                      data-col={tickIndex}
+                      data-row={dayIndex}
                     />
                   ))
                 }
