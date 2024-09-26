@@ -132,10 +132,15 @@ export function applyTimezone(value: SchedulerValue, timezoneDiff: number) {
 }
 
 export function toApiDTO(value: SchedulerValue): ApiSchedule {
+  // Apply the current timezone to the user
+  const offsetMinutes = new Date().getTimezoneOffset();
+  const withTimezone = applyTimezone(value, Math.floor(offsetMinutes / intervalDuration));
   // The api takes intervals of 5 minutes instead, so map it.
   const adjustment = intervalDuration / 5;
   // It also never considers the last "24 hour" one.
-  const adjusted = value.map((d) => d.filter((v) => v !== dailyTicks).map((v) => v * adjustment));
+  const adjusted = withTimezone.map(
+    (d) => d.filter((v) => v !== dailyTicks).map((v) => v * adjustment),
+  );
   return {
     monday: adjusted[0],
     tuesday: adjusted[1],
@@ -158,5 +163,10 @@ export function fromApiDTO(value: ApiSchedule): SchedulerValue {
     value.sunday ?? [],
   ];
   // The api takes intervals of 5 minutes instead, so map it.
-  return schedule.map((arr) => arr.map((v) => v * (5 / intervalDuration))) as SchedulerValue;
+  const adjusted = schedule.map(
+    (arr) => arr.map((v) => v * (5 / intervalDuration)),
+  ) as SchedulerValue;
+  // Adjust for timezone
+  const offsetMinutes = new Date().getTimezoneOffset();
+  return applyTimezone(adjusted, -Math.floor(offsetMinutes / intervalDuration));
 }
